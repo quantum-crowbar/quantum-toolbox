@@ -4,77 +4,60 @@ Current project context and state information for AI agents.
 
 ## Project Overview
 
-<!-- Describe the project purpose and goals -->
+Universal AI coding agent setup boilerplate. Provides standardized instructions, workflows, and templates for AI agents working on software projects.
+
+**Goals:**
+- Consistent agent behavior across projects
+- Clear guidelines for safe and restricted operations
+- Reusable workflows for common development tasks
+- Templates for standardized commits and PRs
 
 ## Tech Stack
 
-<!-- List technologies, frameworks, and tools used -->
+- Markdown documentation
+- Git for version control
+- GitHub for repository hosting
 
 ## Current State
 
-<!-- Describe what's been implemented and what's in progress -->
+**Version:** 1.0.0
+
+**Implemented:**
+- Core documentation structure (AGENTS.md, instructions.md, context.md, workflows.md)
+- Comprehensive bash command guidelines (safe, restricted, prohibited)
+- Development workflows (Feature, Bug Fix, Hotfix, Refactoring)
+- Autonomous Development Loop with retry limits and rollback
+- Pre-work checklist for workspace validation
+- PR and commit message templates
+- Glossary with terminology and conventions
+
+**In Progress:**
+- None
 
 ## Key Components
 
-<!-- Document important files, modules, or architectural decisions -->
-
-## API Endpoints
-
-<!-- Document API endpoints if applicable -->
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| <!-- METHOD --> | <!-- /path --> | <!-- Description --> | <!-- Yes/No --> |
-
-## Database Schema
-
-<!-- Document database tables/collections if applicable -->
-
-### Tables/Collections
-
-<!--
-Example:
-- **users**: User accounts and profiles
-- **orders**: Customer orders
--->
-
-## Third-Party Integrations
-
-<!-- Document external services and APIs -->
-
-| Service | Purpose | Documentation |
-|---------|---------|---------------|
-| <!-- Service --> | <!-- Purpose --> | <!-- Link --> |
-
-## Performance Considerations
-
-<!-- Document performance-sensitive areas -->
-
-- <!-- Area 1: Description of constraints or optimizations -->
-- <!-- Area 2: Description of constraints or optimizations -->
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Entry point, links to all docs, usage instructions |
+| `instructions.md` | Coding rules, bash commands, security guidelines |
+| `workflows.md` | Step-by-step processes for development tasks |
+| `context.md` | Project state (this file) |
+| `glossary.md` | Terminology and code conventions |
+| `templates/PULL_REQUEST.md` | PR template with checklist |
+| `templates/COMMIT.md` | Commit message format guide |
 
 ## Known Issues
 
-<!-- Track bugs or technical debt -->
+None currently.
 
 ## Dependencies
 
-<!-- Note important external dependencies or integrations -->
+None - this is a documentation-only project.
 
 ## Environment Setup
 
-<!-- Document environment variables, configuration, etc. -->
-
-### Required Environment Variables
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| <!-- VAR_NAME --> | <!-- Description --> | <!-- Yes/No --> | <!-- default --> |
-
 ### Local Development Setup
 
-<!-- Steps to set up local development environment -->
-
-1. <!-- Step 1 -->
-2. <!-- Step 2 -->
-3. <!-- Step 3 -->
+1. Clone the repository: `git clone git@github.com:rastko-vukasinovic/agents-setup.git`
+2. Copy `.aiagent/` directory to your project root
+3. Customize files for your project's specific needs
