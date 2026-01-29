@@ -1,12 +1,6 @@
 # Glossary
 
-Project-specific terminology and definitions for AI agents.
-
-## General Terms
-
-| Term | Definition |
-|------|------------|
-| <!-- Term --> | <!-- Definition --> |
+Standard terminology and definitions for AI agents.
 
 ## Technical Terms
 
@@ -21,28 +15,10 @@ Project-specific terminology and definitions for AI agents.
 | **SOLID** | Single responsibility, Open-closed, Liskov substitution, Interface segregation, Dependency inversion |
 | **TDD** | Test-Driven Development |
 | **BDD** | Behavior-Driven Development |
-
-## Project-Specific Terms
-
-<!-- Add project-specific terminology here -->
-
-| Term | Definition |
-|------|------------|
-| <!-- Term --> | <!-- Definition --> |
-
-## Abbreviations
-
-| Abbreviation | Full Form |
-|--------------|-----------|
-| <!-- Abbr --> | <!-- Full form --> |
-
-## Domain Terms
-
-<!-- Add business/domain-specific terms here -->
-
-| Term | Definition |
-|------|------------|
-| <!-- Term --> | <!-- Definition --> |
+| **ADR** | Architecture Decision Record |
+| **RFC** | Request for Comments |
+| **SLA** | Service Level Agreement |
+| **MVP** | Minimum Viable Product |
 
 ## Code Conventions
 
@@ -54,7 +30,7 @@ Project-specific terminology and definitions for AI agents.
 | `SCREAMING_SNAKE_CASE` | Uppercase with underscores (Constants) |
 | `kebab-case` | Lowercase with hyphens (URLs, CSS classes) |
 
-## File Naming
+## File Naming Patterns
 
 | Pattern | Usage |
 |---------|-------|
@@ -64,3 +40,14 @@ Project-specific terminology and definitions for AI agents.
 | `*.config.*` | Configuration files |
 | `*.types.ts` | Type definition files |
 | `index.*` | Module entry points |
+
+## Git Terminology
+
+| Term | Definition |
+|------|------------|
+| **HEAD** | Current commit reference |
+| **upstream** | The original repository that was forked |
+| **origin** | Default name for the remote repository |
+| **rebase** | Re-apply commits on top of another base |
+| **cherry-pick** | Apply specific commits from another branch |
+| **squash** | Combine multiple commits into one |

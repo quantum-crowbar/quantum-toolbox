@@ -1,10 +1,8 @@
 # Instructions
 
-Static guidelines and rules for AI agents working on this project.
+Static guidelines and rules for AI agents working on projects.
 
 ## Coding Rules
-
-<!-- Add your coding standards here -->
 
 - Follow existing code style and conventions
 - Write clear, self-documenting code
@@ -45,8 +43,6 @@ Static guidelines and rules for AI agents working on this project.
 - Document why each dependency is needed
 
 ## Allowed Bash Scripts
-
-<!-- Define allowed bash operations -->
 
 ### Safe Operations
 
@@ -163,7 +159,3 @@ Static guidelines and rules for AI agents working on this project.
 - Use HTTPS for all external communications
 - Implement proper authentication and authorization
 - Keep dependencies updated for security patches
-
-## File Structure Rules
-
-<!-- Define conventions for file organization -->

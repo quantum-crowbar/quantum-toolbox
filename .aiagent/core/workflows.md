@@ -59,12 +59,12 @@ REPEAT until all todo items are complete (max 10 retries per item):
 ## Feature Development
 
 1. **Pre-work**: Run Pre-Work Checklist (above)
-2. Read context.md for current project state
+2. Read project context for current project state
 3. Create a feature branch: `git checkout -b feature/<name>`
 4. Create todo list for implementation tasks
 5. **Execute**: Run Autonomous Development Loop for each todo
 6. Ensure all tests pass
-7. Update context.md if significant changes made
+7. Update project context if significant changes made
 8. Create pull request using PR template
 
 ## Bug Fixing
@@ -91,7 +91,7 @@ REPEAT until all todo items are complete (max 10 retries per item):
 7. Commit with `[HOTFIX]` prefix in message
 8. Create PR for expedited review
 9. After merge, backport to development branch if needed
-10. Update context.md with post-mortem notes
+10. Update project context with post-mortem notes
 
 ## Refactoring
 
@@ -119,7 +119,7 @@ REPEAT until all todo items are complete (max 10 retries per item):
 
 ## Context Update
 
-**When to update context.md:**
+**When to update project context:**
 
 1. After completing a significant feature
 2. When architectural decisions are made
@@ -133,15 +133,3 @@ REPEAT until all todo items are complete (max 10 retries per item):
 - Known Issues if bugs discovered
 - Dependencies if new ones added
 - Tech Stack if tools/frameworks change
-
-## Deployment
-
-<!-- Document deployment process -->
-
-## Testing
-
-<!-- Document testing procedures -->
-
-## Documentation Updates
-
-<!-- When and how to update documentation -->
