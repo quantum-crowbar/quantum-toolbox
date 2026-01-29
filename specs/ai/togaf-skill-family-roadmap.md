@@ -340,6 +340,134 @@ togaf/
 - [ ] View templates per stakeholder type
 - [ ] Mapping: Concern → Viewpoint → View
 
+### Architecture Modeling Tools
+
+Selection of text-based tools the agent can generate directly.
+
+#### Tool Selection by Context
+
+| Context | Primary Tool | Why |
+|---------|--------------|-----|
+| Quick sketches, vision docs | Mermaid | Universal rendering, markdown-native |
+| Software architecture (C4) | Structurizr DSL | Hierarchical zoom, workspace model |
+| Enterprise architecture | ArchiMate (PlantUML) | TOGAF-aligned, all domains |
+| Business processes | BPMN (Mermaid/PlantUML) | Phase B process flows |
+| Data models | PlantUML / Mermaid ERD | Phase C data architecture |
+| Infrastructure | Mermaid / D2 | Phase D technology views |
+
+#### Tool by TOGAF Phase
+
+| Phase | Recommended Tools |
+|-------|-------------------|
+| A - Vision | Mermaid (context diagrams, stakeholder maps) |
+| B - Business | BPMN, ArchiMate (business layer), capability maps |
+| C - Information Systems | ArchiMate (application layer), ERD, C4 containers |
+| D - Technology | ArchiMate (technology layer), C4, infrastructure diagrams |
+| E/F - Roadmap | Mermaid Gantt, timeline diagrams |
+
+#### Mermaid (Default)
+
+```
+Best for: Quick diagrams, universal rendering, documentation
+Supports: flowchart, sequence, class, state, ERD, gantt, mindmap, C4
+```
+
+```mermaid
+C4Context
+  Person(user, "User")
+  System(system, "System")
+  System_Ext(ext, "External")
+  Rel(user, system, "Uses")
+  Rel(system, ext, "Calls")
+```
+
+#### Structurizr DSL
+
+```
+Best for: Software architecture, C4 model, living documentation
+Supports: Context, Container, Component, Code views + deployment
+```
+
+```structurizr
+workspace {
+  model {
+    user = person "User"
+    system = softwareSystem "System" {
+      webapp = container "Web App" "React" "Browser"
+      api = container "API" "Node.js" "REST"
+      db = container "Database" "PostgreSQL" "Schema"
+    }
+    user -> webapp "Uses"
+    webapp -> api "Calls"
+    api -> db "Reads/Writes"
+  }
+  views {
+    systemContext system "Context" { include * autoLayout }
+    container system "Containers" { include * autoLayout }
+  }
+}
+```
+
+#### ArchiMate (via PlantUML)
+
+```
+Best for: Enterprise architecture, TOGAF alignment, all domains
+Supports: Business, Application, Technology layers + relationships
+```
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+' Business Layer
+Business_Actor(customer, "Customer")
+Business_Process(orderProcess, "Order Process")
+Business_Service(orderService, "Order Service")
+
+' Application Layer
+Application_Component(orderApp, "Order Application")
+Application_Interface(orderAPI, "Order API")
+
+' Technology Layer
+Technology_Node(appServer, "App Server")
+Technology_Artifact(deployment, "order.war")
+
+' Relationships
+Rel_Serving(orderService, customer)
+Rel_Realization(orderApp, orderService)
+Rel_Serving(orderAPI, orderApp)
+Rel_Assignment(appServer, orderApp)
+Rel_Deployment(appServer, deployment)
+@enduml
+```
+
+#### D2
+
+```
+Best for: Modern diagrams, clean syntax, auto-layout
+Supports: flowcharts, sequence, class, icons
+```
+
+```d2
+direction: right
+user: User {shape: person}
+system: Order System {
+  api: API
+  db: Database {shape: cylinder}
+  api -> db: queries
+}
+user -> system.api: requests
+```
+
+#### Agent Output Guidelines
+
+- [ ] Default to Mermaid unless specific tool requested
+- [ ] Include diagram source in code blocks (reproducible)
+- [ ] Provide both diagram code and explanation
+- [ ] Use consistent styling within a project
+- [ ] Layer diagrams: overview first, then detail views
+- [ ] Always link diagrams to evidence (file:line where applicable)
+
 ---
 
 ## Invocation Patterns
