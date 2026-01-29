@@ -20,6 +20,7 @@ These skills are automatically loaded for every project:
 | Skill | Description | Path |
 |-------|-------------|------|
 | **git-workflow** | Git best practices, branching strategies, commit hygiene | [core/git-workflow/](core/git-workflow/) |
+| **todo-workflow** | Invokable autonomous/semi-autonomous development workflow | [core/todo-workflow/](core/todo-workflow/) |
 
 ### Optional Skills (Opt-In)
 
@@ -96,9 +97,23 @@ Some skills may recommend reading other skills first:
 
 | Skill | Recommended Prerequisites |
 |-------|--------------------------|
+| `git-workflow` | None |
+| `todo-workflow` | `git-workflow` (uses git operations) |
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
+
+---
+
+## Invokable Skills
+
+Some skills can be explicitly invoked during a session:
+
+| Skill | Invocation | Description |
+|-------|------------|-------------|
+| `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
+
+See the skill's README for full invocation options.
 
 ---
 
