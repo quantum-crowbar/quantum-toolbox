@@ -9,6 +9,12 @@ This directory contains developer specifications for AI-related tooling and proc
 - Serve as contract documentation for skills and workflows
 - Can be used as a git submodule in other projects
 
+## Specifications
+
+| Spec | Description |
+|------|-------------|
+| [workflow-system-spec.md](workflow-system-spec.md) | Workflow structure, patterns, and extension guidelines |
+
 ## Roadmaps
 
 Active development plans:
