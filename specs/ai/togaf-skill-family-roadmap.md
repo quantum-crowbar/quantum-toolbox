@@ -54,12 +54,55 @@ Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinki
   - [ ] **Gap Analysis**
     - [ ] Identify gaps between baseline and target per domain
     - [ ] Categorize gaps: missing, outdated, incompatible, redundant
-    - [ ] Prioritize gaps by business impact
     - [ ] Map gaps to capabilities/components affected
+    - [ ] Each gap = potential roadmap candidate
     - [ ] Template for gap register
     ```markdown
-    | ID | Domain | Baseline | Target | Gap Type | Impact | Priority |
-    |----|--------|----------|--------|----------|--------|----------|
+    | ID | Domain | Baseline | Target | Gap Type | Roadmap Candidate | Dependencies |
+    |----|--------|----------|--------|----------|-------------------|--------------|
+    ```
+
+  - [ ] **Roadmap Prioritization**
+    - [ ] Define prioritization criteria (select/weight per engagement)
+    - [ ] Score each gap/roadmap candidate
+    - [ ] Generate prioritized roadmap
+
+    **Standard Prioritization Criteria:**
+    ```markdown
+    | Criterion | Description | Weight |
+    |-----------|-------------|--------|
+    | Business Value | Revenue impact, cost savings, strategic alignment | 1-5 |
+    | Risk Reduction | Security, compliance, operational risk mitigated | 1-5 |
+    | Dependencies | Enables other initiatives, blocked by others | 1-5 |
+    | Complexity | Effort, technical difficulty, organizational change | 1-5 |
+    | Time Sensitivity | Regulatory deadlines, market windows, contracts | 1-5 |
+    | Resource Availability | Skills, budget, vendor capacity | 1-5 |
+    ```
+
+    **Prioritization Matrix Template:**
+    ```markdown
+    | Gap ID | Candidate | BizVal | Risk | Deps | Complexity | Time | Resources | Score | Rank |
+    |--------|-----------|--------|------|------|------------|------|-----------|-------|------|
+    ```
+
+    **Prioritization Approaches:**
+    - [ ] Weighted scoring (default)
+    - [ ] MoSCoW (Must/Should/Could/Won't)
+    - [ ] Value vs Effort quadrant
+    - [ ] WSJF (Weighted Shortest Job First) for SAFe alignment
+
+    **Output: Roadmap View**
+    ```
+    gantt
+      title Architecture Roadmap
+      dateFormat YYYY-MM
+      section Foundation
+        Gap-001 Enable API Gateway :2024-01, 3M
+        Gap-003 Data Platform     :2024-02, 4M
+      section Growth
+        Gap-002 Mobile Capability :2024-04, 3M
+      section Optimization
+        Gap-004 Legacy Retirement :2024-06, 6M
     ```
 
   - [ ] **Risk Analysis**
