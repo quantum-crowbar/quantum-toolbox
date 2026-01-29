@@ -49,8 +49,55 @@ Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinki
 
 - [ ] **Baseline vs Target Thinking**
   - [ ] Distinguish current state (baseline) from desired state (target)
-  - [ ] Identify gaps between baseline and target
   - [ ] Consider transition states
+
+  - [ ] **Gap Analysis**
+    - [ ] Identify gaps between baseline and target per domain
+    - [ ] Categorize gaps: missing, outdated, incompatible, redundant
+    - [ ] Prioritize gaps by business impact
+    - [ ] Map gaps to capabilities/components affected
+    - [ ] Template for gap register
+    ```markdown
+    | ID | Domain | Baseline | Target | Gap Type | Impact | Priority |
+    |----|--------|----------|--------|----------|--------|----------|
+    ```
+
+  - [ ] **Risk Analysis**
+    - [ ] Identify risks from each gap
+    - [ ] Assess probability and impact
+    - [ ] Define mitigation strategies
+    - [ ] Track risk ownership
+    - [ ] Risk mindmap structure:
+    ```
+    mindmap
+      root((Architecture Risks))
+        Technical
+          Integration complexity
+          Legacy dependencies
+          Scalability limits
+          Security vulnerabilities
+        Organizational
+          Skill gaps
+          Change resistance
+          Resource constraints
+          Vendor dependencies
+        Business
+          Timeline pressure
+          Budget limitations
+          Regulatory compliance
+          Market changes
+        Operational
+          Migration disruption
+          Data quality
+          Performance degradation
+          Support readiness
+    ```
+    - [ ] Template for risk register
+    ```markdown
+    | ID | Risk | Category | Probability | Impact | Score | Mitigation | Owner | Status |
+    |----|------|----------|-------------|--------|-------|------------|-------|--------|
+    ```
+    - [ ] Risk-to-gap traceability matrix
 
 - [ ] **Enterprise Continuum Awareness**
   - [ ] Recognize reusable assets (patterns, building blocks)
