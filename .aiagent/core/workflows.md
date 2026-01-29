@@ -58,76 +58,73 @@ REPEAT until all todo items are complete (max 10 retries per item):
 
 ## Todo-Driven Development
 
-**Use this workflow for any multi-step task to ensure atomic commits and traceability:**
+**An invokable workflow for autonomous and semi-autonomous development.**
 
-### Workflow Steps
+> **Full Documentation**: See [skills/core/todo-workflow/](../skills/core/todo-workflow/) for complete details.
+
+### Quick Start
 
 ```
-FOR EACH task/item:
-  1. Add to todo list with status: pending
+"Use todo workflow"                      # Full autonomous
+"Use todo workflow, review code"         # Stop for code reviews
+"Use todo workflow --dry-run"            # Preview without executing
+"Continue"                               # Resume after checkpoint
+```
 
-THEN FOR EACH todo item:
-  1. Mark as in_progress (only one at a time)
+### Core Loop
+
+```
+FOR EACH todo item:
+  1. Mark as in_progress
   2. Implement the change
-  3. Validate the change:
-     - For code: run tests, linter, type checks
-     - For docs: verify links, check structure
-     - For config: validate syntax, test functionality
-  4. If validation fails:
-     - Fix issues
-     - Re-validate
-     - If stuck after 3 attempts: document blocker, move to next item
-  5. If validation passes:
-     - Stage the specific files
-     - Commit with descriptive message
-     - Mark todo as completed
-  6. Move to next todo item
+  3. Validate (tests, linter, structure)
+  4. Commit with descriptive message
+  5. Mark as completed
 ```
 
-### Benefits
+### Pre-Work Checks
 
-- **Atomic commits**: Each change is isolated and revertable
-- **Clear history**: Git log shows progression of work
-- **Traceability**: Each commit maps to a specific task
-- **Safe rollback**: Can revert individual changes without affecting others
+Before starting autonomous work:
+1. **Branch check** - Warn if on main/master
+2. **Test check** - Run tests, warn if failing
+3. **Working directory** - Warn if uncommitted changes
 
-### Example: Adding a New Skill
+### Review Modes
+
+| Mode | Stops For |
+|------|-----------|
+| `review all` | Every item |
+| `review code` | Code changes only |
+| `review tests` | After writing tests |
+| `review items 2,4` | Specific items |
+| `review critical` | Items marked `[critical]` |
+
+### Options
+
+| Option | Effect |
+|--------|--------|
+| `--dry-run` | Preview without making changes |
+| `--push` | Push after each commit |
+| `--push-end` | Push only at end |
+| `--branch <name>` | Create/use feature branch |
+| `--batch` | Group related items into single commits |
+
+### Item Features
 
 ```
-Todo List:
-1. [ ] Create skills/optional/new-skill/README.md
-2. [ ] Create skills/optional/new-skill/workflows.md
-3. [ ] Create skills/optional/new-skill/examples.md
-4. [ ] Create skills/optional/new-skill/templates.md
-5. [ ] Create skills/optional/new-skill/checklist.md
-6. [ ] Update skills/_index.md with new skill
-
-For each file:
-- Create the file
-- Validate: check file exists, structure matches other skills
-- Commit: "feat(skills): add new-skill README.md"
-- Mark complete, move to next
+[ ] Basic item
+[ ] Code item [code]
+[ ] Depends on item 1 (depends: 1)
+[ ] Security sensitive [critical]
+[ ] Part of group [batch: feature-x]
 ```
 
 ### Commit Message Pattern
 
-For todo-driven work, use consistent commit messages:
-
 ```
 <type>(<scope>): <description>
 
-Types:
-- feat: new functionality
-- fix: bug fix
-- docs: documentation only
-- refactor: code change that doesn't add features or fix bugs
-- test: adding or updating tests
-- chore: maintenance tasks
-
-Examples:
-- feat(skills): add software-design README.md
-- docs(templates): add CONTEXT.template.md
-- fix(workflows): correct retry logic in dev loop
+Types: feat | fix | docs | refactor | test | chore
 ```
 
 ---
