@@ -9,6 +9,14 @@ This directory contains developer specifications for AI-related tooling and proc
 - Serve as contract documentation for skills and workflows
 - Can be used as a git submodule in other projects
 
+## Roadmaps
+
+Active development plans:
+
+| Roadmap | Description |
+|---------|-------------|
+| [arch-analysis-skills-roadmap.md](arch-analysis-skills-roadmap.md) | Architectural analysis skill expansion |
+
 ## Structure
 
 Specifications are organized by topic:
