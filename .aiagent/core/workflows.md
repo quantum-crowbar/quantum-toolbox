@@ -56,6 +56,82 @@ REPEAT until all todo items are complete (max 10 retries per item):
 
 ---
 
+## Todo-Driven Development
+
+**Use this workflow for any multi-step task to ensure atomic commits and traceability:**
+
+### Workflow Steps
+
+```
+FOR EACH task/item:
+  1. Add to todo list with status: pending
+
+THEN FOR EACH todo item:
+  1. Mark as in_progress (only one at a time)
+  2. Implement the change
+  3. Validate the change:
+     - For code: run tests, linter, type checks
+     - For docs: verify links, check structure
+     - For config: validate syntax, test functionality
+  4. If validation fails:
+     - Fix issues
+     - Re-validate
+     - If stuck after 3 attempts: document blocker, move to next item
+  5. If validation passes:
+     - Stage the specific files
+     - Commit with descriptive message
+     - Mark todo as completed
+  6. Move to next todo item
+```
+
+### Benefits
+
+- **Atomic commits**: Each change is isolated and revertable
+- **Clear history**: Git log shows progression of work
+- **Traceability**: Each commit maps to a specific task
+- **Safe rollback**: Can revert individual changes without affecting others
+
+### Example: Adding a New Skill
+
+```
+Todo List:
+1. [ ] Create skills/optional/new-skill/README.md
+2. [ ] Create skills/optional/new-skill/workflows.md
+3. [ ] Create skills/optional/new-skill/examples.md
+4. [ ] Create skills/optional/new-skill/templates.md
+5. [ ] Create skills/optional/new-skill/checklist.md
+6. [ ] Update skills/_index.md with new skill
+
+For each file:
+- Create the file
+- Validate: check file exists, structure matches other skills
+- Commit: "feat(skills): add new-skill README.md"
+- Mark complete, move to next
+```
+
+### Commit Message Pattern
+
+For todo-driven work, use consistent commit messages:
+
+```
+<type>(<scope>): <description>
+
+Types:
+- feat: new functionality
+- fix: bug fix
+- docs: documentation only
+- refactor: code change that doesn't add features or fix bugs
+- test: adding or updating tests
+- chore: maintenance tasks
+
+Examples:
+- feat(skills): add software-design README.md
+- docs(templates): add CONTEXT.template.md
+- fix(workflows): correct retry logic in dev loop
+```
+
+---
+
 ## Feature Development
 
 1. **Pre-work**: Run Pre-Work Checklist (above)
