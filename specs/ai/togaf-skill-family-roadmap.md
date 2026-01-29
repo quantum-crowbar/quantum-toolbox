@@ -90,6 +90,7 @@ Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinki
     - [ ] MoSCoW (Must/Should/Could/Won't)
     - [ ] Value vs Effort quadrant
     - [ ] WSJF (Weighted Shortest Job First) for SAFe alignment
+    - [ ] Business Impact / Value Added assessment
 
     **Output: Roadmap View**
     ```
@@ -110,6 +111,20 @@ Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinki
     - [ ] Assess probability and impact
     - [ ] Define mitigation strategies
     - [ ] Track risk ownership
+
+    **Manual Input Required - Non-Technical Risks:**
+    ```
+    Agent should prompt user for input on risks that cannot be inferred from code/docs:
+
+    - Ownership risks: unclear accountability, shared ownership conflicts
+    - Political risks: competing priorities, executive sponsorship gaps
+    - Organizational risks: restructuring, M&A activity, key person dependencies
+    - Operating model risks: outsourcing changes, vendor relationships, SLA gaps
+    - Cultural risks: change fatigue, skill resistance, innovation appetite
+    - Governance risks: approval bottlenecks, compliance interpretation
+    - Financial risks: budget cycles, funding uncertainty, cost allocation disputes
+    ```
+
     - [ ] Risk mindmap structure:
     ```
     mindmap
