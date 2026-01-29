@@ -22,6 +22,7 @@ Active development plans:
 | Roadmap | Description |
 |---------|-------------|
 | [arch-analysis-skills-roadmap.md](arch-analysis-skills-roadmap.md) | Architectural analysis skill expansion |
+| [togaf-skill-family-roadmap.md](togaf-skill-family-roadmap.md) | TOGAF framework as layered skill family |
 
 ## Structure
 
