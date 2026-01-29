@@ -8,6 +8,12 @@ This directory contains human-readable documentation for AI-related tooling and 
 - Serve as reference for human developers working alongside AI agents
 - Can be used as a git submodule in other projects
 
+## Guides
+
+| Guide | Description |
+|-------|-------------|
+| [Architectural Analysis](arch-analysis-guide.md) | Analyze unfamiliar codebases systematically |
+
 ## Structure
 
 Documentation is organized by topic:
