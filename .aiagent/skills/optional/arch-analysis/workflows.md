@@ -293,6 +293,126 @@ Throughout analysis, maintain this cycle:
 
 ---
 
+## Phase 6: Dependency Health Check
+
+**Goal**: Assess health, security, and maintenance status of dependencies
+
+### 6.1 Package Inventory
+
+For each package manifest found:
+1. List all direct dependencies
+2. Identify transitive dependencies (dependency tree)
+3. Categorize by purpose (runtime, dev, peer)
+
+**Template**:
+```markdown
+## Package Inventory
+| Package | Version | Type | Purpose | Direct/Transitive |
+|---------|---------|------|---------|-------------------|
+| express | ^4.18.0 | runtime | Web framework | Direct |
+| lodash | ^4.17.0 | runtime | Utilities | Transitive (via X) |
+```
+
+### 6.2 Version Currency
+
+For each dependency:
+1. Check current installed version
+2. Compare against latest available
+3. Identify major version gaps
+4. Note breaking changes in changelogs
+
+**Template**:
+```markdown
+## Version Currency
+| Package | Current | Latest | Gap | Breaking Changes |
+|---------|---------|--------|-----|------------------|
+| react | 17.0.2 | 18.2.0 | Major | Concurrent rendering, new hooks |
+| axios | 0.27.0 | 1.6.0 | Major | ESM-only, response structure |
+```
+
+### 6.3 Vulnerability Scan
+
+Check for known vulnerabilities:
+1. CVE database references
+2. Security advisories
+3. Severity ratings (Critical/High/Medium/Low)
+
+**Template**:
+```markdown
+## Vulnerability Report
+| Package | Version | CVE ID | Severity | Fixed In | Exploitable |
+|---------|---------|--------|----------|----------|-------------|
+| lodash | 4.17.15 | CVE-2021-23337 | High | 4.17.21 | Yes - prototype pollution |
+```
+
+### 6.4 Maintenance Status
+
+Assess package health:
+1. Last publish date
+2. Open issues count
+3. Maintainer activity
+4. Deprecation notices
+5. Fork/alternative availability
+
+**Template**:
+```markdown
+## Maintenance Status
+| Package | Last Publish | Open Issues | Maintainers | Status |
+|---------|--------------|-------------|-------------|--------|
+| express | 2024-01 | 150 | Active team | Active |
+| request | 2020-02 | 200+ | None | Deprecated |
+
+Status Legend: Active | Maintained | Slow | Unmaintained | Deprecated | Abandoned
+```
+
+### 6.5 License Compliance
+
+Check license compatibility:
+1. Identify all licenses in dependency tree
+2. Flag restrictive licenses (GPL, AGPL)
+3. Note commercial restrictions
+4. Check license conflicts
+
+**Template**:
+```markdown
+## License Inventory
+| Package | License | Type | Restrictions | Compatible |
+|---------|---------|------|--------------|------------|
+| express | MIT | Permissive | None | Yes |
+| some-pkg | GPL-3.0 | Copyleft | Derivative work | Review needed |
+```
+
+### 6.6 Dependency Risk Summary
+
+Aggregate findings into actionable summary:
+
+```markdown
+## Dependency Health Summary
+
+### Critical Issues
+- **Vulnerabilities**: {count} packages with known CVEs
+- **Outdated**: {count} packages with major version gaps
+- **Unmaintained**: {count} packages with no recent activity
+- **License Concerns**: {count} packages requiring review
+
+### Risk Matrix
+| Risk Level | Count | Action |
+|------------|-------|--------|
+| Critical | {n} | Immediate update required |
+| High | {n} | Update within sprint |
+| Medium | {n} | Plan for next cycle |
+| Low | {n} | Monitor |
+
+### Recommended Actions
+1. {Priority action 1}
+2. {Priority action 2}
+3. {Priority action 3}
+```
+
+**Output**: Dependency Health Report
+
+---
+
 ## Output Compilation
 
 Final deliverables:
@@ -302,4 +422,5 @@ Final deliverables:
 3. **Architecture Diagram** (Mermaid)
 4. **Sequence Diagrams** (Mermaid)
 5. **Documentation Audit Report**
-6. **Recommendations** (optional)
+6. **Dependency Health Report**
+7. **Recommendations** (optional)
