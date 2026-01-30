@@ -178,6 +178,88 @@ For each package manifest:
 
 ---
 
+## Phase 7: Data Flow Mapping
+
+### Input Sources
+- [ ] API endpoints catalogued with data formats
+- [ ] File import sources identified
+- [ ] Event consumers mapped
+- [ ] External integrations documented
+- [ ] Scheduled jobs/batch processes listed
+
+### Data Transformations
+- [ ] Parsing/deserialization points identified
+- [ ] Validation stages documented
+- [ ] Normalization/enrichment steps mapped
+- [ ] Model mapping locations noted
+- [ ] Transformation pipeline visualized
+
+### Storage Mapping
+- [ ] All storage systems identified
+- [ ] Entity-to-storage mapping complete
+- [ ] Data relationships documented
+- [ ] Caching strategy understood
+- [ ] Search indexes mapped
+
+### Data Lifecycle
+- [ ] Creation triggers documented
+- [ ] Read/query patterns identified
+- [ ] Update mechanisms mapped
+- [ ] Archival processes documented
+- [ ] Deletion/anonymization paths traced
+- [ ] Retention policies noted
+
+### Data Flow Diagram
+- [ ] Diagram covers all major flows
+- [ ] Input sources shown
+- [ ] Processing stages included
+- [ ] Storage systems represented
+- [ ] Output channels documented
+
+---
+
+## Phase 8: Error Handling Analysis
+
+### Error Sources
+- [ ] Validation error points identified
+- [ ] Business logic error sources mapped
+- [ ] Infrastructure error sources catalogued
+- [ ] External service failure points noted
+- [ ] Runtime error patterns documented
+
+### Error Propagation
+- [ ] Layer-by-layer propagation mapped
+- [ ] Error wrapping patterns identified
+- [ ] Error translation to HTTP codes documented
+- [ ] Error aggregation patterns noted
+
+### Error Response Formats
+- [ ] API error format documented
+- [ ] Error code registry exists/created
+- [ ] Client-friendly messages verified
+- [ ] Debug info appropriately hidden
+
+### Observability
+- [ ] Logging coverage assessed
+- [ ] Log levels appropriately used
+- [ ] Error tracking tool integrated
+- [ ] Alerting rules defined
+- [ ] Error metrics captured
+
+### Recovery Mechanisms
+- [ ] Retry patterns documented
+- [ ] Circuit breakers identified
+- [ ] Fallback strategies mapped
+- [ ] Dead letter queues documented
+- [ ] Compensating transactions noted
+
+### Gap Analysis
+- [ ] Unhandled scenarios identified
+- [ ] Missing coverage documented
+- [ ] Recommendations prioritized
+
+---
+
 ## Output Verification
 
 ### Technology Manifest
@@ -212,6 +294,22 @@ For each package manifest:
 - [ ] License compliance checked
 - [ ] Risk matrix populated
 - [ ] Recommended actions listed
+
+### Data Flow Map
+- [ ] All input sources documented
+- [ ] Transformation pipeline mapped
+- [ ] Storage systems inventoried
+- [ ] Data lifecycle documented
+- [ ] Flow diagram created
+- [ ] Entity matrix complete
+
+### Error Handling Analysis Report
+- [ ] Error sources inventoried
+- [ ] Propagation patterns documented
+- [ ] Response formats specified
+- [ ] Observability coverage assessed
+- [ ] Recovery mechanisms mapped
+- [ ] Gaps identified and prioritized
 
 ---
 
@@ -276,3 +374,24 @@ Watch for these issues:
 - [ ] Excessive transitive dependencies from single package
 - [ ] Packages with no license specified
 - [ ] Pinned versions preventing security updates
+
+### Data Flow
+- [ ] Unvalidated data entering the system
+- [ ] PII data logged or exposed
+- [ ] Missing data retention policies
+- [ ] No anonymization for GDPR compliance
+- [ ] Data stored without encryption requirements
+- [ ] Orphaned data with no deletion path
+- [ ] Unclear data ownership between services
+- [ ] Missing audit trails for sensitive data
+
+### Error Handling
+- [ ] Exceptions swallowed silently
+- [ ] Stack traces exposed to clients
+- [ ] Missing retry logic for external calls
+- [ ] No circuit breakers for failing dependencies
+- [ ] Errors not logged or tracked
+- [ ] No alerting for critical failures
+- [ ] Dead letter queues not monitored
+- [ ] Inconsistent error response formats
+- [ ] Missing fallback behavior for degraded mode
