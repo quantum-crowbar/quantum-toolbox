@@ -413,6 +413,317 @@ Aggregate findings into actionable summary:
 
 ---
 
+## Phase 7: Data Flow Mapping
+
+**Goal**: Trace how data moves through the system from input to storage and output
+
+### 7.1 Input Source Identification
+
+Identify all data entry points:
+
+1. **API Endpoints** - REST, GraphQL, gRPC inputs
+2. **File Imports** - CSV, JSON, XML uploads
+3. **Event Consumers** - Message queue subscriptions
+4. **User Interfaces** - Forms, file uploads
+5. **Scheduled Jobs** - Cron jobs, batch imports
+6. **External Integrations** - Webhooks, third-party APIs
+
+**Template**:
+```markdown
+## Data Input Sources
+| Source | Type | Data Format | Validation | Evidence |
+|--------|------|-------------|------------|----------|
+| POST /api/users | API | JSON | Schema validated | routes/users.ts:45 |
+| uploads/import | File | CSV | Header validation | services/import.ts:12 |
+| order.created | Event | JSON | Avro schema | consumers/orders.ts:8 |
+```
+
+### 7.2 Data Transformation Tracing
+
+For each data path, identify:
+
+1. **Parsing/Deserialization** - How raw input becomes structured data
+2. **Validation** - Schema validation, business rules
+3. **Normalization** - Data cleaning, format standardization
+4. **Enrichment** - Data augmentation from other sources
+5. **Aggregation** - Combining, summarizing data
+6. **Mapping** - Converting between models/formats
+
+**Template**:
+```markdown
+## Data Transformations
+| Stage | Input | Output | Logic Location | Purpose |
+|-------|-------|--------|----------------|---------|
+| Parse | HTTP body | UserDTO | middleware/parse.ts:20 | JSON to object |
+| Validate | UserDTO | ValidatedUser | validators/user.ts:15 | Schema + business rules |
+| Enrich | ValidatedUser | EnrichedUser | services/user.ts:45 | Add computed fields |
+| Map | EnrichedUser | UserEntity | mappers/user.ts:30 | DTO to entity |
+```
+
+### 7.3 Storage Mapping
+
+Document where data lands:
+
+1. **Primary Databases** - Relational, document stores
+2. **Caches** - Redis, Memcached, in-memory
+3. **Search Indexes** - Elasticsearch, Algolia
+4. **File Storage** - S3, local filesystem
+5. **External Systems** - Third-party APIs, data warehouses
+
+**Template**:
+```markdown
+## Data Storage
+| Data Type | Primary Store | Secondary | Retention | Evidence |
+|-----------|---------------|-----------|-----------|----------|
+| Users | PostgreSQL:users | Redis cache | Indefinite | models/user.ts:1 |
+| Orders | PostgreSQL:orders | Elasticsearch | 7 years | models/order.ts:1 |
+| Uploads | S3:uploads | None | 30 days | services/upload.ts:50 |
+| Sessions | Redis:sessions | None | 24 hours | config/session.ts:10 |
+```
+
+### 7.4 Data Lifecycle
+
+Document the full lifecycle:
+
+1. **Creation** - How data is initially stored
+2. **Reading** - Query patterns and access paths
+3. **Updating** - Modification patterns, versioning
+4. **Archival** - Long-term storage, cold storage
+5. **Deletion** - Soft delete, hard delete, cascades
+6. **Anonymization** - PII handling, GDPR compliance
+
+**Template**:
+```markdown
+## Data Lifecycle: {Entity Name}
+
+### Creation
+- Trigger: {what creates this data}
+- Location: {file:line}
+- Validations: {checks performed}
+
+### Access Patterns
+| Pattern | Query | Frequency | Index | Evidence |
+|---------|-------|-----------|-------|----------|
+| By ID | SELECT * WHERE id = ? | High | PK | repo/user.ts:25 |
+| By email | SELECT * WHERE email = ? | Medium | idx_email | repo/user.ts:30 |
+
+### Deletion/Retention
+- Soft delete: {Yes/No} - {field name if yes}
+- Hard delete trigger: {what causes permanent deletion}
+- Retention period: {time period}
+- Anonymization: {fields anonymized, when}
+- Evidence: {file:line}
+```
+
+### 7.5 Data Flow Diagram
+
+Create visual representation:
+
+```markdown
+## Data Flow Diagram
+
+```mermaid
+flowchart LR
+    subgraph "Input"
+        API[REST API]
+        UI[Web UI]
+        MQ[Message Queue]
+    end
+
+    subgraph "Processing"
+        VAL[Validation]
+        TRANS[Transform]
+        BL[Business Logic]
+    end
+
+    subgraph "Storage"
+        DB[(Database)]
+        CACHE[(Cache)]
+        SEARCH[(Search)]
+        FILES[(File Store)]
+    end
+
+    subgraph "Output"
+        RESP[API Response]
+        EVENT[Events]
+        REPORT[Reports]
+    end
+
+    API --> VAL
+    UI --> VAL
+    MQ --> VAL
+    VAL --> TRANS
+    TRANS --> BL
+    BL --> DB
+    BL --> CACHE
+    BL --> SEARCH
+    BL --> FILES
+    DB --> RESP
+    CACHE --> RESP
+    BL --> EVENT
+    DB --> REPORT
+```
+```
+
+### 7.6 Cross-Reference Matrix
+
+Map data entities to their touchpoints:
+
+**Template**:
+```markdown
+## Data Entity Matrix
+| Entity | Input Sources | Transformations | Storage | Outputs |
+|--------|---------------|-----------------|---------|---------|
+| User | API, Admin UI | Validate, Hash password | PostgreSQL, Redis | API, Events |
+| Order | API, Webhook | Validate, Calculate totals | PostgreSQL, ES | API, Email, Events |
+| Product | Admin API, Import | Validate, Index | PostgreSQL, ES, S3 | API, Feed |
+```
+
+**Output**: Data Flow Map
+
+---
+
+## Phase 8: Error Handling Analysis
+
+**Goal**: Map how errors are handled, propagated, and recovered from
+
+### 8.1 Error Entry Points
+
+Identify where errors can originate:
+
+1. **Input Validation Errors** - Bad data from clients
+2. **Business Logic Errors** - Rule violations
+3. **Infrastructure Errors** - Database, network, external services
+4. **Runtime Errors** - Unexpected exceptions
+5. **Timeout Errors** - Slow dependencies
+
+**Template**:
+```markdown
+## Error Sources
+| Source | Type | Example | Handler | Evidence |
+|--------|------|---------|---------|----------|
+| API Input | Validation | Missing required field | ValidationMiddleware | middleware/validate.ts:20 |
+| Database | Infrastructure | Connection timeout | DatabaseErrorHandler | db/errors.ts:15 |
+| Payment API | External | Card declined | PaymentService | services/payment.ts:80 |
+```
+
+### 8.2 Error Propagation Patterns
+
+Document how errors flow through the system:
+
+1. **Exception Bubbling** - Uncaught exceptions propagating up
+2. **Error Wrapping** - Contextual error enhancement
+3. **Error Translation** - Internal to external error mapping
+4. **Error Aggregation** - Collecting multiple errors
+
+**Template**:
+```markdown
+## Error Propagation
+| Layer | Pattern | Catches | Transforms To | Passes To |
+|-------|---------|---------|---------------|-----------|
+| Repository | Wrap | DBError | DataAccessError | Service |
+| Service | Wrap | DataAccessError | BusinessError | Controller |
+| Controller | Translate | BusinessError | HTTPError | Client |
+```
+
+### 8.3 Error Response Formats
+
+Document client-facing error responses:
+
+**Template**:
+```markdown
+## Error Response Formats
+
+### API Errors
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "User-friendly message",
+    "details": [
+      { "field": "email", "issue": "Invalid format" }
+    ],
+    "requestId": "uuid"
+  }
+}
+```
+
+### Error Code Registry
+| Code | HTTP Status | Description | When Used |
+|------|-------------|-------------|-----------|
+| VALIDATION_ERROR | 400 | Input validation failed | Bad request data |
+| NOT_FOUND | 404 | Resource not found | Invalid ID |
+| INTERNAL_ERROR | 500 | Server error | Unexpected failures |
+```
+
+### 8.4 Logging and Monitoring
+
+Document observability:
+
+1. **Log Levels** - When each level is used
+2. **Log Format** - Structured vs unstructured
+3. **Error Tracking** - Sentry, Bugsnag, etc.
+4. **Alerting** - What triggers alerts
+5. **Metrics** - Error rate tracking
+
+**Template**:
+```markdown
+## Error Observability
+| Aspect | Implementation | Evidence |
+|--------|----------------|----------|
+| Logging | Winston, structured JSON | config/logger.ts:1 |
+| Error tracking | Sentry | config/sentry.ts:1 |
+| Alerting | PagerDuty on 5xx spike | infra/alerts.yaml:20 |
+| Metrics | Prometheus error_count | metrics/errors.ts:5 |
+
+## Log Levels
+| Level | Usage | Example |
+|-------|-------|---------|
+| ERROR | Unexpected failures | Database connection lost |
+| WARN | Recoverable issues | Retry attempt, degraded mode |
+| INFO | Significant events | Request completed |
+| DEBUG | Troubleshooting | Query parameters |
+```
+
+### 8.5 Recovery Mechanisms
+
+Document resilience patterns:
+
+1. **Retry Logic** - What's retried, how many times
+2. **Circuit Breakers** - Which services have them
+3. **Fallbacks** - Degraded functionality
+4. **Dead Letter Queues** - Failed message handling
+5. **Compensating Transactions** - Rollback mechanisms
+
+**Template**:
+```markdown
+## Recovery Mechanisms
+| Mechanism | Where Used | Configuration | Evidence |
+|-----------|------------|---------------|----------|
+| Retry | External API calls | 3 retries, exponential backoff | services/http.ts:25 |
+| Circuit Breaker | Payment service | 5 failures, 30s open | services/payment.ts:10 |
+| Fallback | Recommendations | Return popular items | services/recs.ts:40 |
+| DLQ | Order processing | orders-dlq, 7 day retention | queues/orders.ts:15 |
+```
+
+### 8.6 Unhandled Error Scenarios
+
+Identify gaps in error handling:
+
+**Template**:
+```markdown
+## Error Handling Gaps
+| Scenario | Current Behavior | Risk | Recommendation |
+|----------|------------------|------|----------------|
+| DB timeout during checkout | 500 error, no retry | High | Add retry with idempotency |
+| S3 upload failure | Silent failure | Medium | Add error event, retry |
+| Null pointer in mapper | Stack trace leaked | Medium | Add null checks, generic error |
+```
+
+**Output**: Error Handling Analysis Report
+
+---
+
 ## Output Compilation
 
 Final deliverables:
@@ -423,4 +734,6 @@ Final deliverables:
 4. **Sequence Diagrams** (Mermaid)
 5. **Documentation Audit Report**
 6. **Dependency Health Report**
-7. **Recommendations** (optional)
+7. **Data Flow Map**
+8. **Error Handling Analysis Report**
+9. **Recommendations** (optional)
