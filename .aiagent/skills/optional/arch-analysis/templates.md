@@ -530,6 +530,394 @@ sequenceDiagram
 
 ---
 
+## Data Flow Map Template
+
+```markdown
+# Data Flow Map: {Project Name}
+
+**Analysis Date**: {YYYY-MM-DD}
+**Analyzed By**: {Agent/Person}
+**Scope**: {Full system / Specific domain}
+
+## Executive Summary
+
+| Metric | Count |
+|--------|-------|
+| Input Sources | {n} |
+| Data Entities | {n} |
+| Storage Systems | {n} |
+| Output Channels | {n} |
+| Transformation Steps | {n} |
+
+**Data Flow Complexity**: {Simple/Moderate/Complex}
+
+## Data Input Sources
+
+### API Endpoints
+
+| Endpoint | Method | Data Format | Validation | Evidence |
+|----------|--------|-------------|------------|----------|
+| {/api/resource} | POST | JSON | {schema/manual} | {file:line} |
+
+### File Imports
+
+| Source | Format | Trigger | Validation | Evidence |
+|--------|--------|---------|------------|----------|
+| {upload path} | CSV/JSON/XML | {manual/scheduled} | {validation type} | {file:line} |
+
+### Event Consumers
+
+| Event/Topic | Format | Schema | Evidence |
+|-------------|--------|--------|----------|
+| {event.name} | JSON | {Avro/JSON Schema/None} | {file:line} |
+
+### External Integrations
+
+| Integration | Direction | Format | Auth | Evidence |
+|-------------|-----------|--------|------|----------|
+| {service name} | Inbound/Outbound/Both | JSON/XML | {OAuth/API Key/None} | {file:line} |
+
+## Data Transformations
+
+### Transformation Pipeline
+
+| Stage | Input Type | Output Type | Location | Purpose |
+|-------|------------|-------------|----------|---------|
+| Parse | Raw HTTP | DTO | {file:line} | Deserialize request |
+| Validate | DTO | ValidatedDTO | {file:line} | Schema + business rules |
+| Normalize | ValidatedDTO | NormalizedDTO | {file:line} | Standardize formats |
+| Enrich | NormalizedDTO | EnrichedDTO | {file:line} | Add computed/fetched data |
+| Map | EnrichedDTO | Entity | {file:line} | Convert to domain model |
+
+### Transformation Details
+
+#### {Transformation Name}
+
+- **Input**: {type and source}
+- **Output**: {type and destination}
+- **Logic**: {brief description}
+- **Location**: {file:line}
+- **Failure Handling**: {what happens on error}
+
+## Data Storage
+
+### Storage Systems
+
+| System | Type | Purpose | Data Types Stored |
+|--------|------|---------|-------------------|
+| {name} | PostgreSQL/MongoDB/Redis/S3 | Primary/Cache/Search/Archive | {entity list} |
+
+### Entity Storage Map
+
+| Entity | Primary Store | Table/Collection | Secondary Stores | Retention |
+|--------|---------------|------------------|------------------|-----------|
+| {User} | PostgreSQL | users | Redis (cache) | Indefinite |
+| {Order} | PostgreSQL | orders | Elasticsearch | 7 years |
+| {Session} | Redis | sessions:* | None | 24 hours |
+
+### Data Relationships
+
+```mermaid
+erDiagram
+    USER ||--o{ ORDER : places
+    ORDER ||--|{ ORDER_ITEM : contains
+    ORDER_ITEM }o--|| PRODUCT : references
+```
+
+## Data Lifecycle
+
+### {Entity Name} Lifecycle
+
+| Phase | Trigger | Location | Notes |
+|-------|---------|----------|-------|
+| Create | {event/action} | {file:line} | {validation, defaults} |
+| Read | {query patterns} | {file:line} | {indexes used} |
+| Update | {event/action} | {file:line} | {versioning, audit} |
+| Archive | {condition/schedule} | {file:line} | {destination} |
+| Delete | {condition/request} | {file:line} | {soft/hard, cascade} |
+| Anonymize | {GDPR request} | {file:line} | {fields affected} |
+
+### Retention Policies
+
+| Data Type | Retention Period | Archive Location | Deletion Method |
+|-----------|------------------|------------------|-----------------|
+| {type} | {period} | {location or N/A} | {soft/hard/anonymize} |
+
+## Data Flow Diagram
+
+```mermaid
+flowchart TB
+    subgraph "External"
+        CLIENT[Client Apps]
+        WEBHOOK[Webhooks]
+        IMPORT[File Import]
+    end
+
+    subgraph "Ingestion"
+        API[API Gateway]
+        QUEUE[Message Queue]
+    end
+
+    subgraph "Processing"
+        VAL[Validation]
+        BL[Business Logic]
+        TRANS[Transformations]
+    end
+
+    subgraph "Storage"
+        DB[(Primary DB)]
+        CACHE[(Cache)]
+        SEARCH[(Search Index)]
+        FILES[(File Storage)]
+    end
+
+    subgraph "Output"
+        RESPONSE[API Response]
+        EVENTS[Event Stream]
+        REPORTS[Reports/Exports]
+    end
+
+    CLIENT --> API
+    WEBHOOK --> API
+    IMPORT --> QUEUE
+    API --> VAL
+    QUEUE --> VAL
+    VAL --> BL
+    BL --> TRANS
+    TRANS --> DB
+    TRANS --> CACHE
+    TRANS --> SEARCH
+    TRANS --> FILES
+    DB --> RESPONSE
+    CACHE --> RESPONSE
+    BL --> EVENTS
+    DB --> REPORTS
+```
+
+## Entity Cross-Reference Matrix
+
+| Entity | Input Sources | Transformations | Storage | Output Channels | Retention |
+|--------|---------------|-----------------|---------|-----------------|-----------|
+| {User} | API, OAuth | Validate, Hash | PostgreSQL, Redis | API, Events | Indefinite |
+| {Order} | API, Webhook | Validate, Calculate | PostgreSQL, ES | API, Email | 7 years |
+
+## Data Quality Observations
+
+### Concerns
+
+| Area | Issue | Impact | Evidence |
+|------|-------|--------|----------|
+| {area} | {description} | High/Medium/Low | {file:line} |
+
+### Recommendations
+
+1. {Recommendation 1}
+2. {Recommendation 2}
+```
+
+---
+
+## Error Handling Analysis Report Template
+
+```markdown
+# Error Handling Analysis: {Project Name}
+
+**Analysis Date**: {YYYY-MM-DD}
+**Analyzed By**: {Agent/Person}
+**Scope**: {Full system / Specific service}
+
+## Executive Summary
+
+| Metric | Count | Status |
+|--------|-------|--------|
+| Error Sources Identified | {n} | - |
+| Error Handlers | {n} | - |
+| Unhandled Scenarios | {n} | 🔴/🟡/🟢 |
+| Recovery Mechanisms | {n} | - |
+| Observability Coverage | {%} | 🔴/🟡/🟢 |
+
+**Overall Error Handling Maturity**: {Basic/Developing/Mature/Advanced}
+
+## Error Sources
+
+### By Category
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| Validation | {n} | Invalid input, missing fields |
+| Business Logic | {n} | Rule violations, state conflicts |
+| Infrastructure | {n} | Database, network, external services |
+| Runtime | {n} | Null references, type errors |
+
+### Detailed Inventory
+
+| Source | Type | Error Class | Handler | Evidence |
+|--------|------|-------------|---------|----------|
+| {component} | {category} | {error class} | {handler location} | {file:line} |
+
+## Error Propagation
+
+### Layer Architecture
+
+```mermaid
+flowchart TB
+    subgraph "Presentation"
+        CTRL[Controller]
+        MW[Middleware]
+    end
+
+    subgraph "Business"
+        SVC[Service]
+        DOM[Domain]
+    end
+
+    subgraph "Data"
+        REPO[Repository]
+        EXT[External APIs]
+    end
+
+    REPO -->|DataError| SVC
+    EXT -->|ExternalError| SVC
+    SVC -->|BusinessError| CTRL
+    DOM -->|DomainError| SVC
+    CTRL -->|HTTPError| MW
+    MW -->|Response| CLIENT[Client]
+```
+
+### Propagation Patterns
+
+| Layer | Input Error | Output Error | Transformation | Evidence |
+|-------|-------------|--------------|----------------|----------|
+| Repository | DBError | DataAccessError | Wrap with context | {file:line} |
+| Service | DataAccessError | BusinessError | Translate to domain | {file:line} |
+| Controller | BusinessError | HTTPError | Map to status code | {file:line} |
+
+## Error Response Formats
+
+### API Error Response
+
+```json
+{
+  "error": {
+    "code": "{ERROR_CODE}",
+    "message": "{user-friendly message}",
+    "details": [],
+    "requestId": "{trace-id}",
+    "timestamp": "{ISO-8601}"
+  }
+}
+```
+
+### Error Code Registry
+
+| Code | HTTP Status | Category | Description | Client Action |
+|------|-------------|----------|-------------|---------------|
+| VALIDATION_ERROR | 400 | Client | Invalid input | Fix request |
+| UNAUTHORIZED | 401 | Auth | Missing/invalid token | Re-authenticate |
+| FORBIDDEN | 403 | Auth | Insufficient permissions | Request access |
+| NOT_FOUND | 404 | Client | Resource doesn't exist | Check ID |
+| CONFLICT | 409 | Business | State conflict | Retry with fresh data |
+| RATE_LIMITED | 429 | Client | Too many requests | Back off |
+| INTERNAL_ERROR | 500 | Server | Unexpected error | Retry later |
+| SERVICE_UNAVAILABLE | 503 | Server | Dependency down | Retry later |
+
+## Observability
+
+### Logging
+
+| Component | Logger | Format | Levels Used | Evidence |
+|-----------|--------|--------|-------------|----------|
+| {component} | {logger} | JSON/Text | ERROR,WARN,INFO | {file:line} |
+
+### Error Tracking
+
+| Tool | Coverage | Alerting | Evidence |
+|------|----------|----------|----------|
+| {Sentry/Bugsnag/etc} | {%} | {Yes/No} | {file:line} |
+
+### Metrics
+
+| Metric | Type | Labels | Evidence |
+|--------|------|--------|----------|
+| error_count | Counter | code, service | {file:line} |
+| error_rate | Gauge | service | {file:line} |
+
+### Alerting Rules
+
+| Alert | Condition | Severity | Destination |
+|-------|-----------|----------|-------------|
+| {name} | {condition} | Critical/Warning | {PagerDuty/Slack/etc} |
+
+## Recovery Mechanisms
+
+### Retry Patterns
+
+| Component | Retried Operations | Max Retries | Backoff | Evidence |
+|-----------|-------------------|-------------|---------|----------|
+| {component} | {operations} | {n} | {linear/exponential} | {file:line} |
+
+### Circuit Breakers
+
+| Service | Failure Threshold | Open Duration | Fallback | Evidence |
+|---------|-------------------|---------------|----------|----------|
+| {service} | {n} failures | {duration} | {fallback behavior} | {file:line} |
+
+### Fallback Strategies
+
+| Component | Trigger | Fallback Behavior | Evidence |
+|-----------|---------|-------------------|----------|
+| {component} | {condition} | {behavior} | {file:line} |
+
+### Dead Letter Handling
+
+| Queue/Topic | DLQ Name | Retention | Replay Strategy | Evidence |
+|-------------|----------|-----------|-----------------|----------|
+| {queue} | {dlq} | {duration} | {manual/auto} | {file:line} |
+
+## Gap Analysis
+
+### Unhandled Scenarios
+
+| Scenario | Current Behavior | Risk Level | Recommendation |
+|----------|------------------|------------|----------------|
+| {scenario} | {behavior} | Critical/High/Medium/Low | {recommendation} |
+
+### Missing Coverage
+
+| Area | Gap | Impact | Priority |
+|------|-----|--------|----------|
+| {area} | {description} | {impact} | High/Medium/Low |
+
+## Recommendations
+
+### Immediate (Critical)
+
+1. **{Issue}**: {Recommendation} - {file:line}
+
+### Short-term (High Priority)
+
+1. **{Issue}**: {Recommendation}
+
+### Long-term (Improvements)
+
+1. **{Issue}**: {Recommendation}
+
+## Error Handling Patterns Observed
+
+### Good Practices Found
+
+- {Practice 1} - {file:line}
+- {Practice 2} - {file:line}
+
+### Anti-Patterns Found
+
+| Anti-Pattern | Location | Issue | Fix |
+|--------------|----------|-------|-----|
+| {pattern} | {file:line} | {problem} | {solution} |
+```
+
+---
+
 ## Analysis Session Log Template
 
 ```markdown
