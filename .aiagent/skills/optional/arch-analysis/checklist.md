@@ -131,6 +131,53 @@ For each package manifest:
 
 ---
 
+## Phase 6: Dependency Health Check
+
+### Package Inventory
+- [ ] All package manifests located (package.json, requirements.txt, go.mod, etc.)
+- [ ] Direct dependencies catalogued
+- [ ] Transitive dependencies identified
+- [ ] Dependencies categorized (runtime, dev, peer/optional)
+- [ ] Purpose of each major dependency documented
+
+### Version Currency
+- [ ] Current versions recorded
+- [ ] Latest available versions checked
+- [ ] Major version gaps identified
+- [ ] Breaking changes noted for outdated packages
+- [ ] Update priority assigned
+
+### Vulnerability Scan
+- [ ] Known CVEs checked for each dependency
+- [ ] Severity levels recorded (Critical/High/Medium/Low)
+- [ ] Fixed versions identified
+- [ ] Exploitability context assessed
+- [ ] Remediation paths documented
+
+### Maintenance Status
+- [ ] Last publish date checked
+- [ ] Maintainer activity assessed
+- [ ] Open issues count noted
+- [ ] Deprecation notices identified
+- [ ] Alternatives identified for unmaintained packages
+
+### License Compliance
+- [ ] All licenses in dependency tree identified
+- [ ] License types categorized (Permissive/Copyleft/Other)
+- [ ] Restrictive licenses flagged (GPL, AGPL)
+- [ ] Commercial use restrictions noted
+- [ ] License conflicts checked
+
+### Risk Summary
+- [ ] Vulnerability count summarized
+- [ ] Outdated package count summarized
+- [ ] Unmaintained package count summarized
+- [ ] License concern count summarized
+- [ ] Risk matrix completed
+- [ ] Priority actions listed
+
+---
+
 ## Output Verification
 
 ### Technology Manifest
@@ -156,6 +203,15 @@ For each package manifest:
 - [ ] Coverage assessment complete
 - [ ] Discrepancies listed
 - [ ] Recommendations provided
+
+### Dependency Health Report
+- [ ] Package inventory complete
+- [ ] Version currency assessed
+- [ ] Vulnerabilities documented
+- [ ] Maintenance status evaluated
+- [ ] License compliance checked
+- [ ] Risk matrix populated
+- [ ] Recommended actions listed
 
 ---
 
@@ -200,6 +256,7 @@ Ask these to validate findings:
 
 Watch for these issues:
 
+### Documentation & Code
 - [ ] Documentation that doesn't match code
 - [ ] Undocumented external dependencies
 - [ ] Hidden API endpoints
@@ -208,4 +265,14 @@ Watch for these issues:
 - [ ] Dead code paths
 - [ ] Hardcoded configuration
 - [ ] Missing error handling
-- [ ] Outdated dependency versions
+
+### Dependency Health
+- [ ] Dependencies with known critical/high CVEs
+- [ ] Packages with major version gaps (2+ major versions behind)
+- [ ] Unmaintained packages (no updates in 12+ months)
+- [ ] Deprecated packages still in use
+- [ ] Packages with GPL/AGPL licenses in proprietary projects
+- [ ] Duplicate packages at different versions in tree
+- [ ] Excessive transitive dependencies from single package
+- [ ] Packages with no license specified
+- [ ] Pinned versions preventing security updates
