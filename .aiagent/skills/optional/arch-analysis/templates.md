@@ -376,6 +376,160 @@ sequenceDiagram
 
 ---
 
+## Dependency Health Report Template
+
+```markdown
+# Dependency Health Report: {Project Name}
+
+**Analysis Date**: {YYYY-MM-DD}
+**Analyzed By**: {Agent/Person}
+**Package Managers**: {npm, pip, go mod, etc.}
+
+## Executive Summary
+
+| Metric | Count | Status |
+|--------|-------|--------|
+| Total Dependencies | {n} | - |
+| Direct Dependencies | {n} | - |
+| Vulnerabilities (Critical/High) | {n} | 🔴/🟡/🟢 |
+| Major Version Gaps | {n} | 🔴/🟡/🟢 |
+| Unmaintained Packages | {n} | 🔴/🟡/🟢 |
+| License Concerns | {n} | 🔴/🟡/🟢 |
+
+**Overall Health**: {Critical/Poor/Fair/Good/Excellent}
+
+## Package Inventory
+
+### {Package Manager} Dependencies
+
+| Package | Version | Type | Purpose | Direct/Transitive |
+|---------|---------|------|---------|-------------------|
+| {name} | {version} | runtime/dev/peer | {purpose} | Direct |
+| {name} | {version} | runtime | {purpose} | Transitive (via {parent}) |
+
+## Version Currency
+
+| Package | Current | Latest | Gap | Breaking Changes | Priority |
+|---------|---------|--------|-----|------------------|----------|
+| {name} | {ver} | {ver} | Major/Minor/Patch | {summary} | High/Medium/Low |
+
+### Outdated Package Summary
+
+- **Major updates available**: {count} packages
+- **Minor updates available**: {count} packages
+- **Patch updates available**: {count} packages
+
+## Vulnerability Report
+
+| Package | Version | CVE ID | Severity | Fixed In | CVSS | Exploitable |
+|---------|---------|--------|----------|----------|------|-------------|
+| {name} | {ver} | {CVE-YYYY-NNNNN} | Critical/High/Medium/Low | {ver} | {score} | {context} |
+
+### Vulnerability Summary
+
+- **Critical**: {count} - Immediate action required
+- **High**: {count} - Action within 48 hours
+- **Medium**: {count} - Plan for next sprint
+- **Low**: {count} - Monitor
+
+## Maintenance Status
+
+| Package | Last Publish | Publish Frequency | Open Issues | PR Activity | Status |
+|---------|--------------|-------------------|-------------|-------------|--------|
+| {name} | {YYYY-MM} | {weekly/monthly/yearly} | {n} | {active/slow/none} | {status} |
+
+**Status Legend**:
+- 🟢 **Active**: Regular updates, responsive maintainers
+- 🟡 **Maintained**: Occasional updates, security patches applied
+- 🟠 **Slow**: Infrequent updates, issues pile up
+- 🔴 **Unmaintained**: No updates in 12+ months
+- ⚫ **Deprecated**: Officially deprecated, seek alternatives
+- ⬛ **Abandoned**: No maintainer, consider forking or replacing
+
+### Packages Requiring Attention
+
+| Package | Status | Risk | Alternative |
+|---------|--------|------|-------------|
+| {name} | Deprecated | High | {alternative package} |
+| {name} | Unmaintained | Medium | {alternative or fork} |
+
+## License Inventory
+
+| Package | License | Type | Commercial Use | Modification | Distribution | Patent Grant |
+|---------|---------|------|----------------|--------------|--------------|--------------|
+| {name} | MIT | Permissive | ✅ | ✅ | ✅ | ❌ |
+| {name} | Apache-2.0 | Permissive | ✅ | ✅ | ✅ | ✅ |
+| {name} | GPL-3.0 | Copyleft | ✅ | ✅ | ⚠️ | ✅ |
+
+### License Summary
+
+| License Type | Count | Concern Level |
+|--------------|-------|---------------|
+| Permissive (MIT, BSD, Apache) | {n} | None |
+| Weak Copyleft (LGPL, MPL) | {n} | Low |
+| Strong Copyleft (GPL, AGPL) | {n} | Review Required |
+| Unknown/Custom | {n} | Legal Review |
+
+### License Concerns
+
+| Package | License | Concern | Recommendation |
+|---------|---------|---------|----------------|
+| {name} | {license} | {specific concern} | {action} |
+
+## Risk Matrix
+
+| Risk Level | Count | Packages | Action Required |
+|------------|-------|----------|-----------------|
+| 🔴 Critical | {n} | {list} | Immediate update/replacement |
+| 🟠 High | {n} | {list} | Update within current sprint |
+| 🟡 Medium | {n} | {list} | Plan for next cycle |
+| 🟢 Low | {n} | {list} | Monitor |
+
+## Recommended Actions
+
+### Immediate (This Week)
+
+1. **{Package}**: {Action} - {Reason}
+2. **{Package}**: {Action} - {Reason}
+
+### Short-term (This Sprint)
+
+1. **{Package}**: {Action} - {Reason}
+2. **{Package}**: {Action} - {Reason}
+
+### Long-term (Backlog)
+
+1. **{Package}**: {Action} - {Reason}
+2. **{Package}**: {Action} - {Reason}
+
+## Dependency Tree Concerns
+
+### Duplicate Packages
+
+| Package | Versions in Tree | Cause |
+|---------|------------------|-------|
+| {name} | {v1}, {v2} | {conflicting requirements} |
+
+### Deep Transitive Dependencies
+
+| Package | Depth | Brought In By |
+|---------|-------|---------------|
+| {name} | {n} | {chain: A → B → C → package} |
+
+## Appendix: Full Dependency List
+
+<details>
+<summary>Click to expand full dependency list ({n} packages)</summary>
+
+| Package | Version | License | Last Updated |
+|---------|---------|---------|--------------|
+| {name} | {ver} | {license} | {date} |
+
+</details>
+```
+
+---
+
 ## Analysis Session Log Template
 
 ```markdown
