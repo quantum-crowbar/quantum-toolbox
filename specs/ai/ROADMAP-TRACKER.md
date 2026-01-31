@@ -12,11 +12,11 @@ Master tracking document for all skill development roadmaps.
 | Arch-Analysis Output Structure | - | 🟢 Complete | High |
 | TOGAF Foundation | Phase 1 | 🟢 Complete | High |
 | Structurizr Authoring Skill | - | ⚪ Planned | Medium |
-| Structurizr Export Adapter | - | ⚪ Planned | Medium |
+| Structurizr Export Adapter | - | 🟢 Complete | Medium |
 | Security-Analysis Skill | Phase 2 | 🟢 Complete | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | ⚪ Planned | Medium |
 | TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
-| Analysis Refactoring | Phase 1-2 | 🟡 In Progress | Medium |
+| Analysis Refactoring | Phase 1-4 | 🟢 Complete | Medium |
 | TOGAF Planning & Governance | Phase 3-4 | ⚪ Planned | Low |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
@@ -115,10 +115,10 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [ ] checklist.md for C4 completeness
 - [ ] examples.md with sample workspaces
 
-**Structurizr Export** (`analysis-outputs/structurizr/`)
-- [ ] Mapping rules from analysis model to DSL
-- [ ] Workspace generation templates
-- [ ] Integration with codebase-analysis
+**Structurizr Export** (`analysis-outputs/structurizr/`) ✅
+- [x] Mapping rules from analysis model to DSL
+- [x] Workspace generation templates
+- [x] Integration with codebase-analysis
 
 #### TOGAF Core ADM (Phase 2)
 - [ ] Phase B: Business Architecture skill
@@ -139,20 +139,18 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [ ] Phase G: Implementation Governance
 - [ ] Phase H: Architecture Change Management
 
-#### Analysis Refactoring (In Progress)
+#### Analysis Refactoring ✅
 See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
-**Phase 1-2: Complete**
+**Complete**
 - [x] Extract shared analysis engine (`codebase-analysis/`)
 - [x] Define analysis model schema (`analysis-model.md`)
 - [x] Create output adapter pattern (`analysis-outputs/`)
 - [x] Architecture-docs adapter (existing output)
 - [x] Coding-context adapter (AGENTS.md, CONTEXT.md)
-
-**Phase 3-4: Remaining**
-- [ ] Product spec adapter
-- [ ] Structurizr adapter (export from analysis)
-- [ ] ArchiMate adapter
+- [x] Product spec adapter
+- [x] Structurizr adapter (export from analysis)
+- [x] ArchiMate adapter
 
 ---
 
@@ -160,7 +158,6 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| Analysis refactoring remaining (product-spec, structurizr, archimate) | Medium | Medium |
 | Structurizr authoring skill | Medium | Medium |
 | TOGAF Phase B/C/D skills | Large | Medium |
 | Nonfunctional-analysis skill | Large | Low |
@@ -181,6 +178,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Security analysis skill spec (dual output, 4 frameworks) | - |
 | 2025-01-31 | Security analysis skill complete (full skill with 5 files) | - |
 | 2025-01-31 | Analysis refactoring Phase 1-2 (codebase-analysis, architecture-docs, coding-context) | - |
+| 2026-01-31 | Analysis refactoring Phase 3-4 (product-spec, structurizr, archimate adapters) | - |
 
 ---
 
@@ -190,8 +188,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 2. ~~Start TOGAF Foundation~~ ✅ Complete
 3. ~~Add missing `togaf/vision/checklist.md`~~ ✅ Complete
 4. ~~Build security-analysis skill~~ ✅ Complete
-5. ~~Analysis refactoring Phase 1-2~~ ✅ Complete (base engine + 2 adapters)
+5. ~~Analysis refactoring Phase 1-4~~ ✅ Complete (base engine + 5 adapters)
 6. Choose next:
-   - **Analysis refactoring Phase 3-4** - Remaining adapters (product-spec, structurizr, archimate)
-   - **Structurizr authoring** - C4 modeling capability
+   - **Structurizr authoring** - C4 modeling capability (standalone skill)
    - **TOGAF Phase B** - Business architecture
+   - **Nonfunctional-analysis** - Testing, config, performance, code health

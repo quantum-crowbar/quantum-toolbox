@@ -22,6 +22,7 @@ codebase-analysis → analysis_model → output adapter → formatted output
 | [coding-context](coding-context/) | AGENTS.md, CONTEXT.md | AI coding assistance |
 | [product-spec](product-spec/) | Features, flows, data model | Product documentation |
 | [structurizr](structurizr/) | workspace.dsl | C4 architecture diagrams |
+| [archimate](archimate/) | PlantUML or Open Exchange XML | Enterprise architecture |
 
 ---
 
@@ -36,6 +37,7 @@ When invoking analysis, select output adapters:
 "Create coding context"               → coding-context
 "Extract product spec"                → product-spec
 "Generate C4 model"                   → structurizr
+"Generate ArchiMate model"            → archimate
 ```
 
 ### Multiple Adapters
@@ -49,6 +51,7 @@ Multi-choice prompt:
   ☑ Coding context (AGENTS.md)
   ☐ Product specification
   ☐ C4 model (Structurizr)
+  ☐ ArchiMate model
 ```
 
 Analysis runs ONCE, selected adapters generate their outputs in sequence.
@@ -205,6 +208,30 @@ architecture/workspace.dsl
 - `technologies.infrastructure` → Data stores
 
 **See**: [structurizr/README.md](structurizr/README.md)
+
+---
+
+### archimate
+
+**Purpose**: Enterprise architecture using ArchiMate notation
+
+**Output**:
+```
+archimate/
+├── overview.puml           # Full model (PlantUML)
+├── application-layer.puml  # Application components
+├── technology-layer.puml   # Infrastructure
+└── model.archimate         # Open Exchange XML (optional)
+```
+
+**Required Sections**: `meta`, `architecture`, `technologies`
+
+**Layers Generated**:
+- Application Layer: Components, interfaces, data objects
+- Technology Layer: Infrastructure, system software
+- Business Layer: Inferred from APIs and auth
+
+**See**: [archimate/README.md](archimate/README.md)
 
 ---
 
