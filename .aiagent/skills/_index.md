@@ -32,6 +32,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **analysis-outputs** | Output adapters (architecture-docs, coding-context, etc.) | [optional/analysis-outputs/](optional/analysis-outputs/) |
 | **arch-analysis** | Architecture documentation (codebase-analysis + architecture-docs) | [optional/arch-analysis/](optional/arch-analysis/) |
 | **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
+| **nonfunctional-analysis** | Testing coverage, configuration audit, performance, code health | [optional/nonfunctional-analysis/](optional/nonfunctional-analysis/) |
 | **software-design** | Design principles, patterns, architectural decisions | [optional/software-design/](optional/software-design/) |
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
@@ -107,6 +108,7 @@ Some skills may recommend reading other skills first:
 | `analysis-outputs` | `codebase-analysis` (consumes analysis model) |
 | `arch-analysis` | None (uses codebase-analysis internally) |
 | `security-analysis` | `arch-analysis` or `codebase-analysis` (recommended) |
+| `nonfunctional-analysis` | `codebase-analysis` (optional, for context) |
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
@@ -123,6 +125,7 @@ Some skills can be explicitly invoked during a session:
 | `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
 | `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
 | `security-analysis` | `"Analyze security"` | Security posture assessment with compliance reports |
+| `nonfunctional-analysis` | `"Analyze code quality"` | Testing, config, performance, health assessment |
 
 See the skill's README for full invocation options.
 
@@ -132,7 +135,6 @@ See the skill's README for full invocation options.
 
 Skills planned for future development:
 
-- `nonfunctional-analysis` - Testing coverage, configuration audit, performance, code health
 - `testing-strategy` - Test pyramid, coverage, TDD/BDD
 - `api-design` - REST, GraphQL, versioning
 - `documentation` - Code docs, user docs, architecture docs
