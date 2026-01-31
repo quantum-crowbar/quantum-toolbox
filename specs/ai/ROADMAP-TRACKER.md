@@ -13,7 +13,7 @@ Master tracking document for all skill development roadmaps.
 | TOGAF Foundation | Phase 1 | 🟢 Complete | High |
 | Structurizr Authoring Skill | - | ⚪ Planned | Medium |
 | Structurizr Export Adapter | - | ⚪ Planned | Medium |
-| Security-Analysis Skill | Phase 2 | ⚪ Planned | Medium |
+| Security-Analysis Skill | Phase 2 | 🟢 Complete | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | ⚪ Planned | Medium |
 | TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
 | Analysis Refactoring | Future | ⚪ Proposed | Medium |
@@ -80,6 +80,25 @@ Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
   - [x] examples.md
   - [x] checklist.md (quick reference)
 
+### Security-Analysis Skill ✅
+
+- [x] **Dual Output Format**
+  - [x] Human-readable analysis (7 reports with diagrams)
+  - [x] Standards-based compliance reports (multi-select)
+
+- [x] **Compliance Frameworks**
+  - [x] OWASP ASVS template
+  - [x] NIST CSF template
+  - [x] CIS Controls template
+  - [x] ISO 27001 template
+
+- [x] **Skill Files** (`skills/optional/security-analysis/`)
+  - [x] README.md with principles and framework descriptions
+  - [x] workflows.md with 7 analysis phases
+  - [x] templates.md (analysis + compliance templates)
+  - [x] checklist.md
+  - [x] examples.md
+
 ---
 
 ## Remaining Tasks
@@ -100,26 +119,6 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [ ] Mapping rules from analysis model to DSL
 - [ ] Workspace generation templates
 - [ ] Integration with codebase-analysis
-
-#### Security-Analysis Skill (New)
-See: [security-analysis-skill-spec.md](security-analysis-skill-spec.md)
-
-**Dual Output Format**:
-- Human-readable analysis (7 reports with diagrams)
-- Standards-based compliance report (multi-choice)
-
-**Compliance Frameworks** (multi-select):
-- [ ] OWASP ASVS template
-- [ ] NIST CSF template
-- [ ] CIS Controls template
-- [ ] ISO 27001 template
-
-**Skill Files**:
-- [ ] README.md with principles and framework descriptions
-- [ ] workflows.md with 7 analysis phases
-- [ ] templates.md (analysis + compliance templates)
-- [ ] checklist.md
-- [ ] examples.md
 
 #### TOGAF Core ADM (Phase 2)
 - [ ] Phase B: Business Architecture skill
@@ -157,7 +156,6 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 |------|--------|----------|
 | Structurizr authoring skill | Medium | Medium |
 | Structurizr export adapter | Small | Medium |
-| Security-analysis skill (full) | Large | Medium |
 | TOGAF Phase B/C/D skills | Large | Medium |
 | Nonfunctional-analysis skill | Large | Low |
 | Analysis refactoring | XL | Future |
@@ -176,6 +174,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Structurizr skills spec added | - |
 | 2025-01-31 | TOGAF vision checklist.md complete | - |
 | 2025-01-31 | Security analysis skill spec (dual output, 4 frameworks) | - |
+| 2025-01-31 | Security analysis skill complete (full skill with 5 files) | - |
 
 ---
 
@@ -184,7 +183,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 1. ~~Start Arch-Analysis Phase 1~~ ✅ Complete
 2. ~~Start TOGAF Foundation~~ ✅ Complete
 3. ~~Add missing `togaf/vision/checklist.md`~~ ✅ Complete
-4. Choose next:
+4. ~~Build security-analysis skill~~ ✅ Complete
+5. Choose next:
    - **Structurizr authoring** - C4 modeling capability
-   - **Security-analysis** - Security review capability
    - **TOGAF Phase B** - Business architecture
+   - **Nonfunctional-analysis** - Testing, performance, code health

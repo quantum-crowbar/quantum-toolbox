@@ -29,6 +29,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | Skill | Description | Path |
 |-------|-------------|------|
 | **arch-analysis** | Systematic analysis of unknown codebases with documentation verification | [optional/arch-analysis/](optional/arch-analysis/) |
+| **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
 | **software-design** | Design principles, patterns, architectural decisions | [optional/software-design/](optional/software-design/) |
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
@@ -101,6 +102,7 @@ Some skills may recommend reading other skills first:
 | `git-workflow` | None |
 | `todo-workflow` | `git-workflow` (uses git operations) |
 | `arch-analysis` | None (benefits from `software-design` for pattern recognition) |
+| `security-analysis` | `arch-analysis` (recommended for baseline understanding) |
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
@@ -115,6 +117,7 @@ Some skills can be explicitly invoked during a session:
 |-------|------------|-------------|
 | `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
 | `arch-analysis` | `"Analyze the architecture"` | Systematic codebase analysis with documentation verification |
+| `security-analysis` | `"Analyze security"` | Security posture assessment with compliance reports |
 
 See the skill's README for full invocation options.
 
@@ -124,9 +127,9 @@ See the skill's README for full invocation options.
 
 Skills planned for future development:
 
+- `nonfunctional-analysis` - Testing coverage, configuration audit, performance, code health
 - `testing-strategy` - Test pyramid, coverage, TDD/BDD
 - `api-design` - REST, GraphQL, versioning
 - `documentation` - Code docs, user docs, architecture docs
-- `security-practices` - OWASP, auth patterns, secrets management
 - `performance` - Profiling, optimization, caching
 - `devops` - CI/CD, deployment, monitoring
