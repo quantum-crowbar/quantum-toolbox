@@ -8,172 +8,135 @@ Master tracking document for all skill development roadmaps.
 
 | Roadmap | Phase | Status | Priority |
 |---------|-------|--------|----------|
-| Arch-Analysis Enhancement | Phase 1 | 🟡 Ready | High |
+| Arch-Analysis Enhancement | Phase 1 | 🟢 Complete | High |
+| Arch-Analysis Output Structure | - | 🟢 Complete | High |
+| TOGAF Foundation | Phase 1 | 🟢 Complete | High |
 | Security-Analysis Skill | Phase 2 | ⚪ Planned | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | ⚪ Planned | Medium |
-| TOGAF Foundation | Phase 1 | 🟡 Ready | High |
 | TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
+| Analysis Refactoring | Future | ⚪ Proposed | Medium |
 | TOGAF Planning & Governance | Phase 3-4 | ⚪ Planned | Low |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
-Legend: 🟢 Complete | 🟡 In Progress/Ready | ⚪ Planned | 🔴 Blocked
+Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 
 ---
 
-## Arch-Analysis Skills Roadmap
+## Completed Work
 
-### Phase 1: Enhance arch-analysis ⬅️ CURRENT
+### Arch-Analysis Phase 1 ✅
 
-- [ ] **Dependency Health Check**
-  - [ ] Add workflow phase for dependency analysis
-  - [ ] Template for dependency manifest
-  - [ ] Checklist for outdated/vulnerable packages
-  - [ ] Integration with package manager files
-  - [ ] Version comparison against latest releases
-  - [ ] Abandoned package detection
-  - [ ] License compliance inventory
+- [x] **Dependency Health Check**
+  - [x] Add workflow phase (Phase 6)
+  - [x] Template for dependency manifest
+  - [x] Checklist for outdated/vulnerable packages
+  - [x] License compliance inventory
 
-- [ ] **Data Flow Mapping**
-  - [ ] Add workflow phase for data flow tracing
-  - [ ] Template for data flow diagrams (Mermaid)
-  - [ ] Trace data from input sources to storage
-  - [ ] Identify transformation points
-  - [ ] Map database schemas and relationships
-  - [ ] Document data retention patterns
-  - [ ] Identify data deletion/anonymization paths
+- [x] **Data Flow Mapping**
+  - [x] Add workflow phase (Phase 7)
+  - [x] Template for data flow diagrams
+  - [x] Trace data from input to storage
+  - [x] Entity cross-reference matrix
 
-- [ ] **Error Handling Analysis**
-  - [ ] Add workflow phase for error analysis
-  - [ ] Template for error handling inventory
-  - [ ] Map error propagation patterns
-  - [ ] Identify logging and monitoring integration
-  - [ ] Document retry mechanisms and dead letter handling
-  - [ ] Assess graceful degradation patterns
-  - [ ] Find unhandled error scenarios
+- [x] **Error Handling Analysis**
+  - [x] Add workflow phase (Phase 8)
+  - [x] Template for error handling inventory
+  - [x] Map error propagation patterns
+  - [x] Recovery mechanisms documentation
 
-- [ ] **Acceptance Criteria**
-  - [ ] All three new phases integrated into workflow
-  - [ ] Templates added for each output type
-  - [ ] Checklist updated with new items
-  - [ ] Examples added demonstrating each analysis
-  - [ ] Human guide updated in docs/ai
+### Arch-Analysis Output Structure ✅
 
-### Phase 2: Create security-analysis Skill
+- [x] Phase 0: Setup workflow
+- [x] Ask for documentation directory
+- [x] Create `architecture-docs/` with `index.md` and `analysis/` subdirectory
+- [x] Numbered output files (01-07)
+- [x] Index template with executive summary
+- [x] Diagram format preference (Mermaid/ASCII/PlantUML)
+- [x] AI file exclusions
 
-- [ ] **Skill Structure**
-  - [ ] Create directory structure
-  - [ ] README.md
-  - [ ] workflows.md
-  - [ ] checklist.md
-  - [ ] templates.md
-  - [ ] examples.md
+### TOGAF Foundation ✅
 
-- [ ] **Security Surface Analysis**
-  - [ ] Identify all entry points
-  - [ ] Map exposed endpoints
-  - [ ] Document network boundaries
-  - [ ] Find hardcoded secrets
-  - [ ] Identify sensitive configuration exposure
-  - [ ] Assess input validation patterns
+- [x] **Core Concepts** (`core/architecture-thinking.md`)
+  - [x] Architecture Domains
+  - [x] Stakeholder Thinking
+  - [x] Architecture Principles
+  - [x] Baseline vs Target Thinking
+  - [x] Gap Analysis templates
+  - [x] Roadmap Prioritization
+  - [x] Risk Analysis with mindmaps
+  - [x] Enterprise Continuum
 
-- [ ] **Authentication & Authorization Analysis**
-  - [ ] Identify auth mechanisms
-  - [ ] Map authentication flows
-  - [ ] Document authorization model
-  - [ ] Find privilege escalation risks
-  - [ ] Assess session management
-  - [ ] Check for auth bypass patterns
+- [x] **Family Index** (`togaf/_index.md`)
+  - [x] ADM cycle overview
+  - [x] Phase relationships diagram
+  - [x] When to use each phase
 
-- [ ] **PII Data Handling**
-  - [ ] Identify PII fields in data models
-  - [ ] Trace PII through system
-  - [ ] Document encryption
-  - [ ] Assess logging for PII leakage
-  - [ ] Check GDPR/CCPA compliance patterns
+- [x] **Phase A: Architecture Vision** (`togaf/vision/`)
+  - [x] README.md
+  - [x] workflows.md (template-first approach)
+  - [x] templates.md (Vision doc, Stakeholder map, Statement of Work)
+  - [x] examples.md
 
-### Phase 3: Create nonfunctional-analysis Skill
+---
 
-- [ ] Skill structure (5 files)
+## Remaining Tasks
+
+### High Priority
+
+#### TOGAF Vision Skill - Missing File
+- [ ] `togaf/vision/checklist.md` - Quick reference checklist
+
+### Medium Priority
+
+#### Security-Analysis Skill (New)
+- [ ] Create skill directory structure
+- [ ] README.md with principles
+- [ ] workflows.md with security phases
+- [ ] Security Surface Analysis
+- [ ] Authentication & Authorization Analysis
+- [ ] PII Data Handling Analysis
+- [ ] templates.md and checklist.md
+- [ ] examples.md
+
+#### TOGAF Core ADM (Phase 2)
+- [ ] Phase B: Business Architecture skill
+- [ ] Phase C: Information Systems skill
+- [ ] Phase D: Technology Architecture skill
+
+### Low Priority
+
+#### Nonfunctional-Analysis Skill
 - [ ] Testing Coverage Analysis
 - [ ] Configuration Audit
 - [ ] Performance Hotspots
 - [ ] Code Health Indicators
 
----
-
-## TOGAF Skill Family Roadmap
-
-### Foundation Phase ⬅️ CURRENT
-
-- [ ] **Layer 1: Core Concepts**
-  - [ ] Architecture Domains Awareness
-  - [ ] Stakeholder Thinking
-  - [ ] Architecture Principles
-  - [ ] Baseline vs Target Thinking
-  - [ ] Gap Analysis templates
-  - [ ] Roadmap Prioritization criteria
-  - [ ] Risk Analysis with mindmaps
-  - [ ] Enterprise Continuum Awareness
-
-- [ ] **Family Index**
-  - [ ] Create `togaf/_index.md`
-  - [ ] ADM cycle overview
-  - [ ] Phase relationships diagram
-  - [ ] When to use each phase
-
-- [ ] **Phase A: Architecture Vision**
-  - [ ] README.md
-  - [ ] workflows.md
-  - [ ] checklist.md
-  - [ ] templates.md (vision doc, stakeholder map)
-  - [ ] examples.md
-
-### Core ADM Phase
-
-- [ ] Phase B: Business Architecture
-- [ ] Phase C: Information Systems Architecture
-- [ ] Phase D: Technology Architecture
-
-### Planning & Governance Phase
-
+#### TOGAF Planning & Governance
 - [ ] Phase E: Opportunities and Solutions
 - [ ] Phase F: Migration Planning
-- [ ] Preliminary Phase
 - [ ] Phase G: Implementation Governance
 - [ ] Phase H: Architecture Change Management
 
-### Advanced Phase
-
-- [ ] Architecture Repository templates
-- [ ] Building Block catalogs
-- [ ] Viewpoint library
-- [ ] ArchiMate integration
+#### Analysis Refactoring (Future)
+See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
+- [ ] Extract shared analysis engine
+- [ ] Create output adapter pattern
+- [ ] Coding context adapter (AGENTS.md generation)
+- [ ] Product spec adapter
+- [ ] Structurizr adapter
+- [ ] ArchiMate adapter
 
 ---
 
-## Implementation Notes
+## Quick Summary: What's Left
 
-### Skill Creation Pattern
-
-For each new skill:
-1. Create directory structure
-2. README.md - guidelines, principles, invocation
-3. workflows.md - step-by-step procedures
-4. templates.md - reusable output templates
-5. examples.md - concrete examples
-6. checklist.md - quick reference
-7. Register in `_index.md`
-8. Create human guide in `docs/ai/`
-9. Commit each file separately (todo workflow)
-
-### Priority Order
-
-1. **Arch-Analysis Phase 1** - Enhances existing skill
-2. **TOGAF Foundation** - Enables enterprise architecture
-3. **Security-Analysis** - High-value new capability
-4. **TOGAF Core ADM** - Business/Data/Tech architecture
-5. **Nonfunctional-Analysis** - Quality attributes
-6. **TOGAF remaining phases** - Complete framework
+| Task | Effort | Priority |
+|------|--------|----------|
+| TOGAF vision checklist.md | Small | High |
+| Security-analysis skill (full) | Large | Medium |
+| TOGAF Phase B/C/D skills | Large | Medium |
+| Nonfunctional-analysis skill | Large | Low |
+| Analysis refactoring | XL | Future |
 
 ---
 
@@ -181,11 +144,17 @@ For each new skill:
 
 | Date | Change | Commit |
 |------|--------|--------|
-| 2024-XX-XX | Initial tracker created | - |
+| 2025-01-31 | Arch-analysis Phase 1 complete (deps, data flow, errors) | Multiple |
+| 2025-01-31 | Arch-analysis output structure (Phase 0, index, numbered files) | b5d8fa4 |
+| 2025-01-31 | TOGAF Foundation complete (core concepts, index, vision skill) | 7beada1 |
+| 2025-01-31 | Diagram format options, AI file exclusions | b5d8fa4 |
+| 2025-01-31 | Analysis refactoring spec added | - |
 
 ---
 
 ## Next Actions
 
-1. Start Arch-Analysis Phase 1: Dependency Health Check
-2. Start TOGAF Foundation: Core Concepts document
+1. ~~Start Arch-Analysis Phase 1~~ ✅ Complete
+2. ~~Start TOGAF Foundation~~ ✅ Complete
+3. Add missing `togaf/vision/checklist.md`
+4. Decide: Security-analysis skill OR TOGAF Phase B next?
