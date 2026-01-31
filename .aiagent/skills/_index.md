@@ -28,7 +28,9 @@ Enable these by checking them in your project's `AGENTS.md`:
 
 | Skill | Description | Path |
 |-------|-------------|------|
-| **arch-analysis** | Systematic analysis of unknown codebases with documentation verification | [optional/arch-analysis/](optional/arch-analysis/) |
+| **codebase-analysis** | Base analysis engine producing structured analysis model | [optional/codebase-analysis/](optional/codebase-analysis/) |
+| **analysis-outputs** | Output adapters (architecture-docs, coding-context, etc.) | [optional/analysis-outputs/](optional/analysis-outputs/) |
+| **arch-analysis** | Architecture documentation (codebase-analysis + architecture-docs) | [optional/arch-analysis/](optional/arch-analysis/) |
 | **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
 | **software-design** | Design principles, patterns, architectural decisions | [optional/software-design/](optional/software-design/) |
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
@@ -101,8 +103,10 @@ Some skills may recommend reading other skills first:
 |-------|--------------------------|
 | `git-workflow` | None |
 | `todo-workflow` | `git-workflow` (uses git operations) |
-| `arch-analysis` | None (benefits from `software-design` for pattern recognition) |
-| `security-analysis` | `arch-analysis` (recommended for baseline understanding) |
+| `codebase-analysis` | None (base analysis engine) |
+| `analysis-outputs` | `codebase-analysis` (consumes analysis model) |
+| `arch-analysis` | None (uses codebase-analysis internally) |
+| `security-analysis` | `arch-analysis` or `codebase-analysis` (recommended) |
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
@@ -116,7 +120,8 @@ Some skills can be explicitly invoked during a session:
 | Skill | Invocation | Description |
 |-------|------------|-------------|
 | `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
-| `arch-analysis` | `"Analyze the architecture"` | Systematic codebase analysis with documentation verification |
+| `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
+| `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
 | `security-analysis` | `"Analyze security"` | Security posture assessment with compliance reports |
 
 See the skill's README for full invocation options.

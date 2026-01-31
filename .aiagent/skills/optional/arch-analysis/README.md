@@ -2,6 +2,18 @@
 
 Systematic methodology for analyzing and documenting unknown codebases.
 
+---
+
+## Architecture Note
+
+This skill is now a wrapper that combines:
+1. **[codebase-analysis](../codebase-analysis/)** - Base analysis engine
+2. **[architecture-docs](../analysis-outputs/architecture-docs/)** - Output adapter
+
+For alternative outputs (AGENTS.md, C4 models, etc.), see [analysis-outputs](../analysis-outputs/_index.md).
+
+---
+
 ## Purpose
 
 This skill enables comprehensive architectural analysis of unfamiliar codebases, producing accurate documentation with verifiable findings.

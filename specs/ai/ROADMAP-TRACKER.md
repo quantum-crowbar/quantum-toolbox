@@ -16,7 +16,7 @@ Master tracking document for all skill development roadmaps.
 | Security-Analysis Skill | Phase 2 | 🟢 Complete | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | ⚪ Planned | Medium |
 | TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
-| Analysis Refactoring | Future | ⚪ Proposed | Medium |
+| Analysis Refactoring | Phase 1-2 | 🟡 In Progress | Medium |
 | TOGAF Planning & Governance | Phase 3-4 | ⚪ Planned | Low |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
@@ -139,13 +139,19 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [ ] Phase G: Implementation Governance
 - [ ] Phase H: Architecture Change Management
 
-#### Analysis Refactoring (Future)
+#### Analysis Refactoring (In Progress)
 See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
-- [ ] Extract shared analysis engine
-- [ ] Create output adapter pattern
-- [ ] Coding context adapter (AGENTS.md generation)
+
+**Phase 1-2: Complete**
+- [x] Extract shared analysis engine (`codebase-analysis/`)
+- [x] Define analysis model schema (`analysis-model.md`)
+- [x] Create output adapter pattern (`analysis-outputs/`)
+- [x] Architecture-docs adapter (existing output)
+- [x] Coding-context adapter (AGENTS.md, CONTEXT.md)
+
+**Phase 3-4: Remaining**
 - [ ] Product spec adapter
-- [ ] Structurizr adapter
+- [ ] Structurizr adapter (export from analysis)
 - [ ] ArchiMate adapter
 
 ---
@@ -154,11 +160,10 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
+| Analysis refactoring remaining (product-spec, structurizr, archimate) | Medium | Medium |
 | Structurizr authoring skill | Medium | Medium |
-| Structurizr export adapter | Small | Medium |
 | TOGAF Phase B/C/D skills | Large | Medium |
 | Nonfunctional-analysis skill | Large | Low |
-| Analysis refactoring | XL | Future |
 
 ---
 
@@ -175,6 +180,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | TOGAF vision checklist.md complete | - |
 | 2025-01-31 | Security analysis skill spec (dual output, 4 frameworks) | - |
 | 2025-01-31 | Security analysis skill complete (full skill with 5 files) | - |
+| 2025-01-31 | Analysis refactoring Phase 1-2 (codebase-analysis, architecture-docs, coding-context) | - |
 
 ---
 
@@ -184,7 +190,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 2. ~~Start TOGAF Foundation~~ ✅ Complete
 3. ~~Add missing `togaf/vision/checklist.md`~~ ✅ Complete
 4. ~~Build security-analysis skill~~ ✅ Complete
-5. Choose next:
+5. ~~Analysis refactoring Phase 1-2~~ ✅ Complete (base engine + 2 adapters)
+6. Choose next:
+   - **Analysis refactoring Phase 3-4** - Remaining adapters (product-spec, structurizr, archimate)
    - **Structurizr authoring** - C4 modeling capability
    - **TOGAF Phase B** - Business architecture
-   - **Nonfunctional-analysis** - Testing, performance, code health
