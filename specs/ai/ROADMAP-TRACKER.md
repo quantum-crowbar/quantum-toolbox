@@ -102,13 +102,23 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [ ] Integration with codebase-analysis
 
 #### Security-Analysis Skill (New)
-- [ ] Create skill directory structure
-- [ ] README.md with principles
-- [ ] workflows.md with security phases
-- [ ] Security Surface Analysis
-- [ ] Authentication & Authorization Analysis
-- [ ] PII Data Handling Analysis
-- [ ] templates.md and checklist.md
+See: [security-analysis-skill-spec.md](security-analysis-skill-spec.md)
+
+**Dual Output Format**:
+- Human-readable analysis (7 reports with diagrams)
+- Standards-based compliance report (multi-choice)
+
+**Compliance Frameworks** (multi-select):
+- [ ] OWASP ASVS template
+- [ ] NIST CSF template
+- [ ] CIS Controls template
+- [ ] ISO 27001 template
+
+**Skill Files**:
+- [ ] README.md with principles and framework descriptions
+- [ ] workflows.md with 7 analysis phases
+- [ ] templates.md (analysis + compliance templates)
+- [ ] checklist.md
 - [ ] examples.md
 
 #### TOGAF Core ADM (Phase 2)
@@ -165,6 +175,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Analysis refactoring spec added | 1e2625b |
 | 2025-01-31 | Structurizr skills spec added | - |
 | 2025-01-31 | TOGAF vision checklist.md complete | - |
+| 2025-01-31 | Security analysis skill spec (dual output, 4 frameworks) | - |
 
 ---
 
