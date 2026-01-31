@@ -68,6 +68,28 @@ Create `index.md` with placeholder links (see templates.md for full template):
 | [Error Handling](analysis/07-error-handling.md) | Pending | Error patterns and recovery |
 ```
 
+#### 0.4 Diagram Format Preference
+
+Ask the user for their preferred diagram format:
+
+```
+What diagram format do you prefer?
+
+1. **Mermaid** (Recommended) - Renders in GitHub, GitLab, and most markdown viewers
+2. **ASCII** - Works everywhere, no rendering required
+3. **PlantUML** - More features, requires PlantUML viewer/extension
+```
+
+| Format | Pros | Cons |
+|--------|------|------|
+| **Mermaid** | Native GitHub/GitLab support, clean syntax | Limited customization |
+| **ASCII** | Universal compatibility, no dependencies | Harder to maintain, limited complexity |
+| **PlantUML** | Feature-rich, great for complex diagrams | Requires external renderer |
+
+**Default**: Mermaid (most widely supported in modern tools)
+
+Store the preference for use in Phase 4 (Architecture Synthesis) and Phase 7 (Data Flow).
+
 **Output**: Documentation structure ready for analysis
 
 ---
@@ -83,6 +105,26 @@ Create `index.md` with placeholder links (see templates.md for full template):
 - [ ] Identify architecture decision records (ADRs)
 - [ ] Find API documentation (OpenAPI, Swagger, etc.)
 - [ ] Check for inline documentation comments
+
+**Exclude AI/Agent configuration files** - These are not project documentation:
+
+```
+# Directories to exclude
+.aiagent/
+.aider/
+.cursor/
+.github/copilot/
+.continue/
+
+# Files to exclude
+AGENTS.md
+CLAUDE.md
+.cursorrules
+.aider*
+.copilot*
+```
+
+These files contain AI agent instructions, not project architecture documentation.
 
 **Track findings**:
 ```markdown

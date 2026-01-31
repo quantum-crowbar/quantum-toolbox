@@ -4,12 +4,21 @@ Quick reference for systematic codebase analysis.
 
 ---
 
-## Pre-Analysis Checklist
+## Phase 0: Setup
 
-Before starting:
+### Documentation Location
+- [ ] Documentation directory confirmed with user
+- [ ] `architecture-docs/` directory created
+- [ ] `architecture-docs/index.md` initialized
+- [ ] `architecture-docs/analysis/` directory created
+
+### Preferences
+- [ ] Diagram format selected (Mermaid/ASCII/PlantUML)
+- [ ] Format preference recorded for consistent use
+
+### Pre-Analysis
 - [ ] Access to full codebase confirmed
 - [ ] Known constraints documented (time, scope)
-- [ ] Output format requirements clear
 - [ ] Stakeholder questions collected (if any)
 
 ---
@@ -23,6 +32,11 @@ Before starting:
 - [ ] API documentation found (OpenAPI/Swagger)
 - [ ] Inline doc comments assessed
 - [ ] Wiki/external docs identified
+
+### AI/Agent Files Excluded
+- [ ] `.aiagent/`, `.aider/`, `.cursor/` directories skipped
+- [ ] `AGENTS.md`, `CLAUDE.md`, `.cursorrules` ignored
+- [ ] Other AI config files excluded from doc analysis
 
 ### Structure Mapping
 - [ ] Top-level directories catalogued

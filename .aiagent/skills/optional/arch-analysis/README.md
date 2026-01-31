@@ -40,6 +40,26 @@ The `index.md` serves as the main entry point with:
 - Key recommendations
 - High-level architecture diagram
 
+### Diagram Format Options
+
+During setup, you'll be asked to choose a diagram format:
+
+| Format | Best For |
+|--------|----------|
+| **Mermaid** (default) | GitHub, GitLab, modern markdown viewers |
+| **ASCII** | Universal compatibility, terminal viewing |
+| **PlantUML** | Complex diagrams, enterprise tooling |
+
+All diagrams in the output will use your chosen format consistently.
+
+### Excluded Files
+
+The analysis automatically excludes AI agent configuration files:
+- `.aiagent/`, `.aider/`, `.cursor/`, `.continue/`
+- `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.aider*`
+
+These contain agent instructions, not project architecture.
+
 ### Analysis Outputs
 
 | Output | File | Description |
