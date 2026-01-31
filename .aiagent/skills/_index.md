@@ -33,6 +33,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **arch-analysis** | Architecture documentation (codebase-analysis + architecture-docs) | [optional/arch-analysis/](optional/arch-analysis/) |
 | **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
 | **nonfunctional-analysis** | Testing coverage, configuration audit, performance, code health | [optional/nonfunctional-analysis/](optional/nonfunctional-analysis/) |
+| **structurizr** | C4 architecture modeling with Structurizr DSL | [optional/structurizr/](optional/structurizr/) |
 | **software-design** | Design principles, patterns, architectural decisions | [optional/software-design/](optional/software-design/) |
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
@@ -109,6 +110,7 @@ Some skills may recommend reading other skills first:
 | `arch-analysis` | None (uses codebase-analysis internally) |
 | `security-analysis` | `arch-analysis` or `codebase-analysis` (recommended) |
 | `nonfunctional-analysis` | `codebase-analysis` (optional, for context) |
+| `structurizr` | None (standalone C4 modeling) |
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
@@ -126,6 +128,7 @@ Some skills can be explicitly invoked during a session:
 | `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
 | `security-analysis` | `"Analyze security"` | Security posture assessment with compliance reports |
 | `nonfunctional-analysis` | `"Analyze code quality"` | Testing, config, performance, health assessment |
+| `structurizr` | `"Create C4 model"` | Architecture modeling with Structurizr DSL |
 
 See the skill's README for full invocation options.
 

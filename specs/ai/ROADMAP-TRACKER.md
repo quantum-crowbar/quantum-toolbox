@@ -11,7 +11,7 @@ Master tracking document for all skill development roadmaps.
 | Arch-Analysis Enhancement | Phase 1 | 🟢 Complete | High |
 | Arch-Analysis Output Structure | - | 🟢 Complete | High |
 | TOGAF Foundation | Phase 1 | 🟢 Complete | High |
-| Structurizr Authoring Skill | - | ⚪ Planned | Medium |
+| Structurizr Authoring Skill | - | 🟢 Complete | Medium |
 | Structurizr Export Adapter | - | 🟢 Complete | Medium |
 | Security-Analysis Skill | Phase 2 | 🟢 Complete | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | 🟢 Complete | Medium |
@@ -141,12 +141,12 @@ Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 #### Structurizr Skills (New)
 See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 
-**Structurizr Authoring** (`skills/optional/structurizr/`)
-- [ ] README.md with C4 concepts and DSL reference
-- [ ] workflows.md for create/update/review workspaces
-- [ ] templates.md with DSL patterns
-- [ ] checklist.md for C4 completeness
-- [ ] examples.md with sample workspaces
+**Structurizr Authoring** (`skills/optional/structurizr/`) ✅
+- [x] README.md with C4 concepts and DSL reference
+- [x] workflows.md for create/update/review workspaces
+- [x] templates.md with DSL patterns
+- [x] checklist.md for C4 completeness
+- [x] examples.md with sample workspaces
 
 **Structurizr Export** (`analysis-outputs/structurizr/`) ✅
 - [x] Mapping rules from analysis model to DSL
@@ -185,7 +185,6 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| Structurizr authoring skill | Medium | Medium |
 | TOGAF Phase B/C/D skills | Large | Medium |
 
 ---
@@ -206,6 +205,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Analysis refactoring Phase 1-2 (codebase-analysis, architecture-docs, coding-context) | - |
 | 2026-01-31 | Analysis refactoring Phase 3-4 (product-spec, structurizr, archimate adapters) | - |
 | 2026-01-31 | Nonfunctional-analysis skill complete (testing, config, perf, health) | - |
+| 2026-01-31 | Structurizr authoring skill complete (C4 modeling with DSL) | - |
 
 ---
 
@@ -217,6 +217,11 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 4. ~~Build security-analysis skill~~ ✅ Complete
 5. ~~Analysis refactoring Phase 1-4~~ ✅ Complete (base engine + 5 adapters)
 6. ~~Nonfunctional-analysis skill~~ ✅ Complete
+7. ~~Structurizr authoring skill~~ ✅ Complete
+8. Choose next:
+   - **TOGAF Phase B** - Business architecture skill
+   - **TOGAF Phase C** - Information systems architecture
+   - **TOGAF Phase D** - Technology architecture
 7. Choose next:
    - **Structurizr authoring** - C4 modeling capability (standalone skill)
    - **TOGAF Phase B** - Business architecture
