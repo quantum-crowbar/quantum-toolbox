@@ -11,6 +11,8 @@ Master tracking document for all skill development roadmaps.
 | Arch-Analysis Enhancement | Phase 1 | 🟢 Complete | High |
 | Arch-Analysis Output Structure | - | 🟢 Complete | High |
 | TOGAF Foundation | Phase 1 | 🟢 Complete | High |
+| Structurizr Authoring Skill | - | ⚪ Planned | Medium |
+| Structurizr Export Adapter | - | ⚪ Planned | Medium |
 | Security-Analysis Skill | Phase 2 | ⚪ Planned | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | ⚪ Planned | Medium |
 | TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
@@ -88,6 +90,21 @@ Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 
 ### Medium Priority
 
+#### Structurizr Skills (New)
+See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
+
+**Structurizr Authoring** (`skills/optional/structurizr/`)
+- [ ] README.md with C4 concepts and DSL reference
+- [ ] workflows.md for create/update/review workspaces
+- [ ] templates.md with DSL patterns
+- [ ] checklist.md for C4 completeness
+- [ ] examples.md with sample workspaces
+
+**Structurizr Export** (`analysis-outputs/structurizr/`)
+- [ ] Mapping rules from analysis model to DSL
+- [ ] Workspace generation templates
+- [ ] Integration with codebase-analysis
+
 #### Security-Analysis Skill (New)
 - [ ] Create skill directory structure
 - [ ] README.md with principles
@@ -133,6 +150,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | Task | Effort | Priority |
 |------|--------|----------|
 | TOGAF vision checklist.md | Small | High |
+| Structurizr authoring skill | Medium | Medium |
+| Structurizr export adapter | Small | Medium |
 | Security-analysis skill (full) | Large | Medium |
 | TOGAF Phase B/C/D skills | Large | Medium |
 | Nonfunctional-analysis skill | Large | Low |
@@ -148,7 +167,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Arch-analysis output structure (Phase 0, index, numbered files) | b5d8fa4 |
 | 2025-01-31 | TOGAF Foundation complete (core concepts, index, vision skill) | 7beada1 |
 | 2025-01-31 | Diagram format options, AI file exclusions | b5d8fa4 |
-| 2025-01-31 | Analysis refactoring spec added | - |
+| 2025-01-31 | Analysis refactoring spec added | 1e2625b |
+| 2025-01-31 | Structurizr skills spec added | - |
 
 ---
 
@@ -157,4 +177,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 1. ~~Start Arch-Analysis Phase 1~~ ✅ Complete
 2. ~~Start TOGAF Foundation~~ ✅ Complete
 3. Add missing `togaf/vision/checklist.md`
-4. Decide: Security-analysis skill OR TOGAF Phase B next?
+4. Choose next:
+   - **Structurizr authoring** - C4 modeling capability
+   - **Security-analysis** - Security review capability
+   - **TOGAF Phase B** - Business architecture
