@@ -6,6 +6,72 @@ Step-by-step procedures for analyzing unknown codebases.
 
 ## Main Analysis Workflow
 
+### Phase 0: Setup
+
+**Goal**: Establish output location and create documentation structure
+
+#### 0.1 Ask for Documentation Directory
+
+Before starting analysis, ask the user:
+
+```
+Where should I create the architecture documentation?
+
+Please provide a path to your documentation directory (e.g., ./docs, ./documentation).
+I will create an `architecture-docs` folder inside it with all analysis results.
+```
+
+**Default locations to suggest**:
+- `./docs` - Common convention
+- `./documentation` - Explicit naming
+- Project root - If no docs directory exists
+
+#### 0.2 Create Output Structure
+
+Once the documentation directory is confirmed, create:
+
+```
+{docs-directory}/
+└── architecture-docs/
+    ├── index.md                              # Main entry point
+    └── analysis/
+        ├── 01-technology-manifest.md         # Phase 2 output
+        ├── 02-interface-specification.md     # Phase 3 output
+        ├── 03-architecture-diagrams.md       # Phase 4 output
+        ├── 04-documentation-audit.md         # Phase 5 output
+        ├── 05-dependency-health.md           # Phase 6 output
+        ├── 06-data-flow-map.md               # Phase 7 output
+        └── 07-error-handling.md              # Phase 8 output
+```
+
+#### 0.3 Initialize Index
+
+Create `index.md` with placeholder links (see templates.md for full template):
+
+```markdown
+# Architecture Documentation
+
+**Project**: {Project Name}
+**Analysis Date**: {Date}
+**Status**: In Progress
+
+## Analysis Results
+
+| Document | Status | Description |
+|----------|--------|-------------|
+| [Technology Manifest](analysis/01-technology-manifest.md) | Pending | Languages, frameworks, dependencies |
+| [Interface Specification](analysis/02-interface-specification.md) | Pending | APIs, contracts, boundaries |
+| [Architecture Diagrams](analysis/03-architecture-diagrams.md) | Pending | Visual system overview |
+| [Documentation Audit](analysis/04-documentation-audit.md) | Pending | Existing docs assessment |
+| [Dependency Health](analysis/05-dependency-health.md) | Pending | Security and maintenance status |
+| [Data Flow Map](analysis/06-data-flow-map.md) | Pending | Data lifecycle and movement |
+| [Error Handling](analysis/07-error-handling.md) | Pending | Error patterns and recovery |
+```
+
+**Output**: Documentation structure ready for analysis
+
+---
+
 ### Phase 1: Initial Reconnaissance
 
 **Goal**: Get high-level understanding and identify documentation
@@ -720,20 +786,56 @@ Identify gaps in error handling:
 | Null pointer in mapper | Stack trace leaked | Medium | Add null checks, generic error |
 ```
 
-**Output**: Error Handling Analysis Report
+**Output**: Error Handling Analysis Report → `analysis/07-error-handling.md`
 
 ---
 
 ## Output Compilation
 
-Final deliverables:
+### Final Directory Structure
 
-1. **Technology Manifest** (templates.md)
-2. **Interface Specification** (templates.md)
-3. **Architecture Diagram** (Mermaid)
-4. **Sequence Diagrams** (Mermaid)
-5. **Documentation Audit Report**
-6. **Dependency Health Report**
-7. **Data Flow Map**
-8. **Error Handling Analysis Report**
-9. **Recommendations** (optional)
+After analysis is complete:
+
+```
+{docs-directory}/
+└── architecture-docs/
+    ├── index.md                              # Main entry, links to all reports
+    └── analysis/
+        ├── 01-technology-manifest.md         # Complete
+        ├── 02-interface-specification.md     # Complete
+        ├── 03-architecture-diagrams.md       # Complete
+        ├── 04-documentation-audit.md         # Complete
+        ├── 05-dependency-health.md           # Complete
+        ├── 06-data-flow-map.md               # Complete
+        └── 07-error-handling.md              # Complete
+```
+
+### Deliverable Checklist
+
+| # | Deliverable | Output File | Phase |
+|---|-------------|-------------|-------|
+| 1 | Technology Manifest | `analysis/01-technology-manifest.md` | Phase 2 |
+| 2 | Interface Specification | `analysis/02-interface-specification.md` | Phase 3 |
+| 3 | Architecture Diagrams | `analysis/03-architecture-diagrams.md` | Phase 4 |
+| 4 | Documentation Audit | `analysis/04-documentation-audit.md` | Phase 5 |
+| 5 | Dependency Health Report | `analysis/05-dependency-health.md` | Phase 6 |
+| 6 | Data Flow Map | `analysis/06-data-flow-map.md` | Phase 7 |
+| 7 | Error Handling Analysis | `analysis/07-error-handling.md` | Phase 8 |
+
+### Finalize Index
+
+Update `index.md` status for each completed section:
+
+```markdown
+| Document | Status | Description |
+|----------|--------|-------------|
+| [Technology Manifest](analysis/01-technology-manifest.md) | ✅ Complete | Languages, frameworks, dependencies |
+```
+
+### Completion Checklist
+
+- [ ] All analysis files created in `analysis/` directory
+- [ ] Each file follows its template from templates.md
+- [ ] Index.md updated with correct status for each document
+- [ ] Executive summary added to index.md
+- [ ] All internal links verified working

@@ -16,15 +16,41 @@ Every finding MUST be cross-referenced with existing documentation:
 2. **Verify accuracy** - Does the codebase match the documentation?
 3. **Flag discrepancies** - Note where docs are missing, outdated, or incorrect
 
+### Output Structure
+
+When invoked, this skill asks for a documentation directory and creates:
+
+```
+{docs-directory}/
+└── architecture-docs/
+    ├── index.md                              # Main entry point
+    └── analysis/
+        ├── 01-technology-manifest.md         # Languages, frameworks, dependencies
+        ├── 02-interface-specification.md     # APIs, contracts, boundaries
+        ├── 03-architecture-diagrams.md       # Visual system overview (Mermaid)
+        ├── 04-documentation-audit.md         # Existing docs assessment
+        ├── 05-dependency-health.md           # Security and maintenance status
+        ├── 06-data-flow-map.md               # Data lifecycle and movement
+        └── 07-error-handling.md              # Error patterns and recovery
+```
+
+The `index.md` serves as the main entry point with:
+- Executive summary of findings
+- Links to all analysis documents
+- Key recommendations
+- High-level architecture diagram
+
 ### Analysis Outputs
 
-| Output | Description |
-|--------|-------------|
-| Technology Inventory | All languages, frameworks, libraries, tools |
-| Interface Specification | All APIs, contracts, boundaries |
-| Architecture Diagram | High-level system overview (Mermaid) |
-| Sequence Diagrams | Integration and orchestration flows |
-| Documentation Audit | Accuracy assessment of existing docs |
+| Output | File | Description |
+|--------|------|-------------|
+| Technology Manifest | `01-technology-manifest.md` | All languages, frameworks, libraries, tools |
+| Interface Specification | `02-interface-specification.md` | All APIs, contracts, boundaries |
+| Architecture Diagrams | `03-architecture-diagrams.md` | High-level system overview (Mermaid) |
+| Documentation Audit | `04-documentation-audit.md` | Accuracy assessment of existing docs |
+| Dependency Health | `05-dependency-health.md` | Vulnerability, maintenance, license status |
+| Data Flow Map | `06-data-flow-map.md` | How data moves through the system |
+| Error Handling | `07-error-handling.md` | Error patterns and recovery mechanisms |
 
 ## Invocation
 
@@ -95,9 +121,14 @@ Common patterns to identify:
 
 A complete analysis includes:
 
+- [ ] `architecture-docs/` directory created with `index.md`
+- [ ] All 7 analysis documents in `analysis/` subdirectory
 - [ ] All technologies identified with versions where possible
 - [ ] All interfaces documented with contracts
 - [ ] High-level architecture diagram (Mermaid)
 - [ ] Sequence diagrams for key integrations
+- [ ] Dependency health assessment
+- [ ] Data flow mapping
+- [ ] Error handling analysis
 - [ ] Documentation accuracy assessment
-- [ ] Discrepancy report (if applicable)
+- [ ] `index.md` updated with executive summary and all links working
