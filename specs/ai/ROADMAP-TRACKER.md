@@ -78,15 +78,11 @@ Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
   - [x] workflows.md (template-first approach)
   - [x] templates.md (Vision doc, Stakeholder map, Statement of Work)
   - [x] examples.md
+  - [x] checklist.md (quick reference)
 
 ---
 
 ## Remaining Tasks
-
-### High Priority
-
-#### TOGAF Vision Skill - Missing File
-- [ ] `togaf/vision/checklist.md` - Quick reference checklist
 
 ### Medium Priority
 
@@ -149,7 +145,6 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| TOGAF vision checklist.md | Small | High |
 | Structurizr authoring skill | Medium | Medium |
 | Structurizr export adapter | Small | Medium |
 | Security-analysis skill (full) | Large | Medium |
@@ -169,6 +164,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2025-01-31 | Diagram format options, AI file exclusions | b5d8fa4 |
 | 2025-01-31 | Analysis refactoring spec added | 1e2625b |
 | 2025-01-31 | Structurizr skills spec added | - |
+| 2025-01-31 | TOGAF vision checklist.md complete | - |
 
 ---
 
@@ -176,7 +172,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 1. ~~Start Arch-Analysis Phase 1~~ ✅ Complete
 2. ~~Start TOGAF Foundation~~ ✅ Complete
-3. Add missing `togaf/vision/checklist.md`
+3. ~~Add missing `togaf/vision/checklist.md`~~ ✅ Complete
 4. Choose next:
    - **Structurizr authoring** - C4 modeling capability
    - **Security-analysis** - Security review capability
