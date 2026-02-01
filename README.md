@@ -1,10 +1,10 @@
-# AI Agent Knowledge Base
+# AI Agent Toolbox for Architects
 
-A comprehensive knowledge base for AI coding agents, providing structured skills, workflows, and architectural patterns.
+A toolbox of skills, workflows, and patterns for AI coding agents - designed for software architects and senior developers.
 
 ## Overview
 
-This repository provides reusable knowledge that AI coding assistants can leverage to work more effectively on your projects. It includes:
+Equip your AI coding assistant with architectural knowledge, analysis skills, and proven patterns. This toolbox includes:
 
 - **Analysis Skills** - Understand codebases systematically
 - **Architecture Patterns** - TOGAF ADM, C4 modeling, enterprise architecture
@@ -29,16 +29,16 @@ Designed to be used as a git submodule that AI agents can reference when working
 
 Ask your AI assistant:
 
-> Add my agent knowledge base by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory and adopt using its content once downloaded.
+> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory and adopt using its content once downloaded.
 
 ### Immediate Codebase Analysis
 
 To set up and immediately analyze your codebase:
 
-> Add my agent knowledge base by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory. After you are ready to use the .aiagent knowledge base, perform architecture analysis.
+> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory. After you are ready to use the .aiagent toolbox, perform architecture analysis.
 
 This will:
-1. Add the knowledge base as a submodule
+1. Add the toolbox as a submodule
 2. Analyze your codebase structure
 3. Generate architecture documentation
 4. Prepare context for effective coding assistance
@@ -109,7 +109,7 @@ Trigger specific workflows during your session:
 
 ```
 .
-├── .aiagent/                  # Agent knowledge base
+├── .aiagent/                  # Agent toolbox
 │   ├── AGENTS.md              # Main agent instructions
 │   ├── core/                  # Core concepts and workflows
 │   │   ├── instructions.md    # Coding rules, safety
