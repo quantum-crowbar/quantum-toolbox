@@ -97,15 +97,15 @@ flowchart TB
 | **information-systems** | Phase C | Available | [information-systems/](information-systems/) |
 | **technology-architecture** | Phase D | Available | [technology-architecture/](technology-architecture/) |
 | **opportunities-solutions** | Phase E | Available | [opportunities-solutions/](opportunities-solutions/) |
+| **migration-planning** | Phase F | Available | [migration-planning/](migration-planning/) |
+| **implementation-governance** | Phase G | Available | [implementation-governance/](implementation-governance/) |
+| **change-management** | Phase H | Available | [change-management/](change-management/) |
 
 ### Planned
 
 | Skill | Phase | Status |
 |-------|-------|--------|
 | preliminary | Preliminary | Planned |
-| migration-planning | Phase F | Planned |
-| implementation-governance | Phase G | Planned |
-| change-management | Phase H | Planned |
 
 ---
 

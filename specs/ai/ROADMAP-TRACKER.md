@@ -18,7 +18,9 @@ Master tracking document for all skill development roadmaps.
 | TOGAF Core ADM | Phase 2 | 🟢 Complete | Medium |
 | Analysis Refactoring | Phase 1-4 | 🟢 Complete | Medium |
 | TOGAF Phase E | - | 🟢 Complete | Medium |
-| TOGAF Planning & Governance | Phase 3-4 | ⚪ Planned | Low |
+| TOGAF Phase F | - | 🟢 Complete | Medium |
+| TOGAF Phase G | - | 🟢 Complete | Medium |
+| TOGAF Phase H | - | 🟢 Complete | Medium |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
@@ -188,11 +190,11 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 
 ### Low Priority
 
-#### TOGAF Planning & Governance
-- [ ] Phase E: Opportunities and Solutions
-- [ ] Phase F: Migration Planning
-- [ ] Phase G: Implementation Governance
-- [ ] Phase H: Architecture Change Management
+#### TOGAF Planning & Governance ✅
+- [x] Phase E: Opportunities and Solutions
+- [x] Phase F: Migration Planning
+- [x] Phase G: Implementation Governance
+- [x] Phase H: Architecture Change Management
 
 #### Analysis Refactoring ✅
 See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
@@ -213,7 +215,9 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| TOGAF Phase E-H skills | Large | Low |
+| TOGAF Preliminary Phase | Medium | Low |
+
+All TOGAF ADM phases (A through H) are now complete.
 
 ---
 
@@ -236,6 +240,9 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2026-01-31 | Structurizr authoring skill complete (C4 modeling with DSL) | - |
 | 2026-02-01 | TOGAF Core ADM complete (Phase B/C/D - Business, Info Systems, Technology) | - |
 | 2026-02-01 | TOGAF Phase E complete (Opportunities and Solutions) | - |
+| 2026-02-01 | TOGAF Phase F complete (Migration Planning) | - |
+| 2026-02-01 | TOGAF Phase G complete (Implementation Governance) | - |
+| 2026-02-01 | TOGAF Phase H complete (Change Management) | - |
 
 ---
 
@@ -250,7 +257,8 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 7. ~~Structurizr authoring skill~~ ✅ Complete
 8. ~~TOGAF Core ADM (Phase B/C/D)~~ ✅ Complete
 9. ~~TOGAF Phase E~~ ✅ Complete
-10. Choose next (low priority):
-    - **TOGAF Phase F** - Migration Planning
-    - **TOGAF Phase G** - Implementation Governance
-    - **TOGAF Phase H** - Architecture Change Management
+10. ~~TOGAF Phase F~~ ✅ Complete
+11. ~~TOGAF Phase G~~ ✅ Complete
+12. ~~TOGAF Phase H~~ ✅ Complete
+13. Choose next (low priority):
+    - **TOGAF Preliminary Phase** - Framework and principles setup

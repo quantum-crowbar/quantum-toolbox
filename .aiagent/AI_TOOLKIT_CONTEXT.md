@@ -88,6 +88,9 @@ Designed for software architects and senior developers who want their AI assista
 | **togaf/information-systems** | `skills/optional/togaf/information-systems/` | ✅ Complete | Phase C: Data and application architecture |
 | **togaf/technology-architecture** | `skills/optional/togaf/technology-architecture/` | ✅ Complete | Phase D: Infrastructure and platforms |
 | **togaf/opportunities-solutions** | `skills/optional/togaf/opportunities-solutions/` | ✅ Complete | Phase E: Opportunities and Solutions |
+| **togaf/migration-planning** | `skills/optional/togaf/migration-planning/` | ✅ Complete | Phase F: Migration Planning |
+| **togaf/implementation-governance** | `skills/optional/togaf/implementation-governance/` | ✅ Complete | Phase G: Implementation Governance |
+| **togaf/change-management** | `skills/optional/togaf/change-management/` | ✅ Complete | Phase H: Change Management |
 
 ### Development Workflow Skills
 
