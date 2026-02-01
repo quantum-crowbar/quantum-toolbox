@@ -1,151 +1,176 @@
-# AI Agent Setup
+# AI Agent Knowledge Base
 
-Configuration and skills for AI coding agents.
+A comprehensive knowledge base for AI coding agents, providing structured skills, workflows, and architectural patterns.
 
 ## Overview
 
-This repository provides a structured approach to configuring AI coding assistants with reusable skills, workflows, and conventions. Designed to be used as a submodule or template for projects that leverage AI-assisted development.
+This repository provides reusable knowledge that AI coding assistants can leverage to work more effectively on your projects. It includes:
 
-## Structure
+- **Analysis Skills** - Understand codebases systematically
+- **Architecture Patterns** - TOGAF ADM, C4 modeling, enterprise architecture
+- **Development Workflows** - Git conventions, task management, code quality
+- **Templates & Checklists** - Consistent, high-quality deliverables
 
-```
-.
-├── .aiagent/              # Agent configuration (machine-readable)
-│   ├── AGENTS.md          # Main agent instructions
-│   ├── core/              # Core instructions and workflows
-│   ├── skills/            # Modular skill definitions
-│   └── templates/         # Commit, PR, and context templates
-├── docs/ai/               # Human-readable documentation
-└── specs/ai/              # Technical specifications & roadmaps
-```
+Designed to be used as a git submodule that AI agents can reference when working on your code.
+
+---
 
 ## Quick Start
 
-### As a Submodule
+### Recommended Models
 
-Add to your project:
+| Model | Best For | When to Use |
+|-------|----------|-------------|
+| **Claude Haiku** | Fast, simple tasks | Quick edits, simple questions, code formatting |
+| **Claude Sonnet** | Balanced performance | Most coding tasks, analysis, debugging |
+| **Claude Opus** | Complex reasoning | Architecture design, large refactors, multi-file changes |
 
-```bash
-git submodule add <repo-url> .aiagent-config
+### Adding to Your Project
+
+Ask your AI assistant:
+
+> Add my agent knowledge base by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory and adopt using its content once downloaded.
+
+### Immediate Codebase Analysis
+
+To set up and immediately analyze your codebase:
+
+> Add my agent knowledge base by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory. After you are ready to use the .aiagent knowledge base, perform architecture analysis.
+
+This will:
+1. Add the knowledge base as a submodule
+2. Analyze your codebase structure
+3. Generate architecture documentation
+4. Prepare context for effective coding assistance
+
+---
+
+## What's Included
+
+### Analysis Skills
+
+| Skill | Description | Status |
+|-------|-------------|--------|
+| **codebase-analysis** | Base analysis engine with structured output model | Complete |
+| **arch-analysis** | Architecture documentation (8-phase workflow) | Complete |
+| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO) | Complete |
+| **nonfunctional-analysis** | Testing, config, performance, code health | Complete |
+
+### Architecture & Modeling
+
+| Skill | Description | Status |
+|-------|-------------|--------|
+| **structurizr** | C4 architecture modeling with Structurizr DSL | Complete |
+| **togaf/vision** | Phase A: Architecture Vision | Complete |
+| **togaf/business-architecture** | Phase B: Capabilities, value streams, processes | Complete |
+| **togaf/information-systems** | Phase C: Data and application architecture | Complete |
+| **togaf/technology-architecture** | Phase D: Infrastructure and platforms | Complete |
+
+### Development Workflows
+
+| Skill | Description | Status |
+|-------|-------------|--------|
+| **git-workflow** | Commit conventions, branching, PR workflow | Complete |
+| **todo-workflow** | Task tracking and autonomous development | Complete |
+| **software-design** | Design principles, patterns, decisions | Complete |
+| **tech-stack-decisions** | Technology evaluation frameworks, ADRs | Complete |
+| **code-conventions** | Style guides and standards | Complete |
+
+### Output Adapters
+
+Analysis can be exported in multiple formats:
+
+| Adapter | Output |
+|---------|--------|
+| **architecture-docs** | Human-readable markdown documentation |
+| **coding-context** | AGENTS.md and CONTEXT.md for AI context |
+| **product-spec** | Product documentation (features, flows, data model) |
+| **structurizr** | C4 model in Structurizr DSL |
+| **archimate** | ArchiMate enterprise architecture format |
+
+---
+
+## Invokable Skills
+
+Trigger specific workflows during your session:
+
+| Command | What It Does |
+|---------|--------------|
+| "Analyze the architecture" | Run full 8-phase codebase analysis |
+| "Analyze security" | Security assessment with compliance reports |
+| "Analyze code quality" | Testing, config, performance, health check |
+| "Create C4 model" | Generate Structurizr architecture diagrams |
+| "Apply TOGAF" | Enterprise architecture using ADM phases |
+| "Use todo workflow" | Autonomous task-based development |
+
+---
+
+## Repository Structure
+
+```
+.
+├── .aiagent/                  # Agent knowledge base
+│   ├── AGENTS.md              # Main agent instructions
+│   ├── core/                  # Core concepts and workflows
+│   │   ├── instructions.md    # Coding rules, safety
+│   │   ├── workflows.md       # Development processes
+│   │   └── architecture-thinking.md  # TOGAF foundations
+│   ├── skills/                # Modular skill packages
+│   │   ├── core/              # Always-active skills
+│   │   └── optional/          # Opt-in skills
+│   └── templates/             # Commit, PR templates
+├── docs/ai/                   # Human-readable guides
+└── specs/ai/                  # Specifications & roadmaps
 ```
 
-Then symlink or copy what you need:
+---
 
-```bash
-ln -s .aiagent-config/.aiagent .aiagent
-```
+## Skill Package Structure
 
-### Standalone
+Each skill contains:
 
-Clone and customize for your needs:
+| File | Purpose |
+|------|---------|
+| `README.md` | Concepts, principles, guidelines |
+| `workflows.md` | Step-by-step procedures |
+| `templates.md` | Reusable document formats |
+| `checklist.md` | Quick reference for reviews |
+| `examples.md` | Concrete demonstrations |
 
-```bash
-git clone <repo-url>
-cd agents-setup
-# Edit .aiagent/AGENTS.md for your project
-```
+---
+
+## Roadmap
+
+### Complete
+
+- Analysis engine with 5 output adapters
+- Security analysis with 4 compliance frameworks
+- Nonfunctional analysis (testing, config, performance, health)
+- Structurizr C4 modeling skill
+- TOGAF ADM Phases A-D (Vision through Technology)
+- Core development workflows
+
+### Planned (Low Priority)
+
+- TOGAF Phase E: Opportunities and Solutions
+- TOGAF Phase F: Migration Planning
+- TOGAF Phase G: Implementation Governance
+- TOGAF Phase H: Architecture Change Management
+
+See [ROADMAP-TRACKER.md](specs/ai/ROADMAP-TRACKER.md) for details.
+
+---
 
 ## Documentation
 
 | Resource | Description |
 |----------|-------------|
-| [docs/ai/](docs/ai/) | Human-readable guides and explanations |
-| [specs/ai/](specs/ai/) | Technical specifications and roadmaps |
-| [.aiagent/skills/](.aiagent/skills/_index.md) | Skill index and details |
+| [Skills Index](.aiagent/skills/_index.md) | Full skill listing and activation guide |
+| [TOGAF Index](.aiagent/skills/optional/togaf/_index.md) | ADM phases and when to use each |
+| [Analysis Outputs](.aiagent/skills/optional/analysis-outputs/_index.md) | Available export formats |
+| [Architecture Guide](docs/ai/arch-analysis-guide.md) | How to analyze unfamiliar codebases |
 
-### Guides
-
-| Guide | Description |
-|-------|-------------|
-| [Architectural Analysis](docs/ai/arch-analysis-guide.md) | Analyze unfamiliar codebases systematically |
-
-### Specifications
-
-| Spec | Description |
-|------|-------------|
-| [Workflow System](specs/ai/workflow-system-spec.md) | Workflow structure, patterns, extension guidelines |
-
-### Roadmaps
-
-| Roadmap | Description |
-|---------|-------------|
-| [Arch-Analysis Skills](specs/ai/arch-analysis-skills-roadmap.md) | Expand with dependency, data flow, error analysis |
-| [TOGAF Skill Family](specs/ai/togaf-skill-family-roadmap.md) | Enterprise architecture framework (layered approach) |
-
-## Available Skills
-
-### Core Skills (Always Active)
-
-| Skill | Description |
-|-------|-------------|
-| **git-workflow** | Commit conventions, branching, PR workflow |
-| **todo-workflow** | Task tracking and autonomous development |
-
-### Optional Skills (Current)
-
-| Skill | Description | Guide |
-|-------|-------------|-------|
-| **arch-analysis** | Analyze unknown codebases | [guide](docs/ai/arch-analysis-guide.md) |
-| **software-design** | Design principles and patterns | - |
-| **tech-stack-decisions** | Technology evaluation frameworks | - |
-| **code-conventions** | Style guides and standards | - |
-
-### Planned Skills
-
-| Skill | Description | Roadmap |
-|-------|-------------|---------|
-| **security-analysis** | Security surface, auth/authz, PII handling | [roadmap](specs/ai/arch-analysis-skills-roadmap.md) |
-| **nonfunctional-analysis** | Test coverage, config audit, performance, code health | [roadmap](specs/ai/arch-analysis-skills-roadmap.md) |
-| **togaf/** (family) | TOGAF ADM phases as modular skills | [roadmap](specs/ai/togaf-skill-family-roadmap.md) |
-
-## TOGAF Skill Family
-
-Enterprise architecture support using a layered approach:
-
-| Layer | Description |
-|-------|-------------|
-| **Core Concepts** | Architecture domains, stakeholder thinking, baseline/target, gap analysis |
-| **ADM Phase Skills** | Invokable skills for each ADM phase (A-H) |
-| **Modeling Tools** | Mermaid, Structurizr (C4), ArchiMate, D2 |
-
-Key features:
-- Gap analysis → Roadmap candidates
-- Prioritization criteria (business value, risk, dependencies, complexity)
-- Risk analysis with non-technical risk prompts
-- Architecture modeling tool selection by context
-
-See [TOGAF Roadmap](specs/ai/togaf-skill-family-roadmap.md) for full details.
-
-## Key Concepts
-
-### Skills
-
-Modular knowledge units that can be enabled/disabled. Each skill contains:
-- README (overview and concepts)
-- Workflows (step-by-step procedures)
-- Checklist (quick reference)
-- Templates (reusable formats)
-- Examples (concrete demonstrations)
-
-### Invokable Skills
-
-Some skills can be explicitly activated during a session:
-
-| Skill | Invocation |
-|-------|------------|
-| `todo-workflow` | "Use todo workflow" |
-| `arch-analysis` | "Analyze the architecture" |
-| `togaf/*` (planned) | "Apply TOGAF", "Create Architecture Vision" |
-
-### Workflow System
-
-Workflows follow a consistent structure:
-- **Phases** with clear goals
-- **Steps** with checklists
-- **Outputs** defined per phase
-- **Checkpoints** for review modes
-
-See [Workflow System Spec](specs/ai/workflow-system-spec.md) for details.
+---
 
 ## License
 
