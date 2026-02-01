@@ -21,6 +21,9 @@ Master tracking document for all skill development roadmaps.
 | TOGAF Phase F | - | 🟢 Complete | Medium |
 | TOGAF Phase G | - | 🟢 Complete | Medium |
 | TOGAF Phase H | - | 🟢 Complete | Medium |
+| Core Architecture Docs Output | - | ⚪ Planned | High |
+| Change Mgmt Communication Plan | - | ⚪ Planned | High |
+| Evolutionary Planning Enhancement | - | ⚪ Planned | High |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
@@ -215,7 +218,132 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
+| Core Architecture Docs Output | Medium | High |
+| Change Mgmt Communication Plan | Small | High |
+| Evolutionary Planning Enhancement | Medium | High |
 | TOGAF Preliminary Phase | Medium | Low |
+
+---
+
+## Planned Work
+
+### High Priority
+
+#### Core Architecture Docs Output (`analysis-outputs/core-architecture/`)
+
+Restructure the primary architecture analysis output. Core architecture docs become the canonical output location; TOGAF phase outputs link TO these docs via their index files.
+
+**Design Principle**: Core docs are the source of truth. Phase-specific outputs (vision, business-architecture, etc.) reference core docs rather than duplicating content.
+
+**Whitelist Principle**: Only explicitly listed artifacts go in core. Everything else remains in phase-specific outputs.
+
+**Core Artifacts (Whitelist):**
+| Artifact | Location | Description |
+|----------|----------|-------------|
+| Baseline Architecture | `baseline/` | Current state across all domains |
+| Target Architecture | `target/` | Future state across all domains |
+| Gap Analysis | `gap-analysis/` | Baseline vs Target comparison |
+| Risk Analysis | `risk-analysis/` | Risk register and mitigations |
+| Evolution Plan | `evolution-plan/` | Roadmap, fitness functions, transitions |
+| Change Management Summary | `change-management/` | Change tracking and communication plan |
+
+**Output Structure:**
+```
+core-architecture/
+├── index.md                    # Executive summary and navigation
+├── baseline/                   # Current state documentation
+│   ├── overview.md
+│   └── domain-specific files
+├── target/                     # Future state documentation
+│   ├── overview.md
+│   └── domain-specific files
+├── gap-analysis/               # Baseline vs Target comparison
+│   ├── summary.md
+│   └── domain-specific gaps
+├── risk-analysis/              # Architecture risks
+│   ├── risk-register.md
+│   └── mitigation-plans.md
+├── evolution-plan/             # Migration/transformation roadmap
+│   ├── roadmap.md
+│   ├── fitness-functions.md    # Measurable evolution criteria
+│   └── transition-states.md
+└── change-management/          # Change tracking and communication
+    ├── summary.md
+    └── communication-plan.md
+```
+
+**Tasks:**
+- [ ] Define core-architecture as primary output structure
+- [ ] Create templates for each section
+- [ ] Update TOGAF phase outputs to link to core docs
+- [ ] Build mapping from analysis model to core structure
+- [ ] Define which artifacts go in core vs remain phase-specific
+
+#### Change Management Communication Plan Enhancement
+
+Enhance Phase H change management with structured communication planning.
+
+**Features:**
+- [ ] Communication plan custom table with:
+  - Stakeholder/audience
+  - Message type
+  - Owner
+  - Delivery date
+  - Team/domain
+  - Channel/medium
+  - Status
+  - **Impact review date/period** (when to assess change effectiveness)
+- [ ] Integration into change impact assessment
+- [ ] Input workflow for owners, dates, teams, domains
+- [ ] Template for communication matrix
+- [ ] Examples with realistic scenarios
+
+**Location:** `togaf/change-management/` (enhancement to existing skill)
+
+#### Evolutionary Planning Enhancement
+
+Enhance Phase F migration planning with evolutionary architecture approach using fitness functions.
+
+**Base Fitness Function Categories:**
+| Category | Example Metrics | Description |
+|----------|-----------------|-------------|
+| Performance | Response time, throughput, latency | System speed and capacity |
+| Security | Vulnerability count, compliance score, attack surface | Protection posture |
+| Maintainability | Code complexity, test coverage, documentation | Ease of change |
+| Scalability | Capacity headroom, horizontal scaling readiness | Growth capability |
+| Cost | Infrastructure spend, operational cost, TCO | Financial efficiency |
+
+Agent expands with system-specific fitness functions based on analysis (e.g., "GraphQL query depth < 5", "API response < 200ms P95").
+
+**Features:**
+- [ ] Fitness function framework:
+  - Base fitness function definitions (5 categories above)
+  - Agent expands/customizes based on system being analyzed
+  - Measurable criteria for transition completion
+  - Automated checks where possible
+- [ ] Evolutionary plan generation from gap analysis
+- [ ] Leverage existing baseline/target artifacts from core-architecture
+- [ ] Incremental migration steps with fitness validation
+- [ ] Integration with core-architecture/evolution-plan output
+
+**Location:** `togaf/migration-planning/` (enhancement to existing skill)
+
+---
+
+### Execution Order
+
+Build in sequence - core output structure first, then enhance phases to populate it:
+
+| Step | Task | Depends On |
+|------|------|------------|
+| 1 | Core Architecture Output Structure | - |
+| 2 | Update TOGAF phases to link to core | Step 1 |
+| 3 | Change Management Communication Plan | Step 1 |
+| 4 | Evolutionary Planning with Fitness Functions | Step 1 |
+
+---
+
+## Quick Summary: What's Left (Previous)
 
 All TOGAF ADM phases (A through H) are now complete.
 
@@ -260,5 +388,9 @@ All TOGAF ADM phases (A through H) are now complete.
 10. ~~TOGAF Phase F~~ ✅ Complete
 11. ~~TOGAF Phase G~~ ✅ Complete
 12. ~~TOGAF Phase H~~ ✅ Complete
-13. Choose next (low priority):
+13. **Next: Step 1 - Core Architecture Output Structure** (High Priority)
+14. **Next: Step 2 - Update TOGAF phases to link to core** (High Priority)
+15. **Next: Step 3 - Change Mgmt Communication Plan** (High Priority)
+16. **Next: Step 4 - Evolutionary Planning with Fitness Functions** (High Priority)
+17. Choose next (low priority):
     - **TOGAF Preliminary Phase** - Framework and principles setup
