@@ -93,15 +93,15 @@ flowchart TB
 | Skill | Phase | Status | Path |
 |-------|-------|--------|------|
 | **vision** | Phase A | Available | [vision/](vision/) |
+| **business-architecture** | Phase B | Available | [business-architecture/](business-architecture/) |
+| **information-systems** | Phase C | Available | [information-systems/](information-systems/) |
+| **technology-architecture** | Phase D | Available | [technology-architecture/](technology-architecture/) |
 
 ### Planned
 
 | Skill | Phase | Status |
 |-------|-------|--------|
 | preliminary | Preliminary | Planned |
-| business-architecture | Phase B | Planned |
-| information-systems | Phase C | Planned |
-| technology-architecture | Phase D | Planned |
 | opportunities-solutions | Phase E | Planned |
 | migration-planning | Phase F | Planned |
 | implementation-governance | Phase G | Planned |

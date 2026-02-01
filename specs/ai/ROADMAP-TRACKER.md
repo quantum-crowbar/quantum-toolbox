@@ -15,7 +15,7 @@ Master tracking document for all skill development roadmaps.
 | Structurizr Export Adapter | - | 🟢 Complete | Medium |
 | Security-Analysis Skill | Phase 2 | 🟢 Complete | Medium |
 | Nonfunctional-Analysis Skill | Phase 3 | 🟢 Complete | Medium |
-| TOGAF Core ADM | Phase 2 | ⚪ Planned | Medium |
+| TOGAF Core ADM | Phase 2 | 🟢 Complete | Medium |
 | Analysis Refactoring | Phase 1-4 | 🟢 Complete | Medium |
 | TOGAF Planning & Governance | Phase 3-4 | ⚪ Planned | Low |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
@@ -132,6 +132,33 @@ Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
   - [x] checklist.md
   - [x] examples.md
 
+### TOGAF Core ADM ✅
+
+- [x] **Phase B: Business Architecture** (`togaf/business-architecture/`)
+  - [x] Capability mapping and heatmaps
+  - [x] Value stream modeling
+  - [x] Business process models (BPMN-style)
+  - [x] Organization mapping
+  - [x] Gap analysis templates
+  - [x] Work package definitions
+
+- [x] **Phase C: Information Systems** (`togaf/information-systems/`)
+  - [x] Data entity catalogs
+  - [x] Logical data models
+  - [x] Data flow diagrams
+  - [x] Application catalogs
+  - [x] Application-capability matrix
+  - [x] Interface and integration catalogs
+  - [x] Data governance model
+
+- [x] **Phase D: Technology Architecture** (`togaf/technology-architecture/`)
+  - [x] Technology catalog and radar
+  - [x] Platform architecture (containers, databases, messaging)
+  - [x] Network architecture diagrams
+  - [x] Deployment architecture (HA, DR)
+  - [x] Security architecture
+  - [x] Technology standards
+
 ---
 
 ## Remaining Tasks
@@ -153,10 +180,10 @@ See: [structurizr-skills-spec.md](structurizr-skills-spec.md)
 - [x] Workspace generation templates
 - [x] Integration with codebase-analysis
 
-#### TOGAF Core ADM (Phase 2)
-- [ ] Phase B: Business Architecture skill
-- [ ] Phase C: Information Systems skill
-- [ ] Phase D: Technology Architecture skill
+#### TOGAF Core ADM (Phase 2) ✅
+- [x] Phase B: Business Architecture skill
+- [x] Phase C: Information Systems skill
+- [x] Phase D: Technology Architecture skill
 
 ### Low Priority
 
@@ -185,7 +212,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| TOGAF Phase B/C/D skills | Large | Medium |
+| TOGAF Phase E-H skills | Large | Low |
 
 ---
 
@@ -206,6 +233,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 | 2026-01-31 | Analysis refactoring Phase 3-4 (product-spec, structurizr, archimate adapters) | - |
 | 2026-01-31 | Nonfunctional-analysis skill complete (testing, config, perf, health) | - |
 | 2026-01-31 | Structurizr authoring skill complete (C4 modeling with DSL) | - |
+| 2026-02-01 | TOGAF Core ADM complete (Phase B/C/D - Business, Info Systems, Technology) | - |
 
 ---
 
@@ -218,10 +246,9 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 5. ~~Analysis refactoring Phase 1-4~~ ✅ Complete (base engine + 5 adapters)
 6. ~~Nonfunctional-analysis skill~~ ✅ Complete
 7. ~~Structurizr authoring skill~~ ✅ Complete
-8. Choose next:
-   - **TOGAF Phase B** - Business architecture skill
-   - **TOGAF Phase C** - Information systems architecture
-   - **TOGAF Phase D** - Technology architecture
-7. Choose next:
-   - **Structurizr authoring** - C4 modeling capability (standalone skill)
-   - **TOGAF Phase B** - Business architecture
+8. ~~TOGAF Core ADM (Phase B/C/D)~~ ✅ Complete
+9. Choose next (low priority):
+   - **TOGAF Phase E** - Opportunities and Solutions
+   - **TOGAF Phase F** - Migration Planning
+   - **TOGAF Phase G** - Implementation Governance
+   - **TOGAF Phase H** - Architecture Change Management
