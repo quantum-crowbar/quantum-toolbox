@@ -24,6 +24,8 @@ Master tracking document for all skill development roadmaps.
 | Core Architecture Docs Output | - | ⚪ Planned | High |
 | Change Mgmt Communication Plan | - | ⚪ Planned | High |
 | Evolutionary Planning Enhancement | - | ⚪ Planned | High |
+| Excalidraw Diagram Support | - | ⚪ Planned | Medium |
+| Presentation Generation | - | ⚪ Planned | Medium |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
@@ -328,6 +330,43 @@ Agent expands with system-specific fitness functions based on analysis (e.g., "G
 
 **Location:** `togaf/migration-planning/` (enhancement to existing skill)
 
+#### Excalidraw Diagram Support
+
+Add Excalidraw as a diagram format option alongside Mermaid, ASCII, and PlantUML.
+
+**Current Options:**
+1. Mermaid (Recommended) - GitHub, GitLab, most markdown viewers
+2. ASCII - Universal, no rendering needed  
+3. PlantUML - Feature-rich, requires renderer
+
+**New Option:**
+4. **Excalidraw** - Hand-drawn style, collaborative, VS Code extension support
+
+**Features:**
+- [ ] Add Excalidraw to diagram format preference prompt
+- [ ] Define `.excalidraw` file output format (JSON-based)
+- [ ] Create Excalidraw templates for common diagram types:
+  - System context diagrams
+  - Component diagrams
+  - Sequence flows
+  - Architecture layers
+- [ ] Embedding strategy (link to .excalidraw files from markdown)
+- [ ] VS Code extension recommendation (excalidraw-editor)
+
+**Excalidraw Advantages:**
+- Hand-drawn aesthetic (approachable, less formal)
+- Collaborative editing
+- Rich VS Code integration
+- Embeddable as SVG/PNG exports
+- Version-controllable JSON format
+
+**Files to Update:**
+- `codebase-analysis/workflows.md` - Add option 4
+- `arch-analysis/workflows.md` - Add option 4
+- `arch-analysis/checklist.md` - Update format list
+- Analysis model schema - Add excalidraw format
+- Templates for each diagram type
+
 ---
 
 ### Execution Order
@@ -340,6 +379,73 @@ Build in sequence - core output structure first, then enhance phases to populate
 | 2 | Update TOGAF phases to link to core | Step 1 |
 | 3 | Change Management Communication Plan | Step 1 |
 | 4 | Evolutionary Planning with Fitness Functions | Step 1 |
+| 5 | Excalidraw Diagram Support | - (independent) |
+
+---
+
+### Presentation & Export (Future Submodule Candidate)
+
+> **Note**: This section may be extracted to a separate git submodule in the future, but remains in the toolkit for now.
+
+#### Presentation Generation
+
+Generate PowerPoint/presentation decks from markdown specifications and architecture documentation.
+
+**Features:**
+- [ ] Markdown to PPT conversion
+  - Parse structured markdown (headers → slides)
+  - Support for speaker notes
+  - Code block formatting
+  - Table rendering
+- [ ] Template system
+  - Create custom slide templates
+  - Import existing corporate templates
+  - Theme customization (colors, fonts, logos)
+- [ ] Architecture diagram export
+  - Mermaid → PNG/JPG/SVG
+  - Excalidraw → PNG/JPG/SVG
+  - PlantUML → PNG/JPG/SVG
+  - Embed exported images in slides
+- [ ] Slide types
+  - Title slides
+  - Content slides (bullets, numbered lists)
+  - Diagram slides (full-bleed images)
+  - Comparison slides (before/after, baseline/target)
+  - Timeline/roadmap slides
+
+**Use Cases:**
+| Source | Output |
+|--------|--------|
+| Architecture Vision doc | Executive presentation |
+| Gap Analysis | Technical review deck |
+| Evolution Plan | Roadmap presentation |
+| Change Management Summary | Stakeholder briefing |
+
+**Technical Approach:**
+- Use python-pptx or similar for PPT generation
+- Mermaid CLI for diagram export
+- Excalidraw CLI/API for export
+- Template library with common layouts
+
+**Files/Structure:**
+```
+presentation/
+├── README.md           # Concepts and usage
+├── workflows.md        # Generation workflows
+├── templates/          # Slide templates
+│   ├── default/
+│   ├── technical/
+│   └── executive/
+├── exporters/          # Diagram export configs
+│   ├── mermaid.md
+│   ├── excalidraw.md
+│   └── plantuml.md
+└── examples/           # Sample presentations
+```
+
+**Dependencies:**
+- Excalidraw diagram support (Step 5)
+- Core architecture docs (provides source content)
 
 ---
 
