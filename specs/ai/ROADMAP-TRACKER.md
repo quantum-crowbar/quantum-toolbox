@@ -422,10 +422,33 @@ Generate PowerPoint/presentation decks from markdown specifications and architec
 | Change Management Summary | Stakeholder briefing |
 
 **Technical Approach:**
-- Use python-pptx or similar for PPT generation
-- Mermaid CLI for diagram export
-- Excalidraw CLI/API for export
-- Template library with common layouts
+- **Marp CLI** (`@marp-team/marp-cli`) - Primary MD→PPTX tool (recommended)
+- **python-pptx** - For complex/dynamic presentations requiring programmatic control
+- **Mermaid CLI** (`@mermaid-js/mermaid-cli`) - Mermaid→PNG/SVG export
+- **PlantUML CLI** - PlantUML→PNG/SVG export (requires Java)
+- **Excalidraw** - Manual export via VS Code extension; CI automation possible with Puppeteer scripts
+
+> **Tooling Research:** See [tooling-research.md](tooling-research.md) for detailed analysis and recommendations.
+
+**Installation:**
+```bash
+# Diagram export
+npm install -g @mermaid-js/mermaid-cli
+brew install plantuml  # or download plantuml.jar
+
+# Presentation generation
+npm install -g @marp-team/marp-cli
+
+# Optional: Python for advanced PPTX
+pip install python-pptx
+```
+
+**VS Code Extensions:**
+| Extension | ID | Purpose |
+|-----------|-----|---------|
+| Excalidraw Editor | `pomdtr.excalidraw-editor` | Edit .excalidraw files |
+| Mermaid Preview | `bierner.markdown-mermaid` | Preview mermaid in MD |
+| Marp for VS Code | `marp-team.marp-vscode` | Preview/edit Marp slides |
 
 **Files/Structure:**
 ```
@@ -477,6 +500,7 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-01 | TOGAF Phase F complete (Migration Planning) | - |
 | 2026-02-01 | TOGAF Phase G complete (Implementation Governance) | - |
 | 2026-02-01 | TOGAF Phase H complete (Change Management) | - |
+| 2026-02-01 | Tooling research added (Marp, mermaid-cli, python-pptx, Excalidraw) | - |
 
 ---
 
