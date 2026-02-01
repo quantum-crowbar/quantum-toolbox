@@ -65,6 +65,7 @@ This will:
 | **togaf/business-architecture** | Phase B: Capabilities, value streams, processes | Complete |
 | **togaf/information-systems** | Phase C: Data and application architecture | Complete |
 | **togaf/technology-architecture** | Phase D: Infrastructure and platforms | Complete |
+| **togaf/opportunities-solutions** | Phase E: Opportunities and Solutions | Complete |
 
 ### Development Workflows
 
@@ -147,12 +148,11 @@ Each skill contains:
 - Security analysis with 4 compliance frameworks
 - Nonfunctional analysis (testing, config, performance, health)
 - Structurizr C4 modeling skill
-- TOGAF ADM Phases A-D (Vision through Technology)
+- TOGAF ADM Phases A-E (Vision through Opportunities & Solutions)
 - Core development workflows
 
 ### Planned (Low Priority)
 
-- TOGAF Phase E: Opportunities and Solutions
 - TOGAF Phase F: Migration Planning
 - TOGAF Phase G: Implementation Governance
 - TOGAF Phase H: Architecture Change Management

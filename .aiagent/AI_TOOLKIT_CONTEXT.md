@@ -87,6 +87,7 @@ Designed for software architects and senior developers who want their AI assista
 | **togaf/business-architecture** | `skills/optional/togaf/business-architecture/` | ✅ Complete | Phase B: Capabilities, value streams, processes |
 | **togaf/information-systems** | `skills/optional/togaf/information-systems/` | ✅ Complete | Phase C: Data and application architecture |
 | **togaf/technology-architecture** | `skills/optional/togaf/technology-architecture/` | ✅ Complete | Phase D: Infrastructure and platforms |
+| **togaf/opportunities-solutions** | `skills/optional/togaf/opportunities-solutions/` | ✅ Complete | Phase E: Opportunities and Solutions |
 
 ### Development Workflow Skills
 
@@ -177,12 +178,12 @@ git submodule update --init --recursive
 | Nonfunctional-analysis skill (testing, config, perf, health) | ✅ Complete | 2026-01-31 |
 | Structurizr authoring skill (C4 modeling with DSL) | ✅ Complete | 2026-01-31 |
 | TOGAF Core ADM (Phase B/C/D - Business, Info Systems, Technology) | ✅ Complete | 2026-02-01 |
+| TOGAF Phase E (Opportunities and Solutions) | ✅ Complete | 2026-02-01 |
 
 ### ⚪ Remaining (Low Priority)
 
 | Work Item | Priority | Description |
 |-----------|----------|-------------|
-| TOGAF Phase E | Low | Opportunities and Solutions |
 | TOGAF Phase F | Low | Migration Planning |
 | TOGAF Phase G | Low | Implementation Governance |
 | TOGAF Phase H | Low | Architecture Change Management |

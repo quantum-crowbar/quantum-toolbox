@@ -96,13 +96,13 @@ flowchart TB
 | **business-architecture** | Phase B | Available | [business-architecture/](business-architecture/) |
 | **information-systems** | Phase C | Available | [information-systems/](information-systems/) |
 | **technology-architecture** | Phase D | Available | [technology-architecture/](technology-architecture/) |
+| **opportunities-solutions** | Phase E | Available | [opportunities-solutions/](opportunities-solutions/) |
 
 ### Planned
 
 | Skill | Phase | Status |
 |-------|-------|--------|
 | preliminary | Preliminary | Planned |
-| opportunities-solutions | Phase E | Planned |
 | migration-planning | Phase F | Planned |
 | implementation-governance | Phase G | Planned |
 | change-management | Phase H | Planned |
