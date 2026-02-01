@@ -3,6 +3,12 @@
 > **Version:** 2.0.0
 > A reusable submodule providing standardized instructions, workflows, and skills for AI coding agents.
 
+## Context
+
+For full repository context, capabilities, and current status, see **[AI_TOOLKIT_CONTEXT.md](AI_TOOLKIT_CONTEXT.md)**.
+
+---
+
 ## Quick Start
 
 ### Adding to Your Project
