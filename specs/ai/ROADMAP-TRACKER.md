@@ -21,6 +21,7 @@ Master tracking document for all skill development roadmaps.
 | TOGAF Phase F | - | 🟢 Complete | Medium |
 | TOGAF Phase G | - | 🟢 Complete | Medium |
 | TOGAF Phase H | - | 🟢 Complete | Medium |
+| Architecture Synthesis Skill | - | ⚪ Planned | High |
 | Core Architecture Docs Output | - | ⚪ Planned | High |
 | Change Mgmt Communication Plan | - | ⚪ Planned | High |
 | Evolutionary Planning Enhancement | - | ⚪ Planned | High |
@@ -229,6 +230,141 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ## Planned Work
 
+### Architecture Synthesis Skill
+
+**Middle-Out Architecture Creation**: Parse visual diagrams and specifications to synthesize architecture models, then feed into full TOGAF analysis.
+
+**Problem:** Currently, we support:
+- Bottom-up: Code → Architecture (codebase-analysis)
+- Top-down: Requirements → Architecture (TOGAF Phase A)
+
+**Missing:** Specification → Architecture (visual diagrams + descriptions)
+
+**Solution:** Interactive synthesis workflow that requests resources and builds unified architecture model.
+
+#### Workflow: Interactive Resource Collection
+
+When invoked, agent provides **requirements checklist** of what's needed, then iteratively asks for:
+
+**Phase 1: Initial Requirements Gathering**
+```
+Agent provides checklist:
+├── Visual Architecture (choose format)
+│   ├── Excalidraw (.excalidraw JSON)
+│   ├── Draw.io (.drawio XML)
+│   ├── Archi/ArchiMate (.archimate XML)
+│   ├── Mermaid (.mmd text)
+│   └── Or: Hand-drawn (JPEG/PNG with OCR fallback)
+├── Component Specifications (markdown)
+│   ├── Component descriptions
+│   ├── Responsibilities
+│   ├── Dependencies/connections
+│   └── Technology stack
+├── Code Samples (optional but recommended)
+│   ├── Repository links
+│   ├── Key modules/files
+│   └── Configuration files
+└── Business Context
+    ├── Business goals
+    ├── Stakeholders
+    └── Constraints
+```
+
+**Phase 2: Parse Visual Architecture**
+- [ ] Parse Excalidraw JSON (elements, connections, labels)
+- [ ] Parse Draw.io XML (mxCell elements, geometry, metadata)
+- [ ] Parse ArchiMate XML (elements, relationships, layers)
+- [ ] Parse Mermaid text (nodes, edges, groups)
+- [ ] Extract components, boundaries, connections
+
+**Phase 3: Parse Specifications**
+- [ ] Parse markdown component descriptions
+- [ ] Extract: name, purpose, responsibilities, interfaces
+- [ ] Map to visual diagram components
+- [ ] Validate: all visual components have descriptions
+
+**Phase 4: Analyze Code Samples**
+- [ ] Link code to components
+- [ ] Extract: tech stack, dependencies, patterns
+- [ ] Validate: code matches specification
+- [ ] Enrich component details
+
+**Phase 5: Iterative Clarification**
+Agent asks follow-up questions for missing/ambiguous info:
+```
+Examples:
+- "Component 'API Gateway' connects to 'Auth Service'. What protocol? REST/gRPC/GraphQL?"
+- "Database component found. What DBMS? PostgreSQL/MySQL/MongoDB?"
+- "'User Service' has no code sample. What language/framework?"
+- "Unclear boundary. Is 'Cache' part of API or separate service?"
+```
+
+**Phase 6: Synthesize Architecture Model**
+- [ ] Build unified model (Structurizr C4 or internal format)
+- [ ] Validate completeness
+- [ ] Generate baseline architecture
+- [ ] Output to architecture-docs/baseline/
+
+**Phase 7: Generate TOGAF Input**
+- [ ] Create Phase A vision input (stakeholders, goals, scope)
+- [ ] Prepare baseline architecture (current state)
+- [ ] Set up for full TOGAF cycle (Phases A-H)
+- [ ] Option to run full analysis or stop at synthesis
+
+#### Supported Input Formats
+
+| Format | Tool | Parseable | Priority |
+|--------|------|-----------|----------|
+| Excalidraw | VS Code, excalidraw.com | JSON | P0 |
+| Mermaid | Text editors | Text | P0 |
+| Draw.io | diagrams.net | XML | P1 |
+| ArchiMate | Archi tool | XML | P1 |
+| Hand-drawn | Image (OCR) | Image | P2 |
+
+#### Output Formats
+
+Same as analysis output:
+- Mermaid diagrams
+- Excalidraw files
+- ArchiMate export (via adapter)
+- Structurizr DSL
+
+#### Documentation
+
+**Tasks:**
+- [ ] Create `architecture-synthesis/` skill directory
+- [ ] Write process guide: tools and formats users can provide
+- [ ] Document interactive workflow and questions
+- [ ] Create template for component specifications (MD)
+- [ ] Provide examples: Excalidraw + MD → Full TOGAF
+- [ ] Add parser implementations for each format
+
+**Files:**
+```
+skills/architecture-synthesis/
+├── README.md                    # Concepts and process guide
+├── workflows.md                 # 7-phase workflow
+├── templates.md                 # Input templates
+│   ├── requirements-checklist.md
+│   ├── component-spec-template.md
+│   ├── excalidraw-conventions.md
+│   ├── drawio-conventions.md
+│   └── archimate-guidelines.md
+├── parsers.md                   # Format parsing logic
+├── examples.md                  # End-to-end examples
+└── checklist.md                 # Quick reference
+```
+
+**Integration:**
+- Links to TOGAF Phase A (feeds synthesized vision)
+- Uses Structurizr for model generation
+- Outputs to architecture-docs/baseline/
+- Can trigger full TOGAF analysis (A-H)
+
+**Location:** `skills/architecture-synthesis/`
+
+---
+
 ### High Priority
 
 #### Core Architecture Docs Output (`analysis-outputs/core-architecture/`)
@@ -371,15 +507,18 @@ Add Excalidraw as a diagram format option alongside Mermaid, ASCII, and PlantUML
 
 ### Execution Order
 
-Build in sequence - core output structure first, then enhance phases to populate it:
+Build in sequence - synthesis enables better core architecture, then enhance phases:
 
 | Step | Task | Depends On |
 |------|------|------------|
+| 0 | Architecture Synthesis Skill | - (new capability) |
 | 1 | Core Architecture Output Structure | - |
 | 2 | Update TOGAF phases to link to core | Step 1 |
 | 3 | Change Management Communication Plan | Step 1 |
 | 4 | Evolutionary Planning with Fitness Functions | Step 1 |
 | 5 | Excalidraw Diagram Support | - (independent) |
+
+**Note:** Architecture Synthesis (Step 0) can be developed in parallel as it creates a new entry point into the TOGAF workflow.
 
 ---
 
@@ -518,9 +657,10 @@ All TOGAF ADM phases (A through H) are now complete.
 10. ~~TOGAF Phase F~~ ✅ Complete
 11. ~~TOGAF Phase G~~ ✅ Complete
 12. ~~TOGAF Phase H~~ ✅ Complete
-13. **Next: Step 1 - Core Architecture Output Structure** (High Priority)
-14. **Next: Step 2 - Update TOGAF phases to link to core** (High Priority)
-15. **Next: Step 3 - Change Mgmt Communication Plan** (High Priority)
-16. **Next: Step 4 - Evolutionary Planning with Fitness Functions** (High Priority)
+13. **Next: Step 0 - Architecture Synthesis Skill** (High Priority - New Entry Point)
+14. **Next: Step 1 - Core Architecture Output Structure** (High Priority)
+15. **Next: Step 2 - Update TOGAF phases to link to core** (High Priority)
+16. **Next: Step 3 - Change Mgmt Communication Plan** (High Priority)
+17. **Next: Step 4 - Evolutionary Planning with Fitness Functions** (High Priority)
 17. Choose next (low priority):
     - **TOGAF Preliminary Phase** - Framework and principles setup
