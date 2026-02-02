@@ -21,9 +21,9 @@ Master tracking document for all skill development roadmaps.
 | TOGAF Phase F | - | 🟢 Complete | Medium |
 | TOGAF Phase G | - | 🟢 Complete | Medium |
 | TOGAF Phase H | - | 🟢 Complete | Medium |
-| Architecture Synthesis Skill | - | ⚪ Planned | High |
-| Core Architecture Docs Output | - | ⚪ Planned | High |
-| Change Mgmt Communication Plan | - | ⚪ Planned | High |
+| Architecture Synthesis Skill | - | 🟢 Complete | High |
+| Core Architecture Docs Output | - | 🟢 Complete | High |
+| Change Mgmt Communication Plan | - | 🟢 Complete | High |
 | Evolutionary Planning Enhancement | - | ⚪ Planned | High |
 | Excalidraw Diagram Support | - | ⚪ Planned | Medium |
 | Presentation Generation | - | ⚪ Planned | Medium |
@@ -215,15 +215,59 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 - [x] Structurizr adapter (export from analysis)
 - [x] ArchiMate adapter
 
+### Architecture Synthesis Skill ✅
+
+- [x] Create skill directory structure
+- [x] README.md - concepts and process guide
+- [x] workflows.md - 7-phase synthesis workflow
+- [x] templates.md - input templates and conventions
+- [x] parsers.md - format parsing logic (Excalidraw, Mermaid, Draw.io, ArchiMate)
+- [x] examples.md - end-to-end examples
+- [x] checklist.md - quick reference
+
+### Core Architecture Docs Output ✅
+
+- [x] Create core-architecture adapter directory
+- [x] README.md - adapter purpose, structure, TOGAF integration
+- [x] templates.md - output templates for all sections:
+  - [x] index.md - executive summary
+  - [x] baseline/ - current state (4 domain files)
+  - [x] target/ - future state
+  - [x] gap-analysis/ - gap register
+  - [x] risk-analysis/ - risk register
+  - [x] evolution-plan/ - roadmap + fitness functions
+  - [x] change-management/ - communication plan
+- [x] Update _index.md to register new adapter
+
+### Change Management Communication Plan ✅
+
+- [x] Communication Plan Template with full matrix:
+  - [x] Stakeholder/audience
+  - [x] Message type
+  - [x] Owner
+  - [x] Delivery date
+  - [x] Team/domain
+  - [x] Channel/medium
+  - [x] Status
+  - [x] **Impact review date/period**
+- [x] Stakeholder group templates
+- [x] Message templates (announcement, training, status)
+- [x] Communication schedule (Gantt)
+- [x] Impact review process
+- [x] Input workflow for planning
+- [x] Integration into workflows.md Step 6.2
+- [x] Realistic example (Auth0 migration)
+- [x] Checklist updates
+
 ---
 
 ## Quick Summary: What's Left
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| Core Architecture Docs Output | Medium | High |
-| Change Mgmt Communication Plan | Small | High |
 | Evolutionary Planning Enhancement | Medium | High |
+| Excalidraw Diagram Support | Medium | Medium |
+| Presentation Generation | Medium | Medium |
 | TOGAF Preliminary Phase | Medium | Low |
 
 ---
@@ -640,6 +684,9 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-01 | TOGAF Phase G complete (Implementation Governance) | - |
 | 2026-02-01 | TOGAF Phase H complete (Change Management) | - |
 | 2026-02-01 | Tooling research added (Marp, mermaid-cli, python-pptx, Excalidraw) | - |
+| 2026-02-02 | Architecture Synthesis skill complete (middle-out from diagrams/specs) | c9e3108 |
+| 2026-02-02 | Core Architecture Docs Output adapter complete (canonical output structure) | b1efb77 |
+| 2026-02-02 | Change Management Communication Plan enhancement complete | - |
 
 ---
 
@@ -657,10 +704,11 @@ All TOGAF ADM phases (A through H) are now complete.
 10. ~~TOGAF Phase F~~ ✅ Complete
 11. ~~TOGAF Phase G~~ ✅ Complete
 12. ~~TOGAF Phase H~~ ✅ Complete
-13. **Next: Step 0 - Architecture Synthesis Skill** (High Priority - New Entry Point)
-14. **Next: Step 1 - Core Architecture Output Structure** (High Priority)
-15. **Next: Step 2 - Update TOGAF phases to link to core** (High Priority)
-16. **Next: Step 3 - Change Mgmt Communication Plan** (High Priority)
-17. **Next: Step 4 - Evolutionary Planning with Fitness Functions** (High Priority)
-17. Choose next (low priority):
-    - **TOGAF Preliminary Phase** - Framework and principles setup
+13. ~~Architecture Synthesis Skill~~ ✅ Complete
+14. ~~Core Architecture Output Structure~~ ✅ Complete
+15. ~~Change Mgmt Communication Plan~~ ✅ Complete
+16. **Next: Evolutionary Planning with Fitness Functions** (High Priority)
+17. Choose next (medium/low priority):
+    - Excalidraw Diagram Support
+    - Presentation Generation
+    - TOGAF Preliminary Phase

@@ -203,14 +203,31 @@ Quality gates and verification criteria for TOGAF Phase H activities.
 - [ ] Version control applied
 - [ ] Superseded artifacts archived
 
-### Communication
-- [ ] Communication audience identified
-- [ ] Update notification prepared
-- [ ] Effective date communicated
-- [ ] Impact clearly explained
-- [ ] Actions required specified
-- [ ] Support resources listed
-- [ ] Communication sent through appropriate channels
+### Communication Plan
+- [ ] All stakeholder groups identified
+- [ ] Stakeholder concerns documented
+- [ ] Communication matrix created with:
+  - [ ] Stakeholder/audience
+  - [ ] Message type
+  - [ ] Owner assigned
+  - [ ] Delivery date set
+  - [ ] Team/domain identified
+  - [ ] Channel selected
+  - [ ] Status tracked
+  - [ ] **Impact review date scheduled**
+- [ ] Message templates prepared
+- [ ] Approval workflow followed
+- [ ] Communications sent per schedule
+- [ ] Delivery confirmed/acknowledged
+
+### Impact Reviews
+- [ ] Review dates scheduled (2-4 weeks post-delivery)
+- [ ] Review method defined (survey, interview, metrics)
+- [ ] Reviews conducted on schedule
+- [ ] Understanding assessed
+- [ ] Required actions verified
+- [ ] Gaps identified
+- [ ] Follow-up communications sent if needed
 
 ### Closure
 - [ ] All artifacts confirmed updated

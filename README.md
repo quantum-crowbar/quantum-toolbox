@@ -55,6 +55,7 @@ This will:
 | **arch-analysis** | Architecture documentation (8-phase workflow) | Complete |
 | **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO) | Complete |
 | **nonfunctional-analysis** | Testing, config, performance, code health | Complete |
+| **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) | Complete |
 
 ### Architecture & Modeling
 
@@ -86,7 +87,8 @@ Analysis can be exported in multiple formats:
 
 | Adapter | Output |
 |---------|--------|
-| **architecture-docs** | Human-readable markdown documentation |
+| **core-architecture** | Canonical source of truth (baseline, target, gaps, risks) |
+| **architecture-docs** | Detailed analysis documentation (7 reports) |
 | **coding-context** | AGENTS.md and CONTEXT.md for AI context |
 | **product-spec** | Product documentation (features, flows, data model) |
 | **structurizr** | C4 model in Structurizr DSL |
@@ -103,8 +105,10 @@ Trigger specific workflows during your session:
 | "Analyze the architecture" | Run full 8-phase codebase analysis |
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |
+| "Synthesize architecture from diagrams" | Parse visual diagrams into architecture model |
 | "Create C4 model" | Generate Structurizr architecture diagrams |
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
+| "Generate core architecture docs" | Canonical documentation structure |
 | "Use todo workflow" | Autonomous task-based development |
 
 ---
@@ -147,16 +151,24 @@ Each skill contains:
 
 ### Complete
 
-- Analysis engine with 5 output adapters
+- Analysis engine with 6 output adapters (including core-architecture)
+- Architecture Synthesis skill (middle-out from diagrams/specs)
 - Security analysis with 4 compliance frameworks
 - Nonfunctional analysis (testing, config, performance, health)
 - Structurizr C4 modeling skill
 - TOGAF ADM Phases A-H (Full ADM cycle complete)
 - Core development workflows
 
-### Planned (Low Priority)
+### In Progress
 
-- TOGAF Preliminary Phase (Framework and principles setup)
+- Change Management Communication Plan enhancement
+- Evolutionary Planning with fitness functions
+
+### Planned
+
+- Excalidraw native diagram support
+- Presentation generation (Marp CLI)
+- TOGAF Preliminary Phase
 
 See [ROADMAP-TRACKER.md](specs/ai/ROADMAP-TRACKER.md) for details.
 

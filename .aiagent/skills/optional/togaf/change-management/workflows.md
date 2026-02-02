@@ -347,11 +347,50 @@ Ensure all architecture artifacts and communications reflect the implemented cha
 #### 6.2 Communications
 
 **Actions:**
-1. Prepare change notification
-2. Identify communication audience
-3. Deliver updates through appropriate channels
-4. Update architecture portal/wiki
-5. Brief affected stakeholders
+1. Create communication plan (see [Communication Plan Template](templates.md#communication-plan-template))
+2. Identify all stakeholder groups and their concerns
+3. Build communication matrix with owners, dates, and channels
+4. Set impact review dates for each communication
+5. Execute communications per schedule
+6. Track delivery and acknowledgment status
+7. Conduct impact reviews on scheduled dates
+
+**Communication Matrix Fields:**
+| Field | Description |
+|-------|-------------|
+| Stakeholder | Who receives the communication |
+| Message Type | Announcement, Training, Status Update, etc. |
+| Owner | Person responsible for delivery |
+| Delivery Date | When to send |
+| Team/Domain | Affected organizational unit |
+| Channel | Email, Meeting, Slack, Wiki, etc. |
+| Status | Planned → Scheduled → Sent → Acknowledged → Completed |
+| Impact Review Date | When to assess understanding (2-4 weeks post-delivery) |
+
+**Communication Workflow:**
+```
+1. Stakeholder Analysis
+   - Identify all affected groups
+   - Understand their concerns
+   - Determine impact level
+
+2. Plan Communications
+   - Create communication matrix
+   - Assign owners
+   - Schedule deliveries
+   - Set review dates
+
+3. Execute Communications
+   - Send per schedule
+   - Track status
+   - Handle feedback
+
+4. Review Impact
+   - Conduct reviews on scheduled dates
+   - Assess understanding
+   - Identify gaps
+   - Follow up as needed
+```
 
 **Communication Elements:**
 | Element | Description |
@@ -361,6 +400,7 @@ Ensure all architecture artifacts and communications reflect the implemented cha
 | Impact | What it means for audience |
 | Effective Date | When change takes effect |
 | Next Steps | Any required actions |
+| Review Date | When we'll assess if message was understood |
 
 #### 6.3 Closure and Learning
 

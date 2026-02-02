@@ -746,3 +746,214 @@ Transformation Program 2025-2027.
 | Schedule Phase A kickoff | Lead Architect | 2025-07-25 |
 | Begin Phase A | Architecture Team | 2025-08-01 |
 ```
+
+---
+
+## Communication Plan Example
+
+```markdown
+# Change Communication Plan
+
+**Change Reference**: ACR-2025-042 (Migrate Authentication to Auth0)
+**Plan Date**: 2025-07-20
+**Communication Lead**: Maria Santos
+
+---
+
+## Communication Objectives
+
+| Objective | Description |
+|-----------|-------------|
+| Awareness | Inform all stakeholders about the Auth0 migration timeline and impact |
+| Alignment | Gain buy-in from development teams for the migration effort |
+| Enablement | Equip teams with knowledge to integrate with Auth0 |
+| Feedback | Collect concerns about migration approach and timing |
+
+---
+
+## Communication Matrix
+
+| Stakeholder | Message Type | Owner | Delivery Date | Team/Domain | Channel | Status | Impact Review Date |
+|-------------|--------------|-------|---------------|-------------|---------|--------|-------------------|
+| Executive Leadership | Announcement | David Kim | 2025-07-22 | Leadership | Executive Briefing | Planned | 2025-08-05 |
+| All Engineering | Announcement | Maria Santos | 2025-07-25 | Engineering | All-Hands Meeting | Planned | 2025-08-08 |
+| Frontend Teams | Training | Alex Chen | 2025-08-01 | Web/Mobile | Workshop (3 sessions) | Planned | 2025-08-22 |
+| Backend Teams | Training | James Wu | 2025-08-01 | Platform | Workshop (2 sessions) | Planned | 2025-08-22 |
+| DevOps | Training | Sarah Kim | 2025-08-05 | Infrastructure | Hands-on Lab | Planned | 2025-08-26 |
+| Security Team | Consultation | David Kim | 2025-07-28 | Security | Meeting | Planned | 2025-08-11 |
+| Customer Success | Status Update | Maria Santos | 2025-08-01 | Customer Success | Email + FAQ | Planned | 2025-08-15 |
+| Help Desk | Training | Alex Chen | 2025-08-10 | Support | Training Session | Planned | 2025-08-31 |
+| Product Managers | Consultation | David Kim | 2025-07-30 | Product | Meeting | Planned | 2025-08-13 |
+| All Staff | Announcement | Maria Santos | 2025-09-01 | All | Company Newsletter | Planned | 2025-09-15 |
+| Customer-Facing Teams | Alert | Maria Santos | 2025-09-10 | Sales/Support | Email | Planned | 2025-09-17 |
+| End Users | Announcement | Comms Team | 2025-09-15 | External | App Notification | Planned | 2025-09-29 |
+
+---
+
+## Stakeholder Groups
+
+### Group 1: Technical Teams (High Impact)
+
+| Attribute | Value |
+|-----------|-------|
+| **Members** | Frontend developers, Backend developers, DevOps engineers |
+| **Primary Concern** | Migration complexity, learning curve, timeline pressure |
+| **Preferred Channel** | Workshops, Slack channels, technical documentation |
+| **Timing Sensitivity** | Need 4+ weeks before migration begins |
+| **Change Impact Level** | High |
+
+### Group 2: Leadership (Medium Impact)
+
+| Attribute | Value |
+|-----------|-------|
+| **Members** | CTO, VP Engineering, VP Product, VP Customer Success |
+| **Primary Concern** | Timeline, budget, risk, customer impact |
+| **Preferred Channel** | Executive briefings, dashboards, written summaries |
+| **Timing Sensitivity** | Early notification required for planning |
+| **Change Impact Level** | Medium |
+
+### Group 3: Customer-Facing Teams (Medium Impact)
+
+| Attribute | Value |
+|-----------|-------|
+| **Members** | Customer Success, Support, Sales |
+| **Primary Concern** | Customer questions, service continuity, training on new flows |
+| **Preferred Channel** | Email, FAQ documents, short training sessions |
+| **Timing Sensitivity** | Need materials before customer communications |
+| **Change Impact Level** | Medium |
+
+### Group 4: End Users (Low Direct Impact)
+
+| Attribute | Value |
+|-----------|-------|
+| **Members** | All application users (external customers) |
+| **Primary Concern** | Login experience changes, password reset if needed |
+| **Preferred Channel** | In-app notifications, email, help center articles |
+| **Timing Sensitivity** | Close to go-live, not too early |
+| **Change Impact Level** | Low (improved experience) |
+
+---
+
+## Communication Schedule
+
+```mermaid
+gantt
+    title Auth0 Migration Communication Timeline
+    dateFormat YYYY-MM-DD
+    section Pre-Migration
+    Executive Briefing          :milestone, m1, 2025-07-22, 0d
+    All-Hands Announcement      :a1, 2025-07-25, 1d
+    Security Consultation       :c1, 2025-07-28, 1d
+    Product Manager Meeting     :c2, 2025-07-30, 1d
+    section Training Phase
+    Technical Training (Week 1) :t1, 2025-08-01, 5d
+    Technical Training (Week 2) :t2, 2025-08-08, 5d
+    Help Desk Training          :t3, 2025-08-10, 2d
+    section Migration Phase
+    Go-Live Internal Comms      :milestone, m2, 2025-09-01, 0d
+    Customer-Facing Prep        :p1, 2025-09-10, 3d
+    End User Notification       :milestone, m3, 2025-09-15, 0d
+    section Post-Migration
+    Impact Reviews              :r1, 2025-09-15, 14d
+```
+
+---
+
+## Impact Review Process
+
+### Review Schedule
+
+| Communication | Delivery Date | Review Date | Reviewer | Review Method |
+|---------------|---------------|-------------|----------|---------------|
+| Executive Briefing | 2025-07-22 | 2025-08-05 | David Kim | 1:1 follow-up |
+| All-Hands Announcement | 2025-07-25 | 2025-08-08 | Maria Santos | Survey |
+| Technical Training | 2025-08-01 | 2025-08-22 | Alex Chen | Quiz + Feedback |
+| DevOps Training | 2025-08-05 | 2025-08-26 | Sarah Kim | Hands-on assessment |
+| Customer Success | 2025-08-01 | 2025-08-15 | Maria Santos | FAQ usage metrics |
+| Help Desk Training | 2025-08-10 | 2025-08-31 | Alex Chen | Ticket resolution metrics |
+| End User Notification | 2025-09-15 | 2025-09-29 | Comms Team | Login success rate |
+
+### Review Questions
+
+1. Did stakeholders receive the communication?
+2. Did stakeholders understand the migration timeline and their role?
+3. Did technical teams complete required training?
+4. What concerns were raised that need addressing?
+5. Are there any blockers to the migration timeline?
+6. Is additional communication or training needed?
+
+### Review Outcomes (Template)
+
+| Stakeholder Group | Understanding | Action Taken | Satisfaction | Follow-up Needed |
+|-------------------|---------------|--------------|--------------|------------------|
+| Technical Teams | High | Training completed | 4.2/5 | Update SDK docs |
+| Leadership | High | Budget approved | 4.5/5 | No |
+| Customer-Facing | Medium | FAQ reviewed | 3.8/5 | Additional Q&A session |
+| End Users | TBD | TBD | TBD | TBD |
+
+---
+
+## Key Messages by Audience
+
+### For Executives
+
+**Key Points:**
+- Migration reduces operational cost by 40% ($120K/year)
+- Improves security posture with advanced MFA options
+- Enables faster feature delivery with Auth0's developer tools
+- Timeline: Complete by October 2025
+- Risk: Managed through phased rollout, starting with internal apps
+
+### For Technical Teams
+
+**Key Points:**
+- New Auth0 SDKs are simpler than current Keycloak integration
+- Training sessions will cover migration patterns
+- Internal apps migrate first (August), external apps follow (September)
+- Dedicated Slack channel #auth0-migration for questions
+- Migration guide and code samples available in wiki
+
+### For Customer-Facing Teams
+
+**Key Points:**
+- Customer login experience will improve (faster, more options)
+- Most customers won't notice the change
+- Some customers may need to re-authenticate once
+- FAQ document covers common customer questions
+- Escalation path: #auth0-support Slack channel
+
+### For End Users
+
+**Key Points:**
+- Your login experience is getting an upgrade
+- You may be asked to log in again on [date]
+- New options: passwordless login, social login
+- If you have issues, contact support at [link]
+
+---
+
+## Communication Governance
+
+### Approval Workflow
+
+| Communication Type | Approval Required From | Status |
+|--------------------|----------------------|--------|
+| Executive Briefing | CTO | Approved |
+| All-Hands Announcement | VP Engineering | Pending |
+| Technical Training Materials | Tech Lead | In Review |
+| Customer Communications | VP Customer Success | Not Started |
+| End User Notifications | Marketing + Legal | Not Started |
+
+---
+
+## Metrics
+
+| Metric | Target | Actual | Status |
+|--------|--------|--------|--------|
+| Communications sent on time | 100% | - | Tracking |
+| Training attendance | >90% | - | Tracking |
+| Training satisfaction | >4.0/5 | - | Tracking |
+| Questions answered within SLA | >95% | - | Tracking |
+| Impact reviews completed | 100% | - | Tracking |
+| No customer escalations | 0 | - | Tracking |
+```

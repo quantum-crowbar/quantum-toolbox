@@ -2,7 +2,7 @@
 
 > **Repository**: AI Agent Toolbox for Architects
 > **Purpose**: Reusable submodule providing standardized instructions, workflows, and skills for AI coding agents
-> **Last Updated**: 2026-02-01
+> **Last Updated**: 2026-02-02
 
 ---
 
@@ -39,9 +39,10 @@ Designed for software architects and senior developers who want their AI assista
 │   │       ├── arch-analysis/         # 8-phase architecture analysis
 │   │       ├── security-analysis/     # Security posture + compliance frameworks
 │   │       ├── nonfunctional-analysis/# Testing, config, performance, health
+│   │       ├── architecture-synthesis/# Middle-out from diagrams/specs
 │   │       ├── structurizr/           # C4 architecture modeling with DSL
-│   │       ├── togaf/                 # TOGAF ADM phases (Vision, Business, IS, Tech)
-│   │       ├── analysis-outputs/      # Output adapters (docs, context, structurizr, etc.)
+│   │       ├── togaf/                 # TOGAF ADM phases A-H (complete)
+│   │       ├── analysis-outputs/      # Output adapters (core-architecture, docs, context, etc.)
 │   │       ├── software-design/       # Design principles, patterns
 │   │       ├── tech-stack-decisions/  # Technology evaluation, ADRs
 │   │       └── code-conventions/      # Style guides, naming standards
@@ -77,6 +78,7 @@ Designed for software architects and senior developers who want their AI assista
 | **arch-analysis** | `skills/optional/arch-analysis/` | ✅ Complete | 8-phase architecture documentation workflow |
 | **security-analysis** | `skills/optional/security-analysis/` | ✅ Complete | Security posture + 4 compliance frameworks (OWASP, NIST, CIS, ISO) |
 | **nonfunctional-analysis** | `skills/optional/nonfunctional-analysis/` | ✅ Complete | Testing, config, performance, code health |
+| **architecture-synthesis** | `skills/optional/architecture-synthesis/` | ✅ Complete | Middle-out from diagrams + specs |
 
 ### Architecture & Modeling Skills
 
@@ -106,7 +108,8 @@ Designed for software architects and senior developers who want their AI assista
 
 | Adapter | Location | Status | Description |
 |---------|----------|--------|-------------|
-| **architecture-docs** | `analysis-outputs/architecture-docs/` | ✅ Complete | Human-readable markdown documentation |
+| **core-architecture** | `analysis-outputs/core-architecture/` | ✅ Complete | Canonical source of truth for TOGAF |
+| **architecture-docs** | `analysis-outputs/architecture-docs/` | ✅ Complete | Detailed analysis documentation |
 | **coding-context** | `analysis-outputs/coding-context/` | ✅ Complete | AGENTS.md and CONTEXT.md for AI context |
 | **product-spec** | `analysis-outputs/product-spec/` | ✅ Complete | Product documentation (features, flows, data model) |
 | **structurizr** | `analysis-outputs/structurizr/` | ✅ Complete | C4 model in Structurizr DSL |
@@ -121,8 +124,10 @@ Designed for software architects and senior developers who want their AI assista
 | "Analyze the architecture" | Run full 8-phase codebase analysis |
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |
+| "Synthesize architecture from diagrams" | Parse Excalidraw/Mermaid/Draw.io into model |
 | "Create C4 model" | Generate Structurizr architecture diagrams |
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
+| "Generate core architecture docs" | Canonical documentation structure |
 | "Use todo workflow" | Autonomous task-based development |
 
 ---
@@ -169,27 +174,33 @@ git submodule update --init --recursive
 
 ## Current Roadmap Status
 
-### ✅ Complete (High/Medium Priority)
+### ✅ Complete
 
 | Work Item | Status | Date |
 |-----------|--------|------|
 | Arch-analysis Phase 1 (deps, data flow, errors) | ✅ Complete | 2025-01-31 |
-| Arch-analysis output structure (Phase 0, index, numbered files) | ✅ Complete | 2025-01-31 |
-| TOGAF Foundation (core concepts, index, vision skill) | ✅ Complete | 2025-01-31 |
-| Security analysis skill (full skill with 5 files, 4 frameworks) | ✅ Complete | 2025-01-31 |
-| Analysis refactoring Phase 1-4 (base engine + 5 adapters) | ✅ Complete | 2026-01-31 |
-| Nonfunctional-analysis skill (testing, config, perf, health) | ✅ Complete | 2026-01-31 |
-| Structurizr authoring skill (C4 modeling with DSL) | ✅ Complete | 2026-01-31 |
-| TOGAF Core ADM (Phase B/C/D - Business, Info Systems, Technology) | ✅ Complete | 2026-02-01 |
-| TOGAF Phase E (Opportunities and Solutions) | ✅ Complete | 2026-02-01 |
+| TOGAF Foundation + Full ADM Cycle (Phases A-H) | ✅ Complete | 2026-02-01 |
+| Security analysis skill (4 compliance frameworks) | ✅ Complete | 2025-01-31 |
+| Analysis refactoring (base engine + 6 adapters) | ✅ Complete | 2026-01-31 |
+| Nonfunctional-analysis skill | ✅ Complete | 2026-01-31 |
+| Structurizr authoring skill | ✅ Complete | 2026-01-31 |
+| Architecture Synthesis skill (middle-out from diagrams) | ✅ Complete | 2026-02-02 |
+| Core Architecture Docs Output (canonical structure) | ✅ Complete | 2026-02-02 |
+| Change Mgmt Communication Plan (with impact reviews) | ✅ Complete | 2026-02-02 |
 
-### ⚪ Remaining (Low Priority)
+### 🟡 In Progress
 
 | Work Item | Priority | Description |
 |-----------|----------|-------------|
-| TOGAF Phase F | Low | Migration Planning |
-| TOGAF Phase G | Low | Implementation Governance |
-| TOGAF Phase H | Low | Architecture Change Management |
+| Evolutionary Planning Enhancement | High | Fitness functions for migration |
+
+### ⚪ Remaining
+
+| Work Item | Priority | Description |
+|-----------|----------|-------------|
+| Excalidraw Diagram Support | Medium | Native Excalidraw output format |
+| Presentation Generation | Medium | Marp CLI for PPTX/PDF export |
+| TOGAF Preliminary Phase | Low | Framework and principles setup |
 
 ---
 
