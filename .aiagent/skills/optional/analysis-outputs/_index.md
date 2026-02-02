@@ -18,7 +18,8 @@ codebase-analysis → analysis_model → output adapter → formatted output
 
 | Adapter | Output | Use Case |
 |---------|--------|----------|
-| [architecture-docs](architecture-docs/) | 7 markdown reports + index | Architecture documentation |
+| [core-architecture](core-architecture/) | Canonical architecture docs | Single source of truth for TOGAF |
+| [architecture-docs](architecture-docs/) | 7 markdown reports + index | Detailed analysis documentation |
 | [coding-context](coding-context/) | AGENTS.md, CONTEXT.md | AI coding assistance |
 | [product-spec](product-spec/) | Features, flows, data model | Product documentation |
 | [structurizr](structurizr/) | workspace.dsl | C4 architecture diagrams |
@@ -33,7 +34,8 @@ When invoking analysis, select output adapters:
 ### Single Adapter
 
 ```
-"Generate architecture documentation"  → architecture-docs
+"Generate core architecture docs"     → core-architecture
+"Generate architecture documentation" → architecture-docs
 "Create coding context"               → coding-context
 "Extract product spec"                → product-spec
 "Generate C4 model"                   → structurizr
@@ -47,7 +49,8 @@ When invoking analysis, select output adapters:
     ↓
 Multi-choice prompt:
   What outputs do you need?
-  ☑ Architecture documentation
+  ☑ Core architecture (canonical docs)
+  ☐ Detailed analysis reports
   ☑ Coding context (AGENTS.md)
   ☐ Product specification
   ☐ C4 model (Structurizr)
@@ -125,9 +128,37 @@ Transform analysis model to adapter-specific format:
 
 ## Adapter Reference
 
+### core-architecture
+
+**Purpose**: Canonical architecture documentation - single source of truth
+
+**Output Structure**:
+```
+{docs}/core-architecture/
+├── index.md                    # Executive summary
+├── baseline/                   # Current state
+│   ├── overview.md
+│   ├── business.md
+│   ├── information-systems.md
+│   └── technology.md
+├── target/                     # Future state
+├── gap-analysis/               # Baseline vs Target
+├── risk-analysis/              # Risk register
+├── evolution-plan/             # Roadmap + fitness functions
+└── change-management/          # Change tracking
+```
+
+**Required Sections**: `meta`, `architecture`
+
+**Design Principle**: Core docs are the source of truth. TOGAF phase outputs link TO these docs rather than duplicating content.
+
+**See**: [core-architecture/README.md](core-architecture/README.md)
+
+---
+
 ### architecture-docs
 
-**Purpose**: Comprehensive architecture documentation
+**Purpose**: Detailed analysis documentation
 
 **Output Structure**:
 ```
