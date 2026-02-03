@@ -307,6 +307,97 @@ Deliverables from this phase:
 4. **Stakeholder-Aligned** - Ensure buy-in for timeline and resources
 5. **Flexible** - Build in contingency and adaptation points
 6. **Measurable** - Define clear success criteria
+7. **Fitness-Guided** - Use fitness functions to validate evolution
+
+---
+
+## Fitness-Guided Migration
+
+### Overview
+
+Fitness functions from evolutionary architecture provide objective measures to guide and validate migration progress. Integrating fitness functions ensures:
+
+- **Measurable progress** - Quantifiable validation at each stage
+- **Controlled degradation** - Know when temporary trade-offs are acceptable
+- **Early warning** - Detect issues before they become critical
+- **Confidence in decisions** - Data-driven go/no-go at each gate
+
+### Fitness Function Integration Points
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              FITNESS-GUIDED MIGRATION                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Baseline Fitness                                        │
+│     ├── Measure current state fitness functions             │
+│     ├── Document baseline conditions                        │
+│     └── Establish comparison point                          │
+│                                                             │
+│  2. Define Target Fitness                                   │
+│     ├── Set fitness targets for end state                   │
+│     ├── Identify expected improvements                      │
+│     └── Define acceptable temporary degradation             │
+│                                                             │
+│  3. Transition Fitness Gates                                │
+│     ├── Pre-transition fitness requirements                 │
+│     ├── Post-transition fitness validation                  │
+│     └── Rollback triggers based on fitness                  │
+│                                                             │
+│  4. Continuous Fitness Monitoring                           │
+│     ├── Real-time dashboard during migration                │
+│     ├── Alerting on threshold breaches                      │
+│     └── Fitness-based phase progression                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Fitness Categories for Migration
+
+| Category | Migration Relevance | Key Metrics |
+|----------|-------------------|-------------|
+| **Performance** | Must not degrade user experience | Response time, throughput |
+| **Reliability** | Critical during cutover | Availability, error rate |
+| **Data Integrity** | Essential for data migration | Consistency, completeness |
+| **Security** | Cannot introduce vulnerabilities | Compliance score, exposure |
+| **Operational** | Support team readiness | MTTR, incident rate |
+
+### Migration Fitness Patterns
+
+#### Non-Negotiable Fitness
+Functions that MUST NOT degrade:
+```yaml
+non_negotiable:
+  - availability: ">= current baseline"
+  - data_integrity: "100%"
+  - security_compliance: "no regression"
+```
+
+#### Expected Improvement
+Functions that SHOULD improve:
+```yaml
+expected_improvement:
+  - response_time: "target < 200ms"
+  - deployment_frequency: "target 5x current"
+  - technical_debt: "reduce by 30%"
+```
+
+#### Acceptable Temporary Degradation
+Functions that MAY temporarily degrade:
+```yaml
+acceptable_degradation:
+  - deployment_frequency:
+      during: "phase 2-3"
+      acceptable: "50% of normal"
+      recovery: "within 2 weeks of phase end"
+```
+
+### See Also
+
+For comprehensive fitness function implementation:
+- [Fitness Functions Skill](../../fitness-functions/) - Full skill documentation
+- [Fitness Workflows](../../fitness-functions/workflows.md) - Step-by-step procedures
+- [Fitness Templates](../../fitness-functions/templates.md) - Reusable formats
 
 ---
 
@@ -315,6 +406,7 @@ Deliverables from this phase:
 - [Opportunities and Solutions](../opportunities-solutions/) - Provides inputs
 - [Implementation Governance](../implementation-governance/) - Consumes outputs
 - [Architecture Vision](../vision/) - Strategic context
+- [Fitness Functions](../../fitness-functions/) - Evolutionary architecture validation
 
 ---
 

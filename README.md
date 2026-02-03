@@ -56,6 +56,7 @@ This will:
 | **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO) | Complete |
 | **nonfunctional-analysis** | Testing, config, performance, code health | Complete |
 | **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) | Complete |
+| **fitness-functions** | Evolutionary architecture fitness measurement and validation | Complete |
 
 ### Architecture & Modeling
 
@@ -106,6 +107,7 @@ Trigger specific workflows during your session:
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |
 | "Synthesize architecture from diagrams" | Parse visual diagrams into architecture model |
+| "Define fitness functions" | Evolutionary architecture fitness assessment |
 | "Create C4 model" | Generate Structurizr architecture diagrams |
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
 | "Generate core architecture docs" | Canonical documentation structure |
@@ -158,11 +160,9 @@ Each skill contains:
 - Structurizr C4 modeling skill
 - TOGAF ADM Phases A-H (Full ADM cycle complete)
 - Core development workflows
-
-### In Progress
-
 - Change Management Communication Plan enhancement
-- Evolutionary Planning with fitness functions
+- Fitness Functions skill (evolutionary architecture)
+- Migration Planning with fitness function integration
 
 ### Planned
 

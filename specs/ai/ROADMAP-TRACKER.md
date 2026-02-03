@@ -24,7 +24,8 @@ Master tracking document for all skill development roadmaps.
 | Architecture Synthesis Skill | - | 🟢 Complete | High |
 | Core Architecture Docs Output | - | 🟢 Complete | High |
 | Change Mgmt Communication Plan | - | 🟢 Complete | High |
-| Evolutionary Planning Enhancement | - | ⚪ Planned | High |
+| Fitness Functions Skill | - | 🟢 Complete | High |
+| Migration Planning Fitness Integration | - | 🟢 Complete | High |
 | Excalidraw Diagram Support | - | ⚪ Planned | Medium |
 | Presentation Generation | - | ⚪ Planned | Medium |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
@@ -259,13 +260,60 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 - [x] Realistic example (Auth0 migration)
 - [x] Checklist updates
 
+### Fitness Functions Skill ✅
+
+- [x] Create skill directory (`skills/optional/fitness-functions/`)
+- [x] README.md - Evolutionary architecture concepts, 8 fitness categories
+  - [x] Deployment/Operational (DORA metrics)
+  - [x] Performance (latency, throughput)
+  - [x] Reliability (availability, MTTR, MTBF)
+  - [x] Security (vulnerabilities, compliance)
+  - [x] Scalability (elasticity, capacity)
+  - [x] Maintainability (complexity, debt, coverage)
+  - [x] Coupling/Modularity (dependencies, API stability)
+  - [x] Data Integrity (consistency, backups, RPO)
+- [x] workflows.md - 7-step lifecycle
+  - [x] Identify quality attributes
+  - [x] Define fitness functions
+  - [x] Establish baselines
+  - [x] Set targets
+  - [x] Implement measurement
+  - [x] Monitor & report
+  - [x] Review & adapt
+- [x] templates.md - Comprehensive templates
+  - [x] Fitness function specification
+  - [x] Quality attribute prioritization
+  - [x] Fitness function catalog
+  - [x] Fitness dashboard
+  - [x] Baseline report
+  - [x] Fitness-guided migration
+  - [x] CI/CD fitness gate
+  - [x] Composite function definition
+- [x] checklist.md - Quick reference for all steps
+- [x] examples.md - 6 comprehensive examples
+  - [x] E-commerce platform
+  - [x] SaaS migration
+  - [x] API platform
+  - [x] Data pipeline
+  - [x] Microservices architecture
+  - [x] Security-first system
+
+### Migration Planning Fitness Integration ✅
+
+- [x] Update migration-planning README.md with fitness concepts
+- [x] Add Step 1b: Establish Fitness Baseline to workflows.md
+- [x] Add Step 2b: Define Fitness Gates to workflows.md
+- [x] Fitness-based rollback triggers
+- [x] Dashboard configuration
+- [x] Update output structure with fitness deliverables
+- [x] Link to standalone fitness-functions skill
+
 ---
 
 ## Quick Summary: What's Left
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| Evolutionary Planning Enhancement | Medium | High |
 | Excalidraw Diagram Support | Medium | Medium |
 | Presentation Generation | Medium | Medium |
 | TOGAF Preliminary Phase | Medium | Low |
@@ -482,33 +530,39 @@ Enhance Phase H change management with structured communication planning.
 
 **Location:** `togaf/change-management/` (enhancement to existing skill)
 
-#### Evolutionary Planning Enhancement
+#### Evolutionary Planning Enhancement ✅
 
-Enhance Phase F migration planning with evolutionary architecture approach using fitness functions.
+**Status:** Complete - Implemented as standalone `fitness-functions` skill with integration into `migration-planning`.
 
-**Base Fitness Function Categories:**
+Enhanced Phase F migration planning with evolutionary architecture approach using fitness functions.
+
+**Implemented Fitness Function Categories (8 total):**
 | Category | Example Metrics | Description |
 |----------|-----------------|-------------|
+| Deployment | Deploy frequency, lead time, MTTR, change failure rate | DORA metrics |
 | Performance | Response time, throughput, latency | System speed and capacity |
-| Security | Vulnerability count, compliance score, attack surface | Protection posture |
-| Maintainability | Code complexity, test coverage, documentation | Ease of change |
-| Scalability | Capacity headroom, horizontal scaling readiness | Growth capability |
-| Cost | Infrastructure spend, operational cost, TCO | Financial efficiency |
+| Reliability | Availability, error rate, MTBF | System stability |
+| Security | Vulnerability count, patch latency, compliance score | Protection posture |
+| Scalability | Scale time, elasticity, cost per transaction | Growth capability |
+| Maintainability | Complexity, debt ratio, coverage, doc coverage | Ease of change |
+| Coupling | Afferent coupling, breaking changes, circular deps | Module independence |
+| Data | Consistency, backup success, RPO compliance | Data protection |
 
-Agent expands with system-specific fitness functions based on analysis (e.g., "GraphQL query depth < 5", "API response < 200ms P95").
+**Completed Features:**
+- [x] Fitness function framework (standalone skill):
+  - 8 fitness categories with detailed metrics
+  - Workflows for definition through monitoring
+  - Templates for specifications, dashboards, gates
+  - Examples for various system types
+- [x] Migration planning integration:
+  - Step 1b: Establish Fitness Baseline
+  - Step 2b: Define Fitness Gates
+  - Fitness-based rollback triggers
+  - Dashboard configuration
+- [x] Independent usability (can analyze any system)
+- [x] Integration with TOGAF migration planning
 
-**Features:**
-- [ ] Fitness function framework:
-  - Base fitness function definitions (5 categories above)
-  - Agent expands/customizes based on system being analyzed
-  - Measurable criteria for transition completion
-  - Automated checks where possible
-- [ ] Evolutionary plan generation from gap analysis
-- [ ] Leverage existing baseline/target artifacts from core-architecture
-- [ ] Incremental migration steps with fitness validation
-- [ ] Integration with core-architecture/evolution-plan output
-
-**Location:** `togaf/migration-planning/` (enhancement to existing skill)
+**Location:** `skills/optional/fitness-functions/` + `togaf/migration-planning/` (enhanced)
 
 #### Excalidraw Diagram Support
 
@@ -687,6 +741,8 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-02 | Architecture Synthesis skill complete (middle-out from diagrams/specs) | c9e3108 |
 | 2026-02-02 | Core Architecture Docs Output adapter complete (canonical output structure) | b1efb77 |
 | 2026-02-02 | Change Management Communication Plan enhancement complete | - |
+| 2026-02-03 | Fitness Functions skill complete (8 categories, full lifecycle) | - |
+| 2026-02-03 | Migration Planning fitness integration complete (baseline, gates, rollback) | - |
 
 ---
 
@@ -707,7 +763,7 @@ All TOGAF ADM phases (A through H) are now complete.
 13. ~~Architecture Synthesis Skill~~ ✅ Complete
 14. ~~Core Architecture Output Structure~~ ✅ Complete
 15. ~~Change Mgmt Communication Plan~~ ✅ Complete
-16. **Next: Evolutionary Planning with Fitness Functions** (High Priority)
+16. ~~Fitness Functions Skill~~ ✅ Complete (standalone + migration integration)
 17. Choose next (medium/low priority):
     - Excalidraw Diagram Support
     - Presentation Generation

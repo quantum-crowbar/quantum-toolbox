@@ -2,7 +2,7 @@
 
 > **Repository**: AI Agent Toolbox for Architects
 > **Purpose**: Reusable submodule providing standardized instructions, workflows, and skills for AI coding agents
-> **Last Updated**: 2026-02-02
+> **Last Updated**: 2026-02-03
 
 ---
 
@@ -40,8 +40,9 @@ Designed for software architects and senior developers who want their AI assista
 │   │       ├── security-analysis/     # Security posture + compliance frameworks
 │   │       ├── nonfunctional-analysis/# Testing, config, performance, health
 │   │       ├── architecture-synthesis/# Middle-out from diagrams/specs
+│   │       ├── fitness-functions/     # Evolutionary architecture fitness
 │   │       ├── structurizr/           # C4 architecture modeling with DSL
-│   │       ├── togaf/                 # TOGAF ADM phases A-H (complete)
+│   │       ├── togaf/                 # TOGAF ADM phases A-H (with fitness integration)
 │   │       ├── analysis-outputs/      # Output adapters (core-architecture, docs, context, etc.)
 │   │       ├── software-design/       # Design principles, patterns
 │   │       ├── tech-stack-decisions/  # Technology evaluation, ADRs
@@ -79,6 +80,7 @@ Designed for software architects and senior developers who want their AI assista
 | **security-analysis** | `skills/optional/security-analysis/` | ✅ Complete | Security posture + 4 compliance frameworks (OWASP, NIST, CIS, ISO) |
 | **nonfunctional-analysis** | `skills/optional/nonfunctional-analysis/` | ✅ Complete | Testing, config, performance, code health |
 | **architecture-synthesis** | `skills/optional/architecture-synthesis/` | ✅ Complete | Middle-out from diagrams + specs |
+| **fitness-functions** | `skills/optional/fitness-functions/` | ✅ Complete | Evolutionary architecture fitness measurement |
 
 ### Architecture & Modeling Skills
 
@@ -125,6 +127,8 @@ Designed for software architects and senior developers who want their AI assista
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |
 | "Synthesize architecture from diagrams" | Parse Excalidraw/Mermaid/Draw.io into model |
+| "Define fitness functions" | Evolutionary architecture fitness assessment |
+| "Analyze system fitness" | Measure system against fitness functions |
 | "Create C4 model" | Generate Structurizr architecture diagrams |
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
 | "Generate core architecture docs" | Canonical documentation structure |
@@ -187,12 +191,8 @@ git submodule update --init --recursive
 | Architecture Synthesis skill (middle-out from diagrams) | ✅ Complete | 2026-02-02 |
 | Core Architecture Docs Output (canonical structure) | ✅ Complete | 2026-02-02 |
 | Change Mgmt Communication Plan (with impact reviews) | ✅ Complete | 2026-02-02 |
-
-### 🟡 In Progress
-
-| Work Item | Priority | Description |
-|-----------|----------|-------------|
-| Evolutionary Planning Enhancement | High | Fitness functions for migration |
+| Fitness Functions skill (evolutionary architecture) | ✅ Complete | 2026-02-03 |
+| Migration Planning with fitness integration | ✅ Complete | 2026-02-03 |
 
 ### ⚪ Remaining
 

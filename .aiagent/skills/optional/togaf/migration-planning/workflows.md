@@ -10,7 +10,9 @@ Step-by-step procedures for TOGAF Phase F.
 flowchart TD
     subgraph "Phase F Workflow"
         A[1. Confirm Transition Architectures]
+        A1[1b. Establish Fitness Baseline]
         B[2. Create Implementation Plan]
+        B1[2b. Define Fitness Gates]
         C[3. Develop Project Charters]
         D[4. Estimate Resources]
         E[5. Assess Migration Risks]
@@ -18,13 +20,17 @@ flowchart TD
         G[7. Stakeholder Approval]
     end
 
-    A --> B
-    B --> C
+    A --> A1
+    A1 --> B
+    B --> B1
+    B1 --> C
     C --> D
     D --> E
     E --> F
     F --> G
 ```
+
+**Fitness Function Integration**: Steps 1b and 2b integrate evolutionary architecture fitness functions to provide objective measures for migration validation. See [Fitness Functions Skill](../../fitness-functions/) for comprehensive documentation.
 
 ---
 
@@ -105,6 +111,103 @@ Create detailed specification per transition:
 2. {measurable criterion 2}
 3. {measurable criterion 3}
 ```
+
+---
+
+## Step 1b: Establish Fitness Baseline
+
+### Purpose
+Measure current state fitness functions before migration begins. This provides a quantitative baseline for comparison throughout migration.
+
+### 1b.1 Identify Relevant Fitness Functions
+
+Select fitness functions relevant to the migration:
+
+```yaml
+fitness_selection:
+  priority_attributes:
+    - performance        # User experience during migration
+    - reliability        # System stability
+    - data_integrity     # Data migration quality
+    - security          # No regression allowed
+    - deployability     # Operational capability
+
+  selection_criteria:
+    - Directly impacted by migration
+    - Critical for business continuity
+    - Measurable with current tooling
+    - Stakeholder-required
+```
+
+### 1b.2 Measure Current Fitness
+
+For each selected function, establish baseline:
+
+```markdown
+## Fitness Baseline Report
+
+### Measurement Conditions
+| Condition | Value |
+|-----------|-------|
+| **Period** | {start date} to {end date} |
+| **Environment** | Production |
+| **Load Profile** | Normal operations |
+| **Exclusions** | {any excluded periods} |
+
+### Baseline Measurements
+
+| Function | Baseline Value | Industry Benchmark | Gap | Confidence |
+|----------|---------------|-------------------|-----|------------|
+| Response Time P95 | {value} ms | 200 ms | {%} | High |
+| Availability | {value}% | 99.9% | {%} | High |
+| Error Rate | {value}% | 0.1% | {%} | Medium |
+| Deployment Frequency | {value}/week | 5/week | {%} | High |
+| Data Consistency | {value}% | 100% | {%} | High |
+
+### Key Observations
+- {observation 1}
+- {observation 2}
+- {observation 3}
+```
+
+### 1b.3 Define Migration Fitness Strategy
+
+Categorize fitness functions for migration:
+
+```markdown
+## Migration Fitness Strategy
+
+### Non-Negotiable (Must Not Degrade)
+| Function | Baseline | Minimum Acceptable | Rationale |
+|----------|----------|-------------------|-----------|
+| Availability | 99.5% | 99.5% | Business continuity |
+| Data Integrity | 100% | 100% | Regulatory requirement |
+| Security Score | 95 | 95 | Compliance |
+
+### Expected Improvement (Migration Benefit)
+| Function | Baseline | Target | Expected Improvement |
+|----------|----------|--------|---------------------|
+| Response Time P95 | 500ms | 200ms | 60% faster |
+| Deployment Frequency | 1/week | 5/week | 5x more frequent |
+| MTTR | 2 hours | 30 min | 4x faster recovery |
+
+### Acceptable Temporary Degradation
+| Function | Baseline | Acceptable During | Recovery Target |
+|----------|----------|------------------|-----------------|
+| Deploy Frequency | 1/week | 0.5/week (Phase 2-3) | Week 2 post-cutover |
+| Feature Velocity | Normal | 50% (cutover period) | Week 4 post-cutover |
+
+### Not Applicable
+| Function | Reason |
+|----------|--------|
+| {function} | {why not relevant} |
+```
+
+### 1b.4 Output
+
+- Fitness baseline report
+- Migration fitness strategy
+- Measurement infrastructure validated
 
 ---
 
@@ -189,6 +292,145 @@ flowchart LR
     M2 --> M3[M3: Users]
     M3 --> M4[M4: Decommission]
 ```
+
+---
+
+## Step 2b: Define Fitness Gates
+
+### Purpose
+Establish fitness-based gates at each transition and milestone to ensure controlled migration progress.
+
+### 2b.1 Transition Fitness Gates
+
+For each transition architecture, define fitness gates:
+
+```markdown
+## Transition {N} Fitness Gates
+
+### Pre-Transition Gate
+**Purpose**: Verify readiness before starting transition
+
+| Function | Required Value | Check Method | Blocker if Fail? |
+|----------|---------------|--------------|------------------|
+| Baseline Stability | Stable for 7 days | Monitoring review | Yes |
+| Test Coverage | ≥80% for affected | Coverage report | Yes |
+| Rollback Validated | Tested | DR test results | Yes |
+
+### During-Transition Monitoring
+**Purpose**: Continuous validation during execution
+
+| Function | Warning Threshold | Critical Threshold | Check Frequency |
+|----------|------------------|-------------------|-----------------|
+| Availability | <99.3% | <99.0% | 5 minutes |
+| Error Rate | >1% | >2% | 5 minutes |
+| Response Time P95 | >300ms | >500ms | 5 minutes |
+
+### Post-Transition Gate
+**Purpose**: Confirm transition achieved objectives
+
+| Function | Required Value | Measurement Period | Proceed if Fail? |
+|----------|---------------|-------------------|------------------|
+| Availability | ≥99.5% | 48 hours | No |
+| Data Consistency | 100% | Full validation | No |
+| Performance | ≤baseline +10% | 24 hours | Conditional |
+
+### Gate Decision Matrix
+| All Gates Pass | Decision |
+|----------------|----------|
+| Yes | Proceed to next phase |
+| Pre-gate fails | Delay transition start |
+| During-gate critical | Pause and assess |
+| Post-gate fails | Remediate or rollback |
+```
+
+### 2b.2 Milestone Fitness Criteria
+
+Tie fitness to milestones:
+
+```markdown
+## Milestone Fitness Criteria
+
+| Milestone | Fitness Requirements | Verification |
+|-----------|---------------------|--------------|
+| M1: Foundation | Infrastructure fitness green | Platform dashboard |
+| M2: Data Migration | Data integrity 100% | Validation scripts |
+| M3: User Migration | UX fitness ≥ baseline | User metrics |
+| M4: Decommission | All fitness targets met | Full assessment |
+```
+
+### 2b.3 Fitness Dashboard Configuration
+
+```yaml
+migration_fitness_dashboard:
+  refresh_interval: 5m
+
+  panels:
+    - name: "Non-Negotiable Functions"
+      type: status_grid
+      functions:
+        - availability
+        - data_integrity
+        - security_score
+
+    - name: "Migration Progress"
+      type: comparison
+      baseline: "2024-01-01"
+      current: "now"
+      functions:
+        - response_time_p95
+        - deployment_frequency
+
+    - name: "Current Phase Status"
+      type: gate_status
+      current_gate: "TA-1 Post-Transition"
+
+  alerts:
+    - function: availability
+      warning: "<99.3%"
+      critical: "<99.0%"
+      notify: ["#migration-alerts", "oncall-pager"]
+
+    - function: error_rate
+      warning: ">1%"
+      critical: ">2%"
+      notify: ["#migration-alerts"]
+```
+
+### 2b.4 Fitness-Based Rollback Triggers
+
+Define automatic and decision-based rollback conditions:
+
+```markdown
+## Fitness-Based Rollback Triggers
+
+### Automatic Rollback
+If ANY of these occur during cutover window:
+- [ ] Availability drops below 98% for >15 minutes
+- [ ] Data integrity check fails
+- [ ] Critical security vulnerability detected
+- [ ] Error rate exceeds 5%
+
+### Decision-Based Rollback
+Trigger assessment meeting if:
+- [ ] 2+ warning thresholds breached simultaneously
+- [ ] Performance degradation >50% from baseline
+- [ ] User-reported issues exceed threshold
+- [ ] Dependent system failures
+
+### Rollback Decision Authority
+| Condition | Authority | Response Time |
+|-----------|-----------|---------------|
+| Automatic trigger | On-call lead | Immediate |
+| Decision trigger | Migration lead + Sponsor | 1 hour |
+| Extended issues | Steering committee | 4 hours |
+```
+
+### 2b.5 Output
+
+- Transition fitness gate specifications
+- Milestone fitness criteria
+- Dashboard configuration
+- Rollback trigger definitions
 
 ---
 
@@ -629,12 +871,27 @@ migration-planning/
 ├── transition-specs/
 │   ├── ta-1-specification.md       # Transition 1 details
 │   └── ta-2-specification.md       # Transition 2 details
+├── fitness/                        # Fitness function documentation
+│   ├── baseline-report.md          # Pre-migration fitness baseline
+│   ├── migration-strategy.md       # Fitness categorization
+│   ├── gate-specifications.md      # Transition and milestone gates
+│   └── dashboard-config.yaml       # Monitoring configuration
 ├── project-charters/
 │   ├── prj-001-charter.md          # Individual project charters
 │   ├── prj-002-charter.md
 │   └── ...
 ├── resource-plan.md                # People, budget, timeline
 ├── risk-assessment.md              # Migration risks
-├── rollback-plans.md               # Recovery procedures
+├── rollback-plans.md               # Recovery procedures (with fitness triggers)
 └── approval-record.md              # Governance sign-off
 ```
+
+### Fitness Function Deliverables
+
+| Deliverable | Description | Used By |
+|-------------|-------------|---------|
+| Baseline Report | Current state fitness measurements | Migration team, governance |
+| Migration Strategy | Categorized fitness expectations | All stakeholders |
+| Gate Specifications | Go/no-go criteria per transition | Phase G governance |
+| Dashboard Config | Real-time monitoring setup | Operations, migration team |
+| Rollback Triggers | Fitness-based rollback conditions | Operations |
