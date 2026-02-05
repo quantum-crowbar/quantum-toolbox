@@ -2,7 +2,7 @@
 
 > **Repository**: AI Agent Toolbox for Architects
 > **Purpose**: Reusable submodule providing standardized instructions, workflows, and skills for AI coding agents
-> **Last Updated**: 2026-02-03
+> **Last Updated**: 2026-02-05
 
 ---
 
@@ -46,7 +46,8 @@ Designed for software architects and senior developers who want their AI assista
 │   │       ├── analysis-outputs/      # Output adapters (core-architecture, docs, context, etc.)
 │   │       ├── software-design/       # Design principles, patterns
 │   │       ├── tech-stack-decisions/  # Technology evaluation, ADRs
-│   │       └── code-conventions/      # Style guides, naming standards
+│   │       ├── code-conventions/      # Style guides, naming standards
+│   │       └── presentation/          # Marp CLI presentation generation
 │   └── templates/                     # Project customization templates
 │       ├── AGENTS.template.md         # Template for project-level AGENTS.md
 │       ├── CONTEXT.template.md        # Template for project-level CONTEXT.md
@@ -105,6 +106,7 @@ Designed for software architects and senior developers who want their AI assista
 | **software-design** | `skills/optional/software-design/` | ✅ Complete | Design principles, patterns, decisions |
 | **tech-stack-decisions** | `skills/optional/tech-stack-decisions/` | ✅ Complete | Technology evaluation frameworks, ADRs |
 | **code-conventions** | `skills/optional/code-conventions/` | ✅ Complete | Style guides and standards |
+| **presentation** | `skills/optional/presentation/` | ✅ Complete | Marp CLI slide generation (PPTX, PDF) |
 
 ### Output Adapters
 
@@ -133,6 +135,7 @@ Designed for software architects and senior developers who want their AI assista
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
 | "Generate core architecture docs" | Canonical documentation structure |
 | "Use todo workflow" | Autonomous task-based development |
+| "Generate presentation" | Create slide decks (PPTX, PDF) from Markdown |
 
 ---
 
@@ -193,13 +196,13 @@ git submodule update --init --recursive
 | Change Mgmt Communication Plan (with impact reviews) | ✅ Complete | 2026-02-02 |
 | Fitness Functions skill (evolutionary architecture) | ✅ Complete | 2026-02-03 |
 | Migration Planning with fitness integration | ✅ Complete | 2026-02-03 |
+| Presentation Generation skill (Marp CLI) | ✅ Complete | 2026-02-05 |
 
 ### ⚪ Remaining
 
 | Work Item | Priority | Description |
 |-----------|----------|-------------|
 | Excalidraw Diagram Support | Medium | Native Excalidraw output format |
-| Presentation Generation | Medium | Marp CLI for PPTX/PDF export |
 | TOGAF Preliminary Phase | Low | Framework and principles setup |
 
 ---

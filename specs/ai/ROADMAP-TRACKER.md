@@ -26,8 +26,9 @@ Master tracking document for all skill development roadmaps.
 | Change Mgmt Communication Plan | - | 🟢 Complete | High |
 | Fitness Functions Skill | - | 🟢 Complete | High |
 | Migration Planning Fitness Integration | - | 🟢 Complete | High |
+| Presentation Generation | - | 🟢 Complete | Medium |
+| NIS 2 Compliance Framework | - | ⚪ Planned | Medium |
 | Excalidraw Diagram Support | - | ⚪ Planned | Medium |
-| Presentation Generation | - | ⚪ Planned | Medium |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
@@ -308,14 +309,48 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 - [x] Update output structure with fitness deliverables
 - [x] Link to standalone fitness-functions skill
 
+### Presentation Generation Skill ✅
+
+- [x] Create skill directory (`skills/optional/presentation/`)
+- [x] README.md - Marp concepts, syntax, architecture patterns
+  - [x] Marp CLI commands and output formats
+  - [x] Markdown slide syntax (front matter, directives, images)
+  - [x] Architecture presentation patterns (vision, ADR, deep dive, migration)
+  - [x] Diagram embedding workflow
+  - [x] File organization best practices
+- [x] workflows.md - 7-step presentation workflow
+  - [x] Define purpose & audience
+  - [x] Select template
+  - [x] Gather content
+  - [x] Prepare diagrams
+  - [x] Write slides
+  - [x] Review & refine
+  - [x] Export & deliver
+- [x] templates.md - Reusable slide templates
+  - [x] Vision deck (12 slides)
+  - [x] ADR deck (10 slides)
+  - [x] Deep dive deck (12 slides)
+  - [x] Migration deck (11 slides)
+  - [x] Status deck (8 slides)
+  - [x] Minimal deck (5 slides)
+  - [x] Common slide patterns
+- [x] checklist.md - Quick reference for all steps
+- [x] examples.md - 5 comprehensive examples
+  - [x] API Gateway ADR presentation
+  - [x] Microservices migration vision
+  - [x] Technical deep dive
+  - [x] Migration briefing
+  - [x] Status update
+- [x] themes/architecture.css - Custom architecture theme
+
 ---
 
 ## Quick Summary: What's Left
 
 | Task | Effort | Priority |
 |------|--------|----------|
+| NIS 2 Compliance Framework | Low | Medium |
 | Excalidraw Diagram Support | Medium | Medium |
-| Presentation Generation | Medium | Medium |
 | TOGAF Preliminary Phase | Medium | Low |
 
 ---
@@ -564,6 +599,48 @@ Enhanced Phase F migration planning with evolutionary architecture approach usin
 
 **Location:** `skills/optional/fitness-functions/` + `togaf/migration-planning/` (enhanced)
 
+#### NIS 2 Compliance Framework
+
+Add EU NIS 2 Directive (2022/2555) as a compliance framework option in `security-analysis`.
+
+**Approach:** Integrate into existing security-analysis skill alongside OWASP ASVS, NIST CSF, CIS Controls, ISO 27001.
+
+**What We CAN Analyze (Technical Controls ~40-50%):**
+
+| NIS 2 Article | Technical Aspect | Maps To |
+|---------------|------------------|---------|
+| Art. 21(2)(c) Business Continuity | Backup code, retry patterns, failover configs | Phase 1, 4 |
+| Art. 21(2)(d) Supply Chain | Dependency analysis, SBOM, vulnerabilities | Phase 6 |
+| Art. 21(2)(e) Secure Development | Input validation, secure coding patterns | Phase 5 |
+| Art. 21(2)(h) Cryptography | Encryption at rest/transit, key management | Phase 4 |
+| Art. 21(2)(i) Access Control | RBAC, authorization, session management | Phase 2, 3 |
+| Art. 21(2)(j) MFA | Multi-factor authentication implementation | Phase 2 |
+
+**What We CANNOT Analyze (Organizational ~50-60%):**
+
+| NIS 2 Article | Why Out of Scope |
+|---------------|------------------|
+| Art. 21(2)(a) Risk Policies | Governance documents, not code |
+| Art. 21(2)(b) Incident Handling | Process/procedures, not code |
+| Art. 21(2)(f) Effectiveness | Audit processes, not code |
+| Art. 21(2)(g) Training | HR/organizational, not code |
+| Art. 20 Reporting | 24h/72h incident reporting to authorities |
+| Art. 32 Accountability | Board-level oversight, management responsibility |
+
+**Implementation Tasks:**
+- [ ] Add NIS 2 to compliance framework options in README.md
+- [ ] Create `nis2.md` template in templates.md
+- [ ] Document scope limitations clearly (link in output)
+- [ ] Cross-mapping to existing frameworks (NIS 2 ↔ ISO 27001 ↔ NIST CSF)
+- [ ] Add NIS 2 example to examples.md
+- [ ] Update checklist.md
+
+**Key Principle:** Be transparent that ~50% of NIS 2 requires organizational assessment beyond code analysis. Output will include clear "Out of Scope" section with guidance for addressing non-technical requirements.
+
+**Location:** `skills/optional/security-analysis/` (enhancement)
+
+---
+
 #### Excalidraw Diagram Support
 
 Add Excalidraw as a diagram format option alongside Mermaid, ASCII, and PlantUML.
@@ -743,6 +820,7 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-02 | Change Management Communication Plan enhancement complete | - |
 | 2026-02-03 | Fitness Functions skill complete (8 categories, full lifecycle) | - |
 | 2026-02-03 | Migration Planning fitness integration complete (baseline, gates, rollback) | - |
+| 2026-02-05 | Presentation Generation skill complete (Marp CLI, templates, examples) | - |
 
 ---
 
@@ -764,7 +842,7 @@ All TOGAF ADM phases (A through H) are now complete.
 14. ~~Core Architecture Output Structure~~ ✅ Complete
 15. ~~Change Mgmt Communication Plan~~ ✅ Complete
 16. ~~Fitness Functions Skill~~ ✅ Complete (standalone + migration integration)
-17. Choose next (medium/low priority):
+17. ~~Presentation Generation Skill~~ ✅ Complete (Marp CLI, templates, examples)
+18. Choose next (medium/low priority):
     - Excalidraw Diagram Support
-    - Presentation Generation
     - TOGAF Preliminary Phase

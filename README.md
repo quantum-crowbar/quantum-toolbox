@@ -81,6 +81,7 @@ This will:
 | **software-design** | Design principles, patterns, decisions | Complete |
 | **tech-stack-decisions** | Technology evaluation frameworks, ADRs | Complete |
 | **code-conventions** | Style guides and standards | Complete |
+| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) | Complete |
 
 ### Output Adapters
 
@@ -112,6 +113,7 @@ Trigger specific workflows during your session:
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
 | "Generate core architecture docs" | Canonical documentation structure |
 | "Use todo workflow" | Autonomous task-based development |
+| "Generate presentation" | Create slide decks from Markdown |
 
 ---
 
@@ -163,11 +165,11 @@ Each skill contains:
 - Change Management Communication Plan enhancement
 - Fitness Functions skill (evolutionary architecture)
 - Migration Planning with fitness function integration
+- Presentation generation skill (Marp CLI)
 
 ### Planned
 
 - Excalidraw native diagram support
-- Presentation generation (Marp CLI)
 - TOGAF Preliminary Phase
 
 See [ROADMAP-TRACKER.md](specs/ai/ROADMAP-TRACKER.md) for details.

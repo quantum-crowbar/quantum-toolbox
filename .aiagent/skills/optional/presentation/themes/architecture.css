@@ -1,0 +1,322 @@
+/*
+ * Architecture Theme for Marp
+ * A professional theme for architecture presentations
+ *
+ * Usage:
+ *   marp slides.md --theme ./themes/architecture.css -o slides.pptx
+ *
+ * Or in front matter:
+ *   ---
+ *   marp: true
+ *   theme: architecture
+ *   ---
+ */
+
+/* @theme architecture */
+
+@import 'default';
+
+:root {
+  /* Primary colors */
+  --color-primary: #1a365d;
+  --color-primary-light: #2c5282;
+  --color-secondary: #2d3748;
+
+  /* Accent colors */
+  --color-accent: #3182ce;
+  --color-accent-light: #63b3ed;
+
+  /* Background colors */
+  --color-background: #ffffff;
+  --color-background-alt: #f7fafc;
+
+  /* Text colors */
+  --color-text: #2d3748;
+  --color-text-light: #718096;
+  --color-text-inverse: #ffffff;
+
+  /* Status colors */
+  --color-success: #38a169;
+  --color-warning: #d69e2e;
+  --color-danger: #e53e3e;
+
+  /* Sizing */
+  --font-size-base: 28px;
+  --font-size-small: 24px;
+  --font-size-h1: 48px;
+  --font-size-h2: 36px;
+  --font-size-h3: 32px;
+}
+
+/* Base section styling */
+section {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  padding: 40px 60px;
+}
+
+/* Headers */
+section h1 {
+  font-size: var(--font-size-h1);
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  border-bottom: 3px solid var(--color-accent);
+  padding-bottom: 0.3em;
+}
+
+section h2 {
+  font-size: var(--font-size-h2);
+  color: var(--color-primary-light);
+  font-weight: 600;
+  margin-bottom: 0.4em;
+}
+
+section h3 {
+  font-size: var(--font-size-h3);
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+/* Paragraphs */
+section p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+/* Lists */
+section ul,
+section ol {
+  margin-left: 1.5em;
+  line-height: 1.8;
+}
+
+section li {
+  margin-bottom: 0.3em;
+}
+
+section li::marker {
+  color: var(--color-accent);
+}
+
+/* Strong emphasis */
+section strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Tables */
+section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: var(--font-size-small);
+}
+
+section th {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+section td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+section tr:nth-child(even) {
+  background-color: var(--color-background-alt);
+}
+
+/* Code blocks */
+section pre {
+  background-color: #1a202c;
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+}
+
+section code {
+  font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.85em;
+}
+
+section :not(pre) > code {
+  background-color: #edf2f7;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary);
+}
+
+/* Links */
+section a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+section a:hover {
+  text-decoration: underline;
+}
+
+/* Blockquotes */
+section blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  background-color: var(--color-background-alt);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Header and footer styling */
+header {
+  font-size: 18px;
+  color: var(--color-text-light);
+}
+
+footer {
+  font-size: 16px;
+  color: var(--color-text-light);
+}
+
+/* Page numbers */
+section::after {
+  font-size: 16px;
+  color: var(--color-text-light);
+}
+
+/* Lead slide class - for title and section dividers */
+section.lead {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: var(--color-text-inverse);
+}
+
+section.lead h1 {
+  color: var(--color-text-inverse);
+  border-bottom: none;
+  font-size: 56px;
+}
+
+section.lead h2 {
+  color: var(--color-accent-light);
+  font-weight: 400;
+}
+
+section.lead p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Invert class - dark slides */
+section.invert {
+  background-color: var(--color-secondary);
+  color: var(--color-text-inverse);
+}
+
+section.invert h1,
+section.invert h2,
+section.invert h3 {
+  color: var(--color-text-inverse);
+}
+
+section.invert th {
+  background-color: var(--color-accent);
+}
+
+section.invert td {
+  border-bottom-color: #4a5568;
+}
+
+section.invert tr:nth-child(even) {
+  background-color: #2d3748;
+}
+
+/* Highlight class - accent background */
+section.highlight {
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+section.highlight h1,
+section.highlight h2 {
+  color: var(--color-text-inverse);
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Status indicators */
+.status-green::before { content: "🟢 "; }
+.status-yellow::before { content: "🟡 "; }
+.status-red::before { content: "🔴 "; }
+
+/* Two-column layout helper (use with CSS grid in content) */
+section.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+section.columns h1 {
+  grid-column: 1 / -1;
+}
+
+/* Small text class */
+section.small {
+  font-size: var(--font-size-small);
+}
+
+section.small table {
+  font-size: 20px;
+}
+
+/* Agenda/TOC styling */
+section.agenda ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+section.agenda li {
+  padding: 0.5em 0;
+  border-bottom: 1px solid #e2e8f0;
+  counter-increment: agenda;
+}
+
+section.agenda li::before {
+  content: counter(agenda) ".";
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-right: 0.5em;
+}
+
+/* Image styling */
+section img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Background image overlays */
+section[data-marpit-advanced-background-container] {
+  color: var(--color-text-inverse);
+}
+
+/* Mermaid diagram container */
+section .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+/* Print optimization */
+@media print {
+  section {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

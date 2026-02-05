@@ -40,6 +40,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **software-design** | Design principles, patterns, architectural decisions | [optional/software-design/](optional/software-design/) |
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
+| **presentation** | Generate slide decks (PPTX, PDF) from Markdown using Marp CLI | [optional/presentation/](optional/presentation/) |
 
 ---
 
@@ -120,6 +121,7 @@ Some skills may recommend reading other skills first:
 | `software-design` | None |
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
+| `presentation` | None (standalone, uses exported diagrams) |
 
 ---
 
@@ -138,6 +140,7 @@ Some skills can be explicitly invoked during a session:
 | `fitness-functions` | `"Define fitness functions"` / `"Analyze system fitness"` | Evolutionary architecture fitness assessment |
 | `structurizr` | `"Create C4 model"` | Architecture modeling with Structurizr DSL |
 | `togaf` | `"Apply TOGAF"` / `"Create architecture vision"` | Enterprise architecture using ADM |
+| `presentation` | `"Generate presentation"` / `"Create slides"` | Markdown to PPTX/PDF slide generation |
 
 See the skill's README for full invocation options.
 
