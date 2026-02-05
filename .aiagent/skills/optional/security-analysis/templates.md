@@ -59,6 +59,7 @@ Templates for all security analysis outputs.
 | [NIST CSF](compliance/nist-csf.md) | ✅ | X/Y categories |
 | [CIS Controls](compliance/cis-controls.md) | ✅ | X/Y safeguards |
 | [ISO 27001](compliance/iso-27001.md) | ✅ | X/Y controls |
+| [NIS 2](compliance/nis2.md) | ✅ | X/Y technical measures |
 
 ---
 
@@ -935,4 +936,191 @@ gantt
 |---------|-----|------|--------|----------|
 | A.8.5 | No MFA | High | Medium | 1 |
 | A.8.11 | No masking | Medium | Low | 2 |
+```
+
+### NIS 2 Template
+
+```markdown
+# NIS 2 Directive Compliance Report
+
+**Project**: {Name}
+**NIS 2 Version**: Directive (EU) 2022/2555
+**Assessment Date**: {Date}
+**Entity Type**: Essential / Important
+
+---
+
+## Scope Disclaimer
+
+> **Important**: This report covers **technical controls only** (~40-50% of NIS 2 requirements).
+> Organizational measures (policies, governance, training, incident procedures) require separate assessment.
+> See [NIS 2 Scope Limitations](README.md#nis-2-scope-limitations) for details.
+
+---
+
+## Executive Summary
+
+| Category | Assessed | Compliant | Partial | Gap | N/A |
+|----------|----------|-----------|---------|-----|-----|
+| Technical Measures (Art. 21.2) | X | X | X | X | X |
+| **Code-Analyzable Coverage** | **~45%** | - | - | - | - |
+
+---
+
+## Article 21(2) Technical Measures Assessment
+
+### (c) Business Continuity - Backup & Recovery
+
+**What we analyzed**: Backup code patterns, retry logic, failover configurations, disaster recovery code.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| Backup mechanisms in code | ✅/⚠️/❌ | {location} | {gap} |
+| Retry patterns implemented | ✅/⚠️/❌ | {location} | {gap} |
+| Failover configuration | ✅/⚠️/❌ | {location} | {gap} |
+| Circuit breaker patterns | ✅/⚠️/❌ | {location} | {gap} |
+| Graceful degradation | ✅/⚠️/❌ | {location} | {gap} |
+
+**Findings**: {findings}
+
+---
+
+### (d) Supply Chain Security
+
+**What we analyzed**: Dependencies, SBOM, known vulnerabilities, third-party integrations.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| Dependency manifest exists | ✅/⚠️/❌ | package.json, etc. | {gap} |
+| Lock file present | ✅/⚠️/❌ | {location} | {gap} |
+| Known vulnerabilities | ✅/⚠️/❌ | {count} found | {gap} |
+| Dependency update policy | ✅/⚠️/❌ | {evidence} | {gap} |
+| Third-party code review | ✅/⚠️/❌ | {evidence} | {gap} |
+
+**Vulnerability Summary**:
+
+| Severity | Count | Notable |
+|----------|-------|---------|
+| Critical | X | {package} |
+| High | X | {package} |
+| Medium | X | - |
+| Low | X | - |
+
+**Findings**: {findings}
+
+---
+
+### (e) Security in Development & Maintenance
+
+**What we analyzed**: Input validation, secure coding patterns, output encoding.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| Input validation framework | ✅/⚠️/❌ | {library/pattern} | {gap} |
+| Output encoding | ✅/⚠️/❌ | {implementation} | {gap} |
+| Parameterized queries | ✅/⚠️/❌ | {ORM/prepared} | {gap} |
+| Security linting | ✅/⚠️/❌ | {tool} | {gap} |
+| Dependency scanning | ✅/⚠️/❌ | {tool} | {gap} |
+
+**Findings**: {findings}
+
+---
+
+### (h) Cryptography & Encryption
+
+**What we analyzed**: Encryption at rest, encryption in transit, key management code.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| TLS/HTTPS enforced | ✅/⚠️/❌ | {config} | {gap} |
+| Data encryption at rest | ✅/⚠️/❌ | {method} | {gap} |
+| Strong algorithms used | ✅/⚠️/❌ | AES-256, etc. | {gap} |
+| Key management | ✅/⚠️/❌ | {approach} | {gap} |
+| Certificate handling | ✅/⚠️/❌ | {validation} | {gap} |
+
+**Cryptographic Inventory**:
+
+| Purpose | Algorithm | Key Size | Status |
+|---------|-----------|----------|--------|
+| Password hashing | {bcrypt/argon2} | {rounds} | ✅/❌ |
+| Data encryption | {AES/etc} | {bits} | ✅/❌ |
+| Token signing | {RS256/HS256} | {bits} | ✅/❌ |
+
+**Findings**: {findings}
+
+---
+
+### (i) Access Control & Asset Management
+
+**What we analyzed**: RBAC implementation, authorization checks, session management.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| Access control model | ✅/⚠️/❌ | {RBAC/ABAC} | {gap} |
+| Role definitions | ✅/⚠️/❌ | {location} | {gap} |
+| Authorization enforcement | ✅/⚠️/❌ | {middleware} | {gap} |
+| Session management | ✅/⚠️/❌ | {implementation} | {gap} |
+| Privilege separation | ✅/⚠️/❌ | {evidence} | {gap} |
+
+**Findings**: {findings}
+
+---
+
+### (j) Multi-Factor Authentication
+
+**What we analyzed**: MFA implementation, supported factors, enforcement.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| MFA implemented | ✅/⚠️/❌ | {library} | {gap} |
+| TOTP support | ✅/⚠️/❌ | {implementation} | {gap} |
+| WebAuthn/FIDO2 | ✅/⚠️/❌ | {implementation} | {gap} |
+| MFA enforcement | ✅/⚠️/❌ | {policy} | {gap} |
+| Recovery mechanisms | ✅/⚠️/❌ | {backup codes} | {gap} |
+
+**Findings**: {findings}
+
+---
+
+## Out of Scope (Organizational Measures)
+
+The following NIS 2 requirements **cannot be assessed through code analysis** and require separate organizational review:
+
+| Article | Requirement | Assessment Method |
+|---------|-------------|-------------------|
+| 21(2)(a) | Risk analysis policies | Policy document review |
+| 21(2)(b) | Incident handling | Process/procedure review |
+| 21(2)(f) | Effectiveness assessment | Audit process review |
+| 21(2)(g) | Cybersecurity training | HR/training records |
+| Art. 20 | Incident reporting (24h/72h) | Process verification |
+| Art. 32 | Management accountability | Governance review |
+
+---
+
+## Cross-Framework Mapping
+
+| NIS 2 Article | ISO 27001 | NIST CSF | This Assessment |
+|---------------|-----------|----------|-----------------|
+| Art. 21(2)(c) | A.8.14 | PR.IP-4, RC.RP | Phase 1, 4 |
+| Art. 21(2)(d) | A.5.21-23 | ID.SC | Phase 6 |
+| Art. 21(2)(e) | A.8.25-31 | PR.DS | Phase 5 |
+| Art. 21(2)(h) | A.8.24 | PR.DS-1,2 | Phase 4 |
+| Art. 21(2)(i) | A.8.2-5 | PR.AC | Phase 2, 3 |
+| Art. 21(2)(j) | A.8.5 | PR.AC-7 | Phase 2 |
+
+---
+
+## Priority Remediation
+
+| NIS 2 Article | Gap | Risk | Effort | Priority |
+|---------------|-----|------|--------|----------|
+| {article} | {gap} | High/Med/Low | High/Med/Low | 1 |
+
+---
+
+## References
+
+- [NIS 2 Directive Full Text](https://eur-lex.europa.eu/eli/dir/2022/2555)
+- [ENISA NIS 2 Guidance](https://www.enisa.europa.eu/topics/nis-directive)
+- [NIS 2 Implementation Toolkit](https://digital-strategy.ec.europa.eu/en/policies/nis2-directive)
 ```

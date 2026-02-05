@@ -30,6 +30,7 @@ Invoke this skill when:
 "Analyze security of this codebase"
 "Run security assessment"
 "Generate OWASP ASVS report"
+"Generate NIS 2 compliance report"
 "Check for security vulnerabilities"
 "Map the attack surface"
 "Assess authentication security"
@@ -62,8 +63,11 @@ Structured report following your selected framework(s):
 | **NIST CSF** | Identify/Protect/Detect/Respond/Recover | Enterprise risk management |
 | **CIS Controls** | Prioritized safeguards (IG1/IG2/IG3) | Implementation roadmap |
 | **ISO 27001** | Annex A controls mapping | Compliance certification |
+| **NIS 2** | EU Directive Article 21 technical measures | EU critical infrastructure |
 
 You can select multiple frameworks - a separate compliance report is generated for each.
+
+> **Note on NIS 2**: Code analysis can assess ~40-50% of NIS 2 requirements (technical controls). Organizational measures (policies, training, governance) require separate assessment. See [NIS 2 Scope Limitations](#nis-2-scope-limitations).
 
 ---
 
@@ -85,7 +89,8 @@ You can select multiple frameworks - a separate compliance report is generated f
         ├── owasp-asvs.md                     # If selected
         ├── nist-csf.md                       # If selected
         ├── cis-controls.md                   # If selected
-        └── iso-27001.md                      # If selected
+        ├── iso-27001.md                      # If selected
+        └── nis2.md                           # If selected (EU critical infrastructure)
 ```
 
 ---
@@ -166,6 +171,47 @@ These contain agent instructions, not application security concerns.
 
 ---
 
+## NIS 2 Scope Limitations
+
+The EU NIS 2 Directive (2022/2555) requires both technical and organizational security measures. **Code analysis can only assess technical controls**.
+
+### What We CAN Analyze (~40-50%)
+
+| NIS 2 Article | Technical Aspect | Maps To Phase |
+|---------------|------------------|---------------|
+| Art. 21(2)(c) | Business continuity (backup code, retry patterns, failover) | Phase 1, 4 |
+| Art. 21(2)(d) | Supply chain security (dependencies, SBOM, vulnerabilities) | Phase 6 |
+| Art. 21(2)(e) | Secure development (input validation, secure coding) | Phase 5 |
+| Art. 21(2)(h) | Cryptography (encryption at rest/transit, key handling) | Phase 4 |
+| Art. 21(2)(i) | Access control (RBAC, authorization, session management) | Phase 2, 3 |
+| Art. 21(2)(j) | Multi-factor authentication implementation | Phase 2 |
+
+### What We CANNOT Analyze (~50-60%)
+
+| NIS 2 Article | Requirement | Why Out of Scope |
+|---------------|-------------|------------------|
+| Art. 21(2)(a) | Risk analysis policies | Governance documents, not code |
+| Art. 21(2)(b) | Incident handling | Process/procedures, not code |
+| Art. 21(2)(f) | Effectiveness assessment | Audit processes, not code |
+| Art. 21(2)(g) | Cybersecurity training | HR/organizational, not code |
+| Art. 20 | Incident reporting (24h/72h) | Regulatory process |
+| Art. 32 | Management accountability | Board-level governance |
+
+### Cross-Framework Mapping
+
+NIS 2 requirements map to other frameworks already supported:
+
+| NIS 2 Article | ISO 27001 | NIST CSF | CIS Controls |
+|---------------|-----------|----------|--------------|
+| Art. 21(2)(c) | A.8.14 | PR.IP-4, RC.RP | 11 |
+| Art. 21(2)(d) | A.5.21-23 | ID.SC | 15 |
+| Art. 21(2)(e) | A.8.25-31 | PR.DS | 16 |
+| Art. 21(2)(h) | A.8.24 | PR.DS-1,2 | 3 |
+| Art. 21(2)(i) | A.8.2-5 | PR.AC | 5, 6 |
+| Art. 21(2)(j) | A.8.5 | PR.AC-7 | 6.5 |
+
+---
+
 ## Quick Start
 
 **For comprehensive analysis**:
@@ -195,3 +241,4 @@ These contain agent instructions, not application security concerns.
 - [NIST CSF](https://www.nist.gov/cyberframework)
 - [CIS Controls](https://www.cisecurity.org/controls)
 - [ISO 27001](https://www.iso.org/isoiec-27001-information-security.html)
+- [NIS 2 Directive](https://eur-lex.europa.eu/eli/dir/2022/2555) (EU 2022/2555)

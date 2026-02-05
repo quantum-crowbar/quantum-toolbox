@@ -27,7 +27,7 @@ Master tracking document for all skill development roadmaps.
 | Fitness Functions Skill | - | 🟢 Complete | High |
 | Migration Planning Fitness Integration | - | 🟢 Complete | High |
 | Presentation Generation | - | 🟢 Complete | Medium |
-| NIS 2 Compliance Framework | - | ⚪ Planned | Medium |
+| NIS 2 Compliance Framework | - | 🟢 Complete | Medium |
 | Excalidraw Diagram Support | - | ⚪ Planned | Medium |
 | TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
 
@@ -349,7 +349,6 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 | Task | Effort | Priority |
 |------|--------|----------|
-| NIS 2 Compliance Framework | Low | Medium |
 | Excalidraw Diagram Support | Medium | Medium |
 | TOGAF Preliminary Phase | Medium | Low |
 
@@ -599,7 +598,9 @@ Enhanced Phase F migration planning with evolutionary architecture approach usin
 
 **Location:** `skills/optional/fitness-functions/` + `togaf/migration-planning/` (enhanced)
 
-#### NIS 2 Compliance Framework
+#### NIS 2 Compliance Framework ✅
+
+**Status:** Complete - Implemented as compliance framework in `security-analysis` skill.
 
 Add EU NIS 2 Directive (2022/2555) as a compliance framework option in `security-analysis`.
 
@@ -627,15 +628,15 @@ Add EU NIS 2 Directive (2022/2555) as a compliance framework option in `security
 | Art. 20 Reporting | 24h/72h incident reporting to authorities |
 | Art. 32 Accountability | Board-level oversight, management responsibility |
 
-**Implementation Tasks:**
-- [ ] Add NIS 2 to compliance framework options in README.md
-- [ ] Create `nis2.md` template in templates.md
-- [ ] Document scope limitations clearly (link in output)
-- [ ] Cross-mapping to existing frameworks (NIS 2 ↔ ISO 27001 ↔ NIST CSF)
-- [ ] Add NIS 2 example to examples.md
-- [ ] Update checklist.md
+**Completed Tasks:**
+- [x] Add NIS 2 to compliance framework options in README.md
+- [x] Create `nis2.md` template in templates.md
+- [x] Document scope limitations clearly (link in output)
+- [x] Cross-mapping to existing frameworks (NIS 2 ↔ ISO 27001 ↔ NIST CSF)
+- [x] Add NIS 2 example to examples.md
+- [x] Update checklist.md
 
-**Key Principle:** Be transparent that ~50% of NIS 2 requires organizational assessment beyond code analysis. Output will include clear "Out of Scope" section with guidance for addressing non-technical requirements.
+**Key Principle:** Be transparent that ~50% of NIS 2 requires organizational assessment beyond code analysis. Output includes clear "Out of Scope" section with guidance for addressing non-technical requirements.
 
 **Location:** `skills/optional/security-analysis/` (enhancement)
 
@@ -821,6 +822,7 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-03 | Fitness Functions skill complete (8 categories, full lifecycle) | - |
 | 2026-02-03 | Migration Planning fitness integration complete (baseline, gates, rollback) | - |
 | 2026-02-05 | Presentation Generation skill complete (Marp CLI, templates, examples) | - |
+| 2026-02-05 | NIS 2 Compliance Framework complete (EU Directive 2022/2555 technical controls) | - |
 
 ---
 
@@ -843,6 +845,7 @@ All TOGAF ADM phases (A through H) are now complete.
 15. ~~Change Mgmt Communication Plan~~ ✅ Complete
 16. ~~Fitness Functions Skill~~ ✅ Complete (standalone + migration integration)
 17. ~~Presentation Generation Skill~~ ✅ Complete (Marp CLI, templates, examples)
-18. Choose next (medium/low priority):
+18. ~~NIS 2 Compliance Framework~~ ✅ Complete (technical controls in security-analysis)
+19. Choose next (medium/low priority):
     - Excalidraw Diagram Support
     - TOGAF Preliminary Phase

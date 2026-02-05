@@ -446,6 +446,103 @@ Address critical findings within 48 hours. Schedule high-priority fixes for the 
 
 ---
 
+## Sample NIS 2 Compliance Excerpt
+
+```markdown
+# NIS 2 Directive Compliance Report
+
+**Project**: Acme Payment Gateway
+**Entity Type**: Essential (Financial Services)
+**Assessment Date**: 2024-01-20
+
+---
+
+## Scope Disclaimer
+
+> **Important**: This report covers **technical controls only** (~40-50% of NIS 2 requirements).
+> Organizational measures (policies, governance, training, incident procedures) require separate assessment.
+
+---
+
+## Executive Summary
+
+| Category | Assessed | Compliant | Partial | Gap |
+|----------|----------|-----------|---------|-----|
+| Technical Measures (Art. 21.2) | 6 | 3 | 2 | 1 |
+| **Code-Analyzable Coverage** | **~45%** | - | - | - |
+
+---
+
+## Article 21(2)(h) Cryptography & Encryption
+
+**What we analyzed**: Encryption at rest, encryption in transit, key management code.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| TLS/HTTPS enforced | ✅ | nginx.conf, app config | - |
+| Data encryption at rest | ⚠️ | AES-256 for PII only | Full disk encryption needed |
+| Strong algorithms used | ✅ | AES-256-GCM, bcrypt | - |
+| Key management | ⚠️ | AWS KMS | Key rotation policy unclear |
+| Certificate handling | ✅ | Auto-renewal via Certbot | - |
+
+**Cryptographic Inventory**:
+
+| Purpose | Algorithm | Key Size | Status |
+|---------|-----------|----------|--------|
+| Password hashing | bcrypt | 12 rounds | ✅ |
+| Data encryption | AES-256-GCM | 256-bit | ✅ |
+| Token signing | RS256 | 2048-bit | ✅ |
+| TLS | TLS 1.3 | - | ✅ |
+
+**Findings**:
+- NIS2-CRYPTO-001 (Medium): Not all sensitive data encrypted at rest. PII fields encrypted but transaction metadata stored in plaintext.
+- NIS2-CRYPTO-002 (Low): Key rotation schedule not enforced in code. Manual process documented but no automated rotation.
+
+---
+
+## Article 21(2)(d) Supply Chain Security
+
+**What we analyzed**: Dependencies, SBOM, known vulnerabilities, third-party integrations.
+
+| Aspect | Status | Evidence | Gap |
+|--------|:------:|----------|-----|
+| Dependency manifest exists | ✅ | package.json, requirements.txt | - |
+| Lock file present | ✅ | package-lock.json | - |
+| Known vulnerabilities | ❌ | 3 high, 12 medium found | Immediate update required |
+| Dependency update policy | ⚠️ | Dependabot configured | PRs not merged promptly |
+
+**Vulnerability Summary**:
+
+| Severity | Count | Notable |
+|----------|-------|---------|
+| Critical | 0 | - |
+| High | 3 | lodash, axios, jsonwebtoken |
+| Medium | 12 | Various |
+| Low | 8 | - |
+
+**Findings**:
+- NIS2-SUPPLY-001 (High): 3 high-severity vulnerabilities in production dependencies. lodash < 4.17.21 (prototype pollution), axios < 1.6.0 (SSRF), jsonwebtoken < 9.0.0 (JWT verification bypass).
+
+---
+
+## Out of Scope (Organizational Measures)
+
+The following NIS 2 requirements **cannot be assessed through code analysis**:
+
+| Article | Requirement | Assessment Method |
+|---------|-------------|-------------------|
+| 21(2)(a) | Risk analysis policies | Policy document review |
+| 21(2)(b) | Incident handling | Process/procedure review |
+| 21(2)(f) | Effectiveness assessment | Audit process review |
+| 21(2)(g) | Cybersecurity training | HR/training records |
+| Art. 20 | Incident reporting (24h/72h) | Process verification |
+| Art. 32 | Management accountability | Governance review |
+
+**Recommendation**: Engage qualified assessor for organizational measures. Technical compliance alone does not satisfy NIS 2 obligations.
+```
+
+---
+
 ## Sample Remediation Roadmap
 
 ```mermaid

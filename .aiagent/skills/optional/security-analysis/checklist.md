@@ -197,6 +197,18 @@ Quick reference for security assessment completion.
 - [ ] Gap analysis complete
 - [ ] Remediation prioritized
 
+### NIS 2 (EU Directive 2022/2555)
+- [ ] Entity type identified (Essential/Important)
+- [ ] Scope disclaimer included (technical controls only)
+- [ ] Art. 21(2)(c) Business continuity assessed
+- [ ] Art. 21(2)(d) Supply chain security assessed
+- [ ] Art. 21(2)(e) Secure development assessed
+- [ ] Art. 21(2)(h) Cryptography assessed
+- [ ] Art. 21(2)(i) Access control assessed
+- [ ] Art. 21(2)(j) MFA assessed
+- [ ] Out-of-scope organizational measures documented
+- [ ] Cross-framework mapping included
+
 ---
 
 ## Finalization
