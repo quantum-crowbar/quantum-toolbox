@@ -454,8 +454,8 @@ roadmaps/
 │   └── initiatives/
 │       ├── initiative-001.pdf
 │       └── initiative-002.pdf
-└── resource-planning/                   # Team planning
-    ├── team-composition.md              # Required roles and sizes
+└── team-planning/                       # Staffing and hiring plan
+    ├── team-composition.md              # Required roles and team sizes
     ├── expertise-requirements.md        # Skills and experience levels
     ├── hiring-plan.md                   # Recruitment timeline
     └── ai-augmentation-strategy.md      # AI coding agent recommendations
@@ -1028,12 +1028,12 @@ including architecture decisions, dependencies, risks, and timeline.
 ```
 ```
 
-#### 7. Resource Planning
+#### 7. Team Planning
 
 Analyze roadmap complexity to determine required team composition, expertise, and AI augmentation opportunities:
 
 ```markdown
-# Resource Planning: Implementation Roadmap
+# Team Planning & Staffing: Implementation Roadmap
 
 ## Executive Summary
 
@@ -1182,7 +1182,7 @@ Requires experienced engineer.
 
 ## Hiring & Onboarding Plan
 
-### Immediate Hires (Before Q1 2026)
+### Immediate Hiring Needs (Before Q1 2026)
 **Priority**: P0 (Critical)
 
 | Role | Reason | Timeline |
@@ -1542,7 +1542,7 @@ and documentation.
 │  └─────────────────────────────────────────────────┘       │
 │                                                             │
 │  ┌─────────────────────────────────────────────────┐       │
-│  │     MODE 7: Resource Planning                    │       │
+│  │     MODE 7: Team Planning                        │       │
 │  ├─────────────────────────────────────────────────┤       │
 │  │  1. Analyze roadmap complexity                   │       │
 │  │  2. Determine required expertise                 │       │
@@ -1587,7 +1587,7 @@ and documentation.
 "Export roadmap to PDF"
 "Generate executive roadmap PDF"
 "Create technical roadmap package"
-"Plan team resources for roadmap"
+"Plan team staffing for roadmap"
 "What expertise do we need?"
 "Generate hiring plan"
 "How can AI agents augment the team?"
@@ -1616,14 +1616,14 @@ and documentation.
 5. User: "Create technical spikes for high-risk items"
    └─> roadmap-analysis skill plans spikes with time boxes
 
-6. User: "Plan team resources for this roadmap"
+6. User: "Plan team staffing for this roadmap"
    └─> roadmap-analysis skill:
        ├─ Analyzes complexity by initiative
        ├─ Determines required expertise and seniority
        ├─ Calculates team composition by phase
        ├─ Creates hiring timeline
        └─ Generates AI augmentation strategy
-       Output: roadmaps/analysis/resource-planning/
+       Output: roadmaps/analysis/team-planning/
 
 7. User: "Export roadmap to PDF for stakeholders"
    └─> roadmap-analysis skill:
@@ -1713,7 +1713,7 @@ Both skills share common data structures:
 - [ ] Parser for external roadmaps (JIRA, Linear, etc.)
 - [ ] Complexity calculation algorithms
 - [ ] Effort estimation models
-- [ ] Resource planning algorithms (team composition, expertise mapping)
+- [ ] Team planning algorithms (team composition, expertise mapping)
 - [ ] AI augmentation impact calculator
 - [ ] PDF export workflow (integration with pdf-report skill)
 - [ ] Mermaid diagram export automation
@@ -1808,8 +1808,8 @@ Both skills share common data structures:
 - [ ] Calculates complexity metrics
 - [ ] Plans technical spikes effectively
 - [ ] Provides effort estimates with confidence levels
-- [ ] Generates resource plans with team composition and expertise requirements
-- [ ] Includes AI augmentation recommendations in all resource plans
+- [ ] Generates staffing plans with team composition and expertise requirements
+- [ ] Includes AI augmentation recommendations in all team plans
 - [ ] Exports professional PDFs with embedded diagrams
 - [ ] Supports multiple export formats (executive, technical, per-initiative)
 
