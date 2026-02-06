@@ -14,15 +14,22 @@ This directory contains developer specifications for AI-related tooling and proc
 | Spec | Description |
 |------|-------------|
 | [workflow-system-spec.md](workflow-system-spec.md) | Workflow structure, patterns, and extension guidelines |
+| [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md) | Shared analysis engine + output adapter pattern |
+| [security-analysis-skill-spec.md](security-analysis-skill-spec.md) | Security posture + compliance frameworks |
+| [structurizr-skills-spec.md](structurizr-skills-spec.md) | C4 authoring + export adapters |
+| [roadmap-skills-spec.md](roadmap-skills-spec.md) | **NEW**: Roadmap building and analysis capabilities |
+| [output-directories-spec.md](output-directories-spec.md) | Default output directory conventions |
+| [tooling-research.md](tooling-research.md) | Diagram export and presentation tooling research |
 
 ## Roadmaps
 
 Active development plans:
 
-| Roadmap | Description |
-|---------|-------------|
-| [arch-analysis-skills-roadmap.md](arch-analysis-skills-roadmap.md) | Architectural analysis skill expansion |
-| [togaf-skill-family-roadmap.md](togaf-skill-family-roadmap.md) | TOGAF framework as layered skill family |
+| Roadmap | Description | Status |
+|---------|-------------|--------|
+| [arch-analysis-skills-roadmap.md](arch-analysis-skills-roadmap.md) | Architectural analysis skill expansion | Complete |
+| [togaf-skill-family-roadmap.md](togaf-skill-family-roadmap.md) | TOGAF framework as layered skill family | Complete |
+| [ROADMAP-TRACKER.md](ROADMAP-TRACKER.md) | Overall project roadmap and progress tracker | Active |
 
 ## Structure
 
