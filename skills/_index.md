@@ -131,6 +131,7 @@ Some skills can be explicitly invoked during a session:
 
 | Skill | Invocation | Description |
 |-------|------------|-------------|
+| `skill-discovery` | `"What skills do you have?"` / `"List your capabilities"` | List all skills with offer to elaborate |
 | `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
 | `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
 | `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
@@ -142,7 +143,7 @@ Some skills can be explicitly invoked during a session:
 | `togaf` | `"Apply TOGAF"` / `"Create architecture vision"` | Enterprise architecture using ADM |
 | `presentation` | `"Generate presentation"` / `"Create slides"` | Markdown to PPTX/PDF slide generation |
 
-See the skill's README for full invocation options.
+See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
 
 ---
 

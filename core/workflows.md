@@ -206,3 +206,127 @@ Types: feat | fix | docs | refactor | test | chore
 - Known Issues if bugs discovered
 - Dependencies if new ones added
 - Tech Stack if tools/frameworks change
+
+---
+
+## Skill Discovery
+
+**An invokable workflow for listing capabilities and offering elaboration.**
+
+### Triggers
+
+- "What skills do you have?"
+- "List your capabilities"
+- "What can you do?"
+- "Show me your skills"
+- After toolkit installation or update
+
+### When to Use
+
+1. **Initial onboarding** - After installing the toolkit, introduce capabilities
+2. **Refresh** - User wants a reminder of available skills
+3. **After update** - Toolkit was updated, show what's new or changed
+4. **Exploration** - User is deciding which skill to use
+
+### Workflow
+
+```
+1. READ toolkit skill index (skills/_index.md)
+2. READ TOGAF index (skills/optional/togaf/_index.md)
+3. READ analysis outputs index (skills/optional/analysis-outputs/_index.md)
+
+4. PRESENT skills organized by category:
+
+   **Analysis Skills** (understand codebases)
+   - codebase-analysis: Base analysis engine
+   - arch-analysis: 8-phase architecture documentation
+   - security-analysis: Security + compliance (OWASP, NIST, CIS, ISO, NIS 2)
+   - nonfunctional-analysis: Testing, config, performance, health
+   - architecture-synthesis: From diagrams to architecture model
+   - fitness-functions: Evolutionary architecture fitness
+
+   **Architecture & Modeling** (enterprise patterns)
+   - structurizr: C4 modeling with Structurizr DSL
+   - TOGAF ADM: Full cycle (Preliminary + Phases A-H)
+
+   **Development Workflows** (coding practices)
+   - git-workflow: Commits, branching, PRs
+   - todo-workflow: Autonomous task-based development
+   - software-design: Patterns and principles
+   - tech-stack-decisions: Technology evaluation, ADRs
+   - code-conventions: Style guides
+   - presentation: Slide generation (PPTX, PDF)
+
+   **Output Formats** (export options)
+   - core-architecture, architecture-docs, coding-context
+   - product-spec, structurizr, archimate
+
+5. PRESENT invokable commands:
+   - "Analyze the architecture"
+   - "Analyze security"
+   - "Analyze code quality"
+   - "Create C4 model"
+   - "Apply TOGAF"
+   - "Use todo workflow"
+   - "Generate presentation"
+   - etc.
+
+6. OFFER to elaborate:
+   "Would you like me to explain any of these skills in more detail?
+    Just name the skill or category you're interested in."
+
+7. IF user requests elaboration:
+   - Read the skill's README.md
+   - Summarize key concepts and use cases
+   - Show example invocations
+   - Offer to demonstrate or run the skill
+```
+
+### Output Format
+
+```markdown
+## What I Can Do
+
+I've learned the AI Architect Toolbox. Here's what I can help you with:
+
+### Analysis Skills
+| Skill | What It Does | Try It |
+|-------|--------------|--------|
+| arch-analysis | Document your codebase architecture | "Analyze the architecture" |
+| security-analysis | Security assessment + compliance | "Analyze security" |
+| ... | ... | ... |
+
+### Architecture & Modeling
+...
+
+### Development Workflows
+...
+
+---
+
+**Want details on any skill?** Just ask, and I'll explain what it does and show examples.
+```
+
+### Elaboration Response
+
+When user asks for details on a specific skill:
+
+```markdown
+## {Skill Name}
+
+**Purpose**: {One-line description}
+
+**When to use**:
+- {Use case 1}
+- {Use case 2}
+
+**What it produces**:
+- {Output 1}
+- {Output 2}
+
+**Example commands**:
+- "{Example invocation 1}"
+- "{Example invocation 2}"
+
+**Want me to run this skill now?**
+```

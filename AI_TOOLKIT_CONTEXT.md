@@ -138,6 +138,7 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 
 | Command | What It Does |
 |---------|--------------|
+| "What skills do you have?" | List all capabilities and offer to elaborate |
 | "Analyze the architecture" | Run full 8-phase codebase analysis |
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |

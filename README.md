@@ -17,6 +17,26 @@ Designed to be used as a git submodule that AI agents can reference when working
 
 ## Quick Start
 
+### One-Prompt Setup
+
+Copy and paste this prompt to your AI assistant:
+
+> Add the AI architect toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, list all the skills you learned organized by category, and what I can now ask you to do. Offer to elaborate on any skill if I want more details.
+
+This will:
+1. Add the toolbox as a submodule
+2. Train your agent on all available skills
+3. Present a summary of capabilities
+4. Offer to dive deeper into any area
+
+### After Setup
+
+Once trained, you can always ask:
+
+> "What skills do you have?" or "List your capabilities"
+
+This triggers the skill discovery workflow to refresh your agent's knowledge and show available commands.
+
 ### Recommended Models
 
 | Model | Best For | When to Use |
@@ -25,64 +45,46 @@ Designed to be used as a git submodule that AI agents can reference when working
 | **Claude Sonnet** | Balanced performance | Most coding tasks, analysis, debugging |
 | **Claude Opus** | Complex reasoning | Architecture design, large refactors, multi-file changes |
 
-### Adding to Your Project
-
-Ask your AI assistant:
-
-> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.ai-toolkit` directory and adopt using its content once downloaded.
-
-### Immediate Codebase Analysis
-
-To set up and immediately analyze your codebase:
-
-> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.ai-toolkit` directory. After you are ready to use the toolkit, perform architecture analysis.
-
-This will:
-1. Add the toolbox as a submodule
-2. Analyze your codebase structure
-3. Generate architecture documentation in `analysis/`
-4. Prepare context for effective coding assistance
-
 ---
 
 ## What's Included
 
 ### Analysis Skills
 
-| Skill | Description | Status |
-|-------|-------------|--------|
-| **codebase-analysis** | Base analysis engine with structured output model | Complete |
-| **arch-analysis** | Architecture documentation (8-phase workflow) | Complete |
-| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2) | Complete |
-| **nonfunctional-analysis** | Testing, config, performance, code health | Complete |
-| **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) | Complete |
-| **fitness-functions** | Evolutionary architecture fitness measurement and validation | Complete |
+| Skill | Description |
+|-------|-------------|
+| **codebase-analysis** | Base analysis engine with structured output model |
+| **arch-analysis** | Architecture documentation (8-phase workflow) |
+| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2) |
+| **nonfunctional-analysis** | Testing, config, performance, code health |
+| **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) |
+| **fitness-functions** | Evolutionary architecture fitness measurement and validation |
 
 ### Architecture & Modeling
 
-| Skill | Description | Status |
-|-------|-------------|--------|
-| **structurizr** | C4 architecture modeling with Structurizr DSL | Complete |
-| **togaf/preliminary** | Preliminary: Architecture capability setup | Complete |
-| **togaf/vision** | Phase A: Architecture Vision | Complete |
-| **togaf/business-architecture** | Phase B: Capabilities, value streams, processes | Complete |
-| **togaf/information-systems** | Phase C: Data and application architecture | Complete |
-| **togaf/technology-architecture** | Phase D: Infrastructure and platforms | Complete |
-| **togaf/opportunities-solutions** | Phase E: Opportunities and Solutions | Complete |
-| **togaf/migration-planning** | Phase F: Migration Planning | Complete |
-| **togaf/implementation-governance** | Phase G: Implementation Governance | Complete |
-| **togaf/change-management** | Phase H: Change Management | Complete |
+| Skill | Description |
+|-------|-------------|
+| **structurizr** | C4 architecture modeling with Structurizr DSL |
+| **togaf/preliminary** | Preliminary: Architecture capability setup |
+| **togaf/vision** | Phase A: Architecture Vision |
+| **togaf/business-architecture** | Phase B: Capabilities, value streams, processes |
+| **togaf/information-systems** | Phase C: Data and application architecture |
+| **togaf/technology-architecture** | Phase D: Infrastructure and platforms |
+| **togaf/opportunities-solutions** | Phase E: Opportunities and Solutions |
+| **togaf/migration-planning** | Phase F: Migration Planning |
+| **togaf/implementation-governance** | Phase G: Implementation Governance |
+| **togaf/change-management** | Phase H: Change Management |
 
 ### Development Workflows
 
-| Skill | Description | Status |
-|-------|-------------|--------|
-| **git-workflow** | Commit conventions, branching, PR workflow | Complete |
-| **todo-workflow** | Task tracking and autonomous development | Complete |
-| **software-design** | Design principles, patterns, decisions | Complete |
-| **tech-stack-decisions** | Technology evaluation frameworks, ADRs | Complete |
-| **code-conventions** | Style guides and standards | Complete |
-| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) | Complete |
+| Skill | Description |
+|-------|-------------|
+| **git-workflow** | Commit conventions, branching, PR workflow |
+| **todo-workflow** | Task tracking and autonomous development |
+| **software-design** | Design principles, patterns, decisions |
+| **tech-stack-decisions** | Technology evaluation frameworks, ADRs |
+| **code-conventions** | Style guides and standards |
+| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) |
 
 ### Output Adapters
 
@@ -110,12 +112,13 @@ When skills generate output files, they use these defaults (confirm with user):
 
 ---
 
-## Invokable Skills
+## Invokable Commands
 
 Trigger specific workflows during your session:
 
 | Command | What It Does |
 |---------|--------------|
+| "What skills do you have?" | List all capabilities and offer to elaborate |
 | "Analyze the architecture" | Run full 8-phase codebase analysis |
 | "Analyze security" | Security assessment with compliance reports |
 | "Analyze code quality" | Testing, config, performance, health check |
@@ -165,22 +168,7 @@ Each skill contains:
 
 ## Roadmap
 
-All planned items are complete:
-
-- Analysis engine with 6 output adapters (including core-architecture)
-- Architecture Synthesis skill (middle-out from diagrams/specs)
-- Security analysis with 5 compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2)
-- Nonfunctional analysis (testing, config, performance, health)
-- Structurizr C4 modeling skill
-- TOGAF ADM (Preliminary + Phases A-H complete)
-- Core development workflows
-- Change Management Communication Plan enhancement
-- Fitness Functions skill (evolutionary architecture)
-- Migration Planning with fitness function integration
-- Presentation generation skill (Marp CLI)
-- Excalidraw diagram support
-
-See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history.
+All planned items are complete. See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history.
 
 ---
 
