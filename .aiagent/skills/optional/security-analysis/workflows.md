@@ -47,9 +47,12 @@ Select one or more:
 ☐ NIST CSF - Cybersecurity Framework (Identify/Protect/Detect/Respond/Recover)
 ☐ CIS Controls - Center for Internet Security prioritized controls (IG1/IG2/IG3)
 ☐ ISO 27001 - Information security management (Annex A controls)
+☐ NIS 2 - EU Directive 2022/2555 (technical controls only, ~40-50% coverage)
 
 Default: OWASP ASVS (most applicable for application security)
 ```
+
+> **Note on NIS 2**: Code analysis can only assess technical controls. Organizational measures (policies, governance, training) require separate assessment. See [NIS 2 Scope Limitations](README.md#nis-2-scope-limitations).
 
 #### 0.4 Select Diagram Format
 
@@ -59,7 +62,10 @@ What diagram format do you prefer?
 1. **Mermaid** (Recommended) - Renders in GitHub, GitLab, markdown viewers
 2. **ASCII** - Works everywhere, no rendering required
 3. **PlantUML** - More features, requires PlantUML viewer
+4. **Excalidraw** - Hand-drawn style, VS Code extension, collaborative
 ```
+
+> **Note**: Excalidraw outputs `.excalidraw` JSON files. Edit visually in VS Code or export to PNG/SVG for embedding.
 
 #### 0.5 Initialize Index
 

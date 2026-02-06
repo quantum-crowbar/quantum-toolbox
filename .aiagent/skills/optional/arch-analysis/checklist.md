@@ -13,7 +13,7 @@ Quick reference for systematic codebase analysis.
 - [ ] `architecture-docs/analysis/` directory created
 
 ### Preferences
-- [ ] Diagram format selected (Mermaid/ASCII/PlantUML)
+- [ ] Diagram format selected (Mermaid/ASCII/PlantUML/Excalidraw)
 - [ ] Format preference recorded for consistent use
 
 ### Pre-Analysis

@@ -78,6 +78,7 @@ What diagram format do you prefer?
 1. **Mermaid** (Recommended) - Renders in GitHub, GitLab, and most markdown viewers
 2. **ASCII** - Works everywhere, no rendering required
 3. **PlantUML** - More features, requires PlantUML viewer/extension
+4. **Excalidraw** - Hand-drawn style, VS Code extension, collaborative editing
 ```
 
 | Format | Pros | Cons |
@@ -85,10 +86,13 @@ What diagram format do you prefer?
 | **Mermaid** | Native GitHub/GitLab support, clean syntax | Limited customization |
 | **ASCII** | Universal compatibility, no dependencies | Harder to maintain, limited complexity |
 | **PlantUML** | Feature-rich, great for complex diagrams | Requires external renderer |
+| **Excalidraw** | Visual editing, hand-drawn aesthetic, collaboration | Requires VS Code extension or export |
 
 **Default**: Mermaid (most widely supported in modern tools)
 
 Store the preference for use in Phase 4 (Architecture Synthesis) and Phase 7 (Data Flow).
+
+> **Note**: Excalidraw outputs `.excalidraw` JSON files. These can be edited visually in VS Code with the Excalidraw extension, or exported to PNG/SVG for embedding in markdown.
 
 **Output**: Documentation structure ready for analysis
 

@@ -150,6 +150,7 @@ Use `meta.preferences.diagram_format`:
 - `mermaid` (default): Mermaid.js syntax
 - `ascii`: ASCII art diagrams
 - `plantuml`: PlantUML syntax
+- `excalidraw`: Excalidraw JSON (hand-drawn style)
 
 ---
 

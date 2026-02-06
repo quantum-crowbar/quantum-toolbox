@@ -212,6 +212,8 @@ Templates for generating architecture documentation from analysis model.
 
 ## 03 - Architecture Diagrams Template
 
+> **Excalidraw Format**: When `diagram_format` is `excalidraw`, generate `.excalidraw` files in a `diagrams/` subdirectory and reference them as images: `![Component Diagram](./diagrams/component-diagram.excalidraw.png)`. Users can open the `.excalidraw` file directly in VS Code for editing.
+
 ```markdown
 # Architecture Diagrams
 

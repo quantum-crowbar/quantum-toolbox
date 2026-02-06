@@ -326,9 +326,12 @@ Responsibilities:
 ### Diagram Generation
 
 Use preference from `meta.preferences.diagram_format`:
-- `mermaid`: Generate Mermaid syntax
-- `ascii`: Generate ASCII diagrams
-- `plantuml`: Generate PlantUML syntax
+- `mermaid`: Generate Mermaid syntax (recommended - GitHub/GitLab native support)
+- `ascii`: Generate ASCII diagrams (universal compatibility)
+- `plantuml`: Generate PlantUML syntax (feature-rich)
+- `excalidraw`: Generate `.excalidraw` JSON files (hand-drawn style, VS Code extension)
+
+See [Excalidraw Output Format](excalidraw-output.md) for detailed JSON templates and generation guidance.
 
 ### Partial Model Handling
 

@@ -4,6 +4,21 @@ Output templates for each section of the core architecture documentation.
 
 ---
 
+## Diagram Format Handling
+
+Templates use `{diagram_format}` placeholder which expands to:
+- `mermaid` - Mermaid.js code blocks
+- `ascii` - ASCII art diagrams
+- `plantuml` - PlantUML syntax
+- `excalidraw` - Excalidraw JSON files
+
+**Excalidraw**: When using Excalidraw format:
+1. Create `.excalidraw` files in a `diagrams/` subdirectory
+2. Reference as images: `![Diagram Name](./diagrams/diagram-name.excalidraw.png)`
+3. Users can edit the `.excalidraw` source directly in VS Code
+
+---
+
 ## index.md - Executive Summary
 
 ```markdown

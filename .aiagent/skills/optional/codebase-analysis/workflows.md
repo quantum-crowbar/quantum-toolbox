@@ -63,9 +63,12 @@ What diagram format do you prefer?
 1. **Mermaid** (Recommended) - GitHub, GitLab, most markdown viewers
 2. **ASCII** - Universal, no rendering needed
 3. **PlantUML** - Feature-rich, requires renderer
+4. **Excalidraw** - Hand-drawn style, VS Code extension, collaborative
 ```
 
 Store preference in `meta.preferences.diagram_format`.
+
+> **Note**: Excalidraw outputs `.excalidraw` JSON files that can be edited in VS Code with the Excalidraw extension or exported to PNG/SVG for embedding.
 
 ### 0.3 Initialize Analysis Model
 
