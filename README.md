@@ -21,21 +21,22 @@ Designed to be used as a git submodule that AI agents can reference when working
 
 Copy and paste this prompt to your AI assistant:
 
-> Add the AI architect toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, list all the skills you learned organized by category, and what I can now ask you to do. Offer to elaborate on any skill if I want more details.
+> Add the AI architect toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
 
 This will:
 1. Add the toolbox as a submodule
 2. Train your agent on all available skills
-3. Present a summary of capabilities
-4. Offer to dive deeper into any area
+3. Trigger the skill discovery workflow
+4. Present capabilities organized by category
+5. Offer to elaborate on any skill
 
-### After Setup
+### Anytime Refresh
 
-Once trained, you can always ask:
+Ask your agent:
 
-> "What skills do you have?" or "List your capabilities"
+> "What skills do you have?"
 
-This triggers the skill discovery workflow to refresh your agent's knowledge and show available commands.
+This re-reads the toolkit and presents all capabilities with invokable commands. Useful after toolkit updates or when you want a reminder of what's available.
 
 ### Recommended Models
 
