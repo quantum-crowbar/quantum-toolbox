@@ -160,8 +160,8 @@ Answer before writing:
 mkdir -p presentations/{topic}/diagrams
 mkdir -p presentations/{topic}/exports
 
-# Copy template
-cp .aiagent/skills/optional/presentation/templates/{template}.md \
+# Copy template (adjust path to your toolkit location)
+cp .ai-toolkit/skills/optional/presentation/templates/{template}.md \
    presentations/{topic}/slides.md
 ```
 

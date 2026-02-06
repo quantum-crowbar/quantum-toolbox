@@ -1,6 +1,5 @@
-
 # Generated presentations
-docs/ai/presentations/*.pptx
-docs/ai/presentations/*.pdf
+docs/presentations/*.pptx
+docs/presentations/*.pdf
 *.pptx
 *.pdf

@@ -240,7 +240,7 @@ Feature Development
 
 ### Central Workflows
 
-Location: `.aiagent/core/workflows.md`
+Location: `core/workflows.md`
 
 Contains:
 - Pre-Work Checklist
@@ -251,7 +251,7 @@ Contains:
 
 ### Skill-Specific Workflows
 
-Location: `.aiagent/skills/{type}/{skill-name}/workflows.md`
+Location: `skills/{type}/{skill-name}/workflows.md`
 
 Contains:
 - Workflows specific to that skill

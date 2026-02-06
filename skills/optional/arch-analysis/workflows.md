@@ -113,8 +113,8 @@ Store the preference for use in Phase 4 (Architecture Synthesis) and Phase 7 (Da
 **Exclude AI/Agent configuration files** - These are not project documentation:
 
 ```
-# Directories to exclude
-.aiagent/
+# Directories to exclude (AI toolkit submodule may have different name)
+.ai-toolkit/
 .aider/
 .cursor/
 .github/copilot/

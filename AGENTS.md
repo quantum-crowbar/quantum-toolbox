@@ -14,8 +14,8 @@ For full repository context, capabilities, and current status, see **[AI_TOOLKIT
 ### Adding to Your Project
 
 ```bash
-# Add as a git submodule
-git submodule add <this-repo-url> .aiagent
+# Add as a git submodule (choose your preferred directory name)
+git submodule add <this-repo-url> .ai-toolkit
 
 # Initialize if cloning a project that already has this submodule
 git submodule update --init --recursive
@@ -25,8 +25,8 @@ git submodule update --init --recursive
 
 1. Copy the templates to your project root:
    ```bash
-   cp .aiagent/templates/AGENTS.template.md ./AGENTS.md
-   cp .aiagent/templates/CONTEXT.template.md ./CONTEXT.md
+   cp .ai-toolkit/templates/AGENTS.template.md ./AGENTS.md
+   cp .ai-toolkit/templates/CONTEXT.template.md ./CONTEXT.md
    ```
 
 2. Customize `AGENTS.md` with your project-specific guidelines
@@ -40,7 +40,7 @@ git submodule update --init --recursive
 ## Structure
 
 ```
-.aiagent/
+.ai-toolkit/                # (or your chosen submodule directory name)
 ├── AGENTS.md              # This file - submodule entry point
 ├── core/                  # Always-loaded base documentation
 │   ├── instructions.md    # Coding rules, bash safety guidelines
@@ -136,11 +136,11 @@ When starting work on a project using this submodule:
 To get the latest version:
 
 ```bash
-cd .aiagent
+cd .ai-toolkit
 git pull origin main
 cd ..
-git add .aiagent
-git commit -m "chore: update .aiagent submodule"
+git add .ai-toolkit
+git commit -m "chore: update ai-toolkit submodule"
 ```
 
 ---

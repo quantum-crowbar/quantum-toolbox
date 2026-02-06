@@ -164,7 +164,8 @@ Findings are classified using standard severity levels:
 ## Excluded from Analysis
 
 Same as arch-analysis, AI agent configuration files are excluded:
-- `.aiagent/`, `.aider/`, `.cursor/`, `.continue/`
+- AI toolkit submodule directory (e.g., `.ai-toolkit/`)
+- `.aider/`, `.cursor/`, `.continue/`
 - `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.aider*`
 
 These contain agent instructions, not application security concerns.

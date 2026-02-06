@@ -29,18 +29,18 @@ Designed to be used as a git submodule that AI agents can reference when working
 
 Ask your AI assistant:
 
-> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory and adopt using its content once downloaded.
+> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.ai-toolkit` directory and adopt using its content once downloaded.
 
 ### Immediate Codebase Analysis
 
 To set up and immediately analyze your codebase:
 
-> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.aiagent` directory. After you are ready to use the .aiagent toolbox, perform architecture analysis.
+> Add my agent toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into the `.ai-toolkit` directory. After you are ready to use the toolkit, perform architecture analysis.
 
 This will:
 1. Add the toolbox as a submodule
 2. Analyze your codebase structure
-3. Generate architecture documentation
+3. Generate architecture documentation in `analysis/`
 4. Prepare context for effective coding assistance
 
 ---
@@ -53,7 +53,7 @@ This will:
 |-------|-------------|--------|
 | **codebase-analysis** | Base analysis engine with structured output model | Complete |
 | **arch-analysis** | Architecture documentation (8-phase workflow) | Complete |
-| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO) | Complete |
+| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2) | Complete |
 | **nonfunctional-analysis** | Testing, config, performance, code health | Complete |
 | **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) | Complete |
 | **fitness-functions** | Evolutionary architecture fitness measurement and validation | Complete |
@@ -63,6 +63,7 @@ This will:
 | Skill | Description | Status |
 |-------|-------------|--------|
 | **structurizr** | C4 architecture modeling with Structurizr DSL | Complete |
+| **togaf/preliminary** | Preliminary: Architecture capability setup | Complete |
 | **togaf/vision** | Phase A: Architecture Vision | Complete |
 | **togaf/business-architecture** | Phase B: Capabilities, value streams, processes | Complete |
 | **togaf/information-systems** | Phase C: Data and application architecture | Complete |
@@ -98,6 +99,17 @@ Analysis can be exported in multiple formats:
 
 ---
 
+## Default Output Directories
+
+When skills generate output files, they use these defaults (confirm with user):
+
+| Output Type | Default Directory | Content |
+|-------------|-------------------|---------|
+| Analysis | `analysis/` | Architecture, security, and code analysis reports |
+| Presentations | `presentations/` | Generated slide decks (PPTX, PDF, HTML) |
+
+---
+
 ## Invokable Skills
 
 Trigger specific workflows during your session:
@@ -121,18 +133,18 @@ Trigger specific workflows during your session:
 
 ```
 .
-├── .aiagent/                  # Agent toolbox
-│   ├── AGENTS.md              # Main agent instructions
-│   ├── core/                  # Core concepts and workflows
-│   │   ├── instructions.md    # Coding rules, safety
-│   │   ├── workflows.md       # Development processes
-│   │   └── architecture-thinking.md  # TOGAF foundations
-│   ├── skills/                # Modular skill packages
-│   │   ├── core/              # Always-active skills
-│   │   └── optional/          # Opt-in skills
-│   └── templates/             # Commit, PR templates
-├── docs/ai/                   # Human-readable guides
-└── specs/ai/                  # Specifications & roadmaps
+├── AGENTS.md              # Main agent instructions
+├── AI_TOOLKIT_CONTEXT.md  # Full context for AI assistants
+├── core/                  # Core concepts and workflows
+│   ├── instructions.md    # Coding rules, safety
+│   ├── workflows.md       # Development processes
+│   └── architecture-thinking.md  # TOGAF foundations
+├── skills/                # Modular skill packages
+│   ├── core/              # Always-active skills
+│   └── optional/          # Opt-in skills
+├── templates/             # Commit, PR templates
+├── docs/                  # Human-readable guides
+└── specs/                 # Specifications & roadmaps
 ```
 
 ---
@@ -153,26 +165,22 @@ Each skill contains:
 
 ## Roadmap
 
-### Complete
+All planned items are complete:
 
 - Analysis engine with 6 output adapters (including core-architecture)
 - Architecture Synthesis skill (middle-out from diagrams/specs)
-- Security analysis with 4 compliance frameworks
+- Security analysis with 5 compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2)
 - Nonfunctional analysis (testing, config, performance, health)
 - Structurizr C4 modeling skill
-- TOGAF ADM Phases A-H (Full ADM cycle complete)
+- TOGAF ADM (Preliminary + Phases A-H complete)
 - Core development workflows
 - Change Management Communication Plan enhancement
 - Fitness Functions skill (evolutionary architecture)
 - Migration Planning with fitness function integration
 - Presentation generation skill (Marp CLI)
+- Excalidraw diagram support
 
-### Planned
-
-- Excalidraw native diagram support
-- TOGAF Preliminary Phase
-
-See [ROADMAP-TRACKER.md](specs/ai/ROADMAP-TRACKER.md) for details.
+See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history.
 
 ---
 
@@ -180,10 +188,10 @@ See [ROADMAP-TRACKER.md](specs/ai/ROADMAP-TRACKER.md) for details.
 
 | Resource | Description |
 |----------|-------------|
-| [Skills Index](.aiagent/skills/_index.md) | Full skill listing and activation guide |
-| [TOGAF Index](.aiagent/skills/optional/togaf/_index.md) | ADM phases and when to use each |
-| [Analysis Outputs](.aiagent/skills/optional/analysis-outputs/_index.md) | Available export formats |
-| [Architecture Guide](docs/ai/arch-analysis-guide.md) | How to analyze unfamiliar codebases |
+| [Skills Index](skills/_index.md) | Full skill listing and activation guide |
+| [TOGAF Index](skills/optional/togaf/_index.md) | ADM phases and when to use each |
+| [Analysis Outputs](skills/optional/analysis-outputs/_index.md) | Available export formats |
+| [Architecture Guide](docs/arch-analysis-guide.md) | How to analyze unfamiliar codebases |
 
 ---
 

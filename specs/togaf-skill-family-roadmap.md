@@ -10,8 +10,8 @@ Development plan for implementing TOGAF (The Open Group Architecture Framework) 
 
 | Layer | Location | Purpose |
 |-------|----------|---------|
-| **Core Concepts** | `.aiagent/core/` | Foundational thinking always active |
-| **ADM Phase Skills** | `.aiagent/skills/optional/togaf/` | Invokable workflows per phase |
+| **Core Concepts** | `core/` | Foundational thinking always active |
+| **ADM Phase Skills** | `skills/optional/togaf/` | Invokable workflows per phase |
 | **Templates & Artifacts** | Within each skill | TOGAF-compliant deliverables |
 
 ### Why Layered?
@@ -25,7 +25,7 @@ Development plan for implementing TOGAF (The Open Group Architecture Framework) 
 
 ## Layer 1: Core Concepts (Agent Training)
 
-Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinking.md`
+Add to `core/instructions.md` or new `core/architecture-thinking.md`
 
 ### TODO
 
@@ -172,7 +172,7 @@ Add to `.aiagent/core/instructions.md` or new `.aiagent/core/architecture-thinki
 
 ## Layer 2: ADM Phase Skills
 
-Location: `.aiagent/skills/optional/togaf/`
+Location: `skills/optional/togaf/`
 
 ### Skill Family Structure
 

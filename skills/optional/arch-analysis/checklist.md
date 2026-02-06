@@ -34,7 +34,7 @@ Quick reference for systematic codebase analysis.
 - [ ] Wiki/external docs identified
 
 ### AI/Agent Files Excluded
-- [ ] `.aiagent/`, `.aider/`, `.cursor/` directories skipped
+- [ ] AI toolkit directories (`.ai-toolkit/`, `.aider/`, `.cursor/`) skipped
 - [ ] `AGENTS.md`, `CLAUDE.md`, `.cursorrules` ignored
 - [ ] Other AI config files excluded from doc analysis
 

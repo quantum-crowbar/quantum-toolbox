@@ -67,7 +67,8 @@ All diagrams in the output will use your chosen format consistently.
 ### Excluded Files
 
 The analysis automatically excludes AI agent configuration files:
-- `.aiagent/`, `.aider/`, `.cursor/`, `.continue/`
+- AI toolkit submodule directory (e.g., `.ai-toolkit/`)
+- `.aider/`, `.cursor/`, `.continue/`
 - `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.aider*`
 
 These contain agent instructions, not project architecture.

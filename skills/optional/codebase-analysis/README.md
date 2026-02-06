@@ -139,7 +139,8 @@ Works best with:
 ## Excluded Files
 
 Analysis automatically excludes AI agent configuration:
-- `.aiagent/`, `.aider/`, `.cursor/`, `.continue/`
+- AI toolkit submodule directory (e.g., `.ai-toolkit/`)
+- `.aider/`, `.cursor/`, `.continue/`
 - `AGENTS.md`, `CLAUDE.md`, `.cursorrules`
 
 These contain agent instructions, not application architecture.

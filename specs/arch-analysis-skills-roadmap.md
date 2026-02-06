@@ -66,7 +66,7 @@ New skill focused on security posture assessment.
 ### TODO
 
 - [ ] **Skill Structure**
-  - [ ] Create `.aiagent/skills/optional/security-analysis/` directory
+  - [ ] Create `skills/optional/security-analysis/` directory
   - [ ] README.md - overview, principles, invocation
   - [ ] workflows.md - security analysis phases
   - [ ] checklist.md - security review checklist
@@ -103,7 +103,7 @@ New skill focused on security posture assessment.
 
 - [ ] Complete skill with all 5 standard files
 - [ ] Skill registered in _index.md
-- [ ] Human guide created in docs/ai/security-analysis-guide.md
+- [ ] Human guide created in docs/security-analysis-guide.md
 - [ ] Cross-references with arch-analysis documented
 - [ ] Invocation patterns documented
 
@@ -116,7 +116,7 @@ New skill focused on quality attributes and code health.
 ### TODO
 
 - [ ] **Skill Structure**
-  - [ ] Create `.aiagent/skills/optional/nonfunctional-analysis/` directory
+  - [ ] Create `skills/optional/nonfunctional-analysis/` directory
   - [ ] README.md - overview, principles, invocation
   - [ ] workflows.md - analysis phases
   - [ ] checklist.md - quality review checklist
@@ -163,7 +163,7 @@ New skill focused on quality attributes and code health.
 
 - [ ] Complete skill with all 5 standard files
 - [ ] Skill registered in _index.md
-- [ ] Human guide created in docs/ai/nonfunctional-analysis-guide.md
+- [ ] Human guide created in docs/nonfunctional-analysis-guide.md
 - [ ] Cross-references with other analysis skills documented
 - [ ] Invocation patterns documented
 

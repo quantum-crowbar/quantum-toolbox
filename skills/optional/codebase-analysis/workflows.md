@@ -118,9 +118,10 @@ api.yaml, openapi.yaml, swagger.*
 
 **Exclude AI agent configuration**:
 ```
-.aiagent/, .aider/, .cursor/, .continue/
+.ai-toolkit/, .aider/, .cursor/, .continue/
 AGENTS.md, CLAUDE.md, .cursorrules, .aider*
 ```
+Note: Exclude any AI toolkit submodule directory (may be named differently).
 
 For each documentation file, capture:
 - `location`: File path
