@@ -119,7 +119,6 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 | **software-design** | `skills/optional/software-design/` | Complete | Design principles, patterns, decisions |
 | **tech-stack-decisions** | `skills/optional/tech-stack-decisions/` | Complete | Technology evaluation frameworks, ADRs |
 | **code-conventions** | `skills/optional/code-conventions/` | Complete | Style guides and standards |
-| **presentation** | `skills/optional/presentation/` | Complete | Marp CLI slide generation (PPTX, PDF) |
 
 ### Output Adapters
 
@@ -131,6 +130,8 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 | **product-spec** | `analysis-outputs/product-spec/` | Complete | Product documentation (features, flows, data model) |
 | **structurizr** | `analysis-outputs/structurizr/` | Complete | C4 model in Structurizr DSL |
 | **archimate** | `analysis-outputs/archimate/` | Complete | ArchiMate enterprise architecture format |
+| **presentation** | `analysis-outputs/presentation/` | Complete | Marp CLI slide generation (PPTX, PDF, HTML) |
+| **pdf-report** | `analysis-outputs/pdf-report/` | Complete | Professional PDF reports from markdown |
 
 ---
 
@@ -148,6 +149,8 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 | "Create C4 model" | Generate Structurizr architecture diagrams |
 | "Apply TOGAF" | Enterprise architecture using ADM phases |
 | "Generate core architecture docs" | Canonical documentation structure |
+| "Generate presentation" | Create slide decks from markdown (PPTX, PDF, HTML) |
+| "Export to PDF" | Convert markdown reports to professional PDFs |
 | "Use todo workflow" | Autonomous task-based development |
 | "Generate presentation" | Create slide decks (PPTX, PDF) from Markdown |
 

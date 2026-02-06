@@ -48,6 +48,34 @@ This re-reads the toolkit and presents all capabilities with invokable commands.
 
 ---
 
+## Skills Index
+
+The toolkit provides **27+ specialized skills** organized into 4 categories. For complete documentation, see [Skills Documentation](docs/skills/README.md).
+
+### Quick Reference
+
+| Category | Count | Skills |
+|----------|-------|--------|
+| **Analysis** | 6 | codebase-analysis, arch-analysis, security-analysis, nonfunctional-analysis, architecture-synthesis, fitness-functions |
+| **Architecture** | 11 | structurizr, TOGAF ADM (Preliminary + Phases A-H) |
+| **Workflow** | 2 | git-workflow (core), todo-workflow |
+| **Output** | 8 | core-architecture, architecture-docs, coding-context, product-spec, structurizr, archimate, presentation, pdf-report |
+
+### Common Invocations
+
+```
+"Analyze the architecture"              → arch-analysis
+"Analyze security with OWASP"          → security-analysis
+"Apply TOGAF Business Architecture"    → togaf/business-architecture
+"Create C4 model"                      → structurizr
+"Export to PDF"                        → pdf-report
+"Generate presentation"                → presentation
+```
+
+**Full documentation**: [docs/skills/README.md](docs/skills/README.md) (27 skills with detailed guides, workflows, templates, and examples)
+
+---
+
 ## What's Included
 
 ### Analysis Skills
@@ -85,7 +113,6 @@ This re-reads the toolkit and presents all capabilities with invokable commands.
 | **software-design** | Design principles, patterns, decisions |
 | **tech-stack-decisions** | Technology evaluation frameworks, ADRs |
 | **code-conventions** | Style guides and standards |
-| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) |
 
 ### Output Adapters
 
@@ -99,6 +126,8 @@ Analysis can be exported in multiple formats:
 | **product-spec** | Product documentation (features, flows, data model) |
 | **structurizr** | C4 model in Structurizr DSL |
 | **archimate** | ArchiMate enterprise architecture format |
+| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) |
+| **pdf-report** | Professional PDF reports from markdown |
 
 ---
 
