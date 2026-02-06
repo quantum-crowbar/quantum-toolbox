@@ -29,9 +29,11 @@ Master tracking document for all skill development roadmaps.
 | Presentation Generation | - | 🟢 Complete | Medium |
 | NIS 2 Compliance Framework | - | 🟢 Complete | Medium |
 | Excalidraw Diagram Support | - | 🟢 Complete | Medium |
-| TOGAF Advanced | Phase 5 | ⚪ Planned | Low |
+| TOGAF Preliminary Phase | - | 🟢 Complete | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
+
+**All planned roadmap items are now complete!**
 
 ---
 
@@ -347,9 +349,11 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ## Quick Summary: What's Left
 
+**All planned items complete!** The roadmap is fully implemented.
+
 | Task | Effort | Priority |
 |------|--------|----------|
-| TOGAF Preliminary Phase | Medium | Low |
+| *(None)* | - | - |
 
 ---
 
@@ -820,6 +824,7 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-05 | Presentation Generation skill complete (Marp CLI, templates, examples) | - |
 | 2026-02-05 | NIS 2 Compliance Framework complete (EU Directive 2022/2555 technical controls) | - |
 | 2026-02-05 | Excalidraw Diagram Support complete (4th output format option) | - |
+| 2026-02-06 | TOGAF Preliminary Phase complete (principles, governance, capability assessment) | - |
 
 ---
 
@@ -844,5 +849,4 @@ All TOGAF ADM phases (A through H) are now complete.
 17. ~~Presentation Generation Skill~~ ✅ Complete (Marp CLI, templates, examples)
 18. ~~NIS 2 Compliance Framework~~ ✅ Complete (technical controls in security-analysis)
 19. ~~Excalidraw Diagram Support~~ ✅ Complete (4th output format with JSON templates)
-20. Choose next (low priority):
-    - TOGAF Preliminary Phase
+20. ~~TOGAF Preliminary Phase~~ ✅ Complete (full ADM cycle now implemented)

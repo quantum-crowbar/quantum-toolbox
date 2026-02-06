@@ -92,6 +92,7 @@ flowchart TB
 
 | Skill | Phase | Status | Path |
 |-------|-------|--------|------|
+| **preliminary** | Preliminary | Available | [preliminary/](preliminary/) |
 | **vision** | Phase A | Available | [vision/](vision/) |
 | **business-architecture** | Phase B | Available | [business-architecture/](business-architecture/) |
 | **information-systems** | Phase C | Available | [information-systems/](information-systems/) |
@@ -101,11 +102,7 @@ flowchart TB
 | **implementation-governance** | Phase G | Available | [implementation-governance/](implementation-governance/) |
 | **change-management** | Phase H | Available | [change-management/](change-management/) |
 
-### Planned
-
-| Skill | Phase | Status |
-|-------|-------|--------|
-| preliminary | Preliminary | Planned |
+All TOGAF ADM phases are now complete.
 
 ---
 
@@ -271,11 +268,16 @@ These concepts from [architecture-thinking.md](../../../core/architecture-thinki
 
 ## Getting Started
 
-### For New Architecture Work
+### For New Architecture Capability
 
 1. Read [architecture-thinking.md](../../../core/architecture-thinking.md) for foundation
-2. Start with [vision/](vision/) (Phase A) to define scope
-3. Proceed through relevant phases based on scope
+2. Start with [preliminary/](preliminary/) to establish principles and governance
+3. Proceed to Phase A for specific initiatives
+
+### For New Architecture Work (Capability Exists)
+
+1. Start with [vision/](vision/) (Phase A) to define scope
+2. Proceed through relevant phases based on scope
 
 ### For Existing Projects
 
@@ -288,6 +290,7 @@ These concepts from [architecture-thinking.md](../../../core/architecture-thinki
 ```
 Need to...                          Use...
 ─────────────────────────────────────────────────────
+Establish architecture practice   → Preliminary
 Define scope and get buy-in       → Phase A (Vision)
 Understand business needs         → Phase B (Business)
 Design data/apps                  → Phase C (Info Systems)
