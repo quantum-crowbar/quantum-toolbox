@@ -1453,6 +1453,445 @@ and documentation.
 **Net Benefit**: $90,000 + improved velocity
 
 **Recommendation**: Implement AI augmentation from Day 1 for maximum impact.
+
+---
+
+## Financial Estimation
+
+### Cost Configuration Options
+
+Users can provide cost parameters in three ways:
+
+#### Option A: Standard Team Templates
+
+Pre-defined team configurations with quarterly costs:
+
+```markdown
+## Standard Team Configurations
+
+### Startup Team (4-5 people)
+**Composition**:
+- 1 Tech Lead (Senior)
+- 2 Backend Engineers (Mid-Senior)
+- 1 DevOps Engineer (Mid)
+- 1 QA Engineer (Mid, 50% time)
+
+**Quarterly Cost**: $180,000 - $220,000
+**Annual Cost**: $720,000 - $880,000
+
+### Small Team (6-8 people)
+**Composition**:
+- 1 Tech Lead (Senior/Staff)
+- 3 Backend Engineers (1 Senior, 2 Mid)
+- 1 DevOps Engineer (Mid-Senior)
+- 1 Data Engineer (Senior)
+- 1-2 QA Engineers (Mid)
+
+**Quarterly Cost**: $300,000 - $380,000
+**Annual Cost**: $1,200,000 - $1,520,000
+
+### Medium Team (10-12 people)
+**Composition**:
+- 1 Tech Lead (Staff)
+- 1 Architect (Senior/Staff)
+- 5 Backend Engineers (2 Senior, 3 Mid)
+- 2 DevOps Engineers (1 Senior, 1 Mid)
+- 1 Data Engineer (Senior)
+- 2 QA Engineers (1 Senior, 1 Mid)
+- 1 Frontend Engineer (Mid-Senior)
+
+**Quarterly Cost**: $500,000 - $650,000
+**Annual Cost**: $2,000,000 - $2,600,000
+```
+
+#### Option B: Cost Per Specialty
+
+Define costs by technology expertise and seniority:
+
+```markdown
+## Cost Rates by Specialty & Seniority
+
+### Backend Development
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Mid | $75-95 | $39,000-49,400 | $156,000-197,600 |
+| Senior | $100-130 | $52,000-67,600 | $208,000-270,400 |
+| Staff | $130-160 | $67,600-83,200 | $270,400-332,800 |
+
+### DevOps Engineering
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Mid | $80-100 | $41,600-52,000 | $166,400-208,000 |
+| Senior | $110-140 | $57,200-72,800 | $228,800-291,200 |
+| Staff | $140-170 | $72,800-88,400 | $291,200-353,600 |
+
+### Data Engineering
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Mid | $85-110 | $44,200-57,200 | $176,800-228,800 |
+| Senior | $115-150 | $59,800-78,000 | $239,200-312,000 |
+| Staff | $150-185 | $78,000-96,200 | $312,000-384,800 |
+
+### Cloud Architecture
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Senior | $120-155 | $62,400-80,600 | $249,600-322,400 |
+| Staff | $155-190 | $80,600-98,800 | $322,400-395,200 |
+| Principal | $190-230 | $98,800-119,600 | $395,200-478,400 |
+
+### QA/Testing
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Mid | $70-90 | $36,400-46,800 | $145,600-187,200 |
+| Senior | $95-120 | $49,400-62,400 | $197,600-249,600 |
+
+### Frontend Development
+| Seniority | Hourly Rate | Quarterly (Full-Time) | Annual |
+|-----------|-------------|----------------------|---------|
+| Mid | $70-90 | $36,400-46,800 | $145,600-187,200 |
+| Senior | $95-125 | $49,400-65,000 | $197,600-260,000 |
+
+**Note**: Rates assume:
+- Full-time = 520 hours/quarter (40 hours/week × 13 weeks)
+- Includes salary, benefits, overhead (multiply base salary × 1.5-1.8)
+- US-based rates; adjust for location
+```
+
+#### Option C: Geographic Adjustments
+
+```markdown
+## Location-Based Cost Multipliers
+
+| Region | Multiplier | Example (Senior Backend) |
+|--------|-----------|--------------------------|
+| San Francisco Bay Area | 1.4-1.6x | $145,000-$208,000 quarterly |
+| New York City | 1.3-1.5x | $135,000-$195,000 quarterly |
+| Seattle | 1.2-1.4x | $125,000-$182,000 quarterly |
+| Austin, Denver, Boston | 1.0-1.2x | $104,000-$156,000 quarterly |
+| US Tier 2 Cities | 0.8-1.0x | $83,000-$130,000 quarterly |
+| Remote US | 0.9-1.1x | $94,000-$143,000 quarterly |
+| Eastern Europe | 0.4-0.6x | $42,000-$78,000 quarterly |
+| Latin America | 0.3-0.5x | $31,000-$65,000 quarterly |
+| Asia (India, Philippines) | 0.2-0.4x | $21,000-$52,000 quarterly |
+```
+
+### Cost Calculation Example
+
+Based on the example roadmap with team planning:
+
+```markdown
+# Financial Estimation: Implementation Roadmap
+
+## Cost Configuration
+
+**Method**: Cost per specialty (Option B)
+**Location**: Remote US (multiplier: 1.0x)
+**Rates**: Mid-range values
+
+## Phase-by-Phase Cost Breakdown
+
+### Phase 1: Foundation (Q1 2026 - 6 months)
+
+| Role | Seniority | Count | Allocation | Hours | Rate/Hour | Quarterly Cost | Phase Cost |
+|------|-----------|-------|------------|-------|-----------|----------------|------------|
+| Technical Lead | Staff | 1 | 100% | 1,040 | $145 | $75,400 | $150,800 |
+| Backend Engineer | Senior | 2 | 100% | 2,080 | $115 | $119,600 | $239,200 |
+| DevOps Engineer | Mid-Senior | 1 | 75% | 780 | $90 | $35,100 | $70,200 |
+| QA Engineer | Mid | 1 | 50% | 520 | $80 | $20,800 | $41,600 |
+| Frontend Engineer | Mid-Senior | 1 | 50% | 260 | $85 | $11,050 | $22,100 |
+| **Subtotal** | | | | **4,680** | | **$261,950** | **$523,900** |
+
+**AI Tooling**: $480 (8 people × $60/month × 6 months) → **$480**
+
+**Total Phase 1**: **$524,380**
+
+---
+
+### Phase 2: Migration (Q2-Q3 2026 - 6 months)
+
+| Role | Seniority | Count | Allocation | Hours | Rate/Hour | Quarterly Cost | Phase Cost |
+|------|-----------|-------|------------|-------|-----------|----------------|------------|
+| Technical Lead | Staff | 1 | 100% | 1,040 | $145 | $75,400 | $150,800 |
+| Backend Engineer | Senior | 1 | 100% | 1,040 | $115 | $59,800 | $119,600 |
+| Backend Engineer | Mid | 2 | 100% | 2,080 | $85 | $88,400 | $176,800 |
+| DevOps Engineer | Mid-Senior | 1 | 100% | 1,040 | $90 | $46,800 | $93,600 |
+| Data Engineer | Senior | 1 | 100% | 1,040 | $133 | $69,160 | $138,320 |
+| QA Engineer | Senior | 1 | 75% | 780 | $108 | $42,120 | $84,240 |
+| QA Engineer | Mid | 1 | 75% | 780 | $80 | $31,200 | $62,400 |
+| Frontend Engineer | Mid-Senior | 1 | 50% | 520 | $85 | $22,100 | $44,200 |
+| **Subtotal** | | | | **8,320** | | **$434,980** | **$869,960** |
+
+**AI Tooling**: $720 (10 people × $60/month × 6 months) → **$720**
+
+**Total Phase 2**: **$870,680**
+
+---
+
+### Phase 3: Optimization (Q4 2026 - Q1 2027 - 6 months)
+
+| Role | Seniority | Count | Allocation | Hours | Rate/Hour | Quarterly Cost | Phase Cost |
+|------|-----------|-------|------------|-------|-----------|----------------|------------|
+| Technical Lead | Staff | 1 | 50% | 520 | $145 | $37,700 | $75,400 |
+| Backend Engineer | Senior | 1 | 75% | 780 | $115 | $44,850 | $89,700 |
+| Backend Engineer | Mid | 1 | 75% | 780 | $85 | $33,150 | $66,300 |
+| DevOps Engineer | Mid-Senior | 1 | 50% | 520 | $90 | $23,400 | $46,800 |
+| **Subtotal** | | | | **2,600** | | **$139,100** | **$278,200** |
+
+**AI Tooling**: $360 (5 people × $60/month × 6 months) → **$360**
+
+**Total Phase 3**: **$278,560**
+
+---
+
+## Total Project Cost Summary
+
+| Phase | Duration | Team Size | Labor Cost | AI Tooling | Total Phase | Cost/Month |
+|-------|----------|-----------|------------|------------|-------------|------------|
+| Phase 1 | 6 months | 6 | $523,900 | $480 | $524,380 | $87,397 |
+| Phase 2 | 6 months | 8-10 | $869,960 | $720 | $870,680 | $145,113 |
+| Phase 3 | 6 months | 4 | $278,200 | $360 | $278,560 | $46,427 |
+| **Total** | **18 months** | **6-10 avg** | **$1,672,060** | **$1,560** | **$1,673,620** | **$92,979** |
+
+### Cost Breakdown by Category
+
+| Category | Cost | Percentage |
+|----------|------|------------|
+| **Labor - Engineering** | $1,672,060 | 99.9% |
+| **AI Augmentation Tools** | $1,560 | 0.1% |
+| **Total Project** | **$1,673,620** | **100%** |
+
+### Cost Per Initiative
+
+| Initiative | Phase | Team Weeks | Labor Hours | Estimated Cost |
+|------------|-------|------------|-------------|----------------|
+| 1.1: API Gateway Setup | 1 | 6 weeks | 240 | $27,600 |
+| 1.2: Core Service A Migration | 1-2 | 12 weeks | 960 | $110,400 |
+| 1.3: Core Service B Migration | 2 | 10 weeks | 800 | $92,000 |
+| 1.4: Data Platform | 2 | 16 weeks | 1,280 | $170,240 |
+| 2.1: Feature X | 2 | 8 weeks | 640 | $73,600 |
+| 2.2: Feature Y | 2 | 8 weeks | 640 | $73,600 |
+| 2.3: Analytics | 2-3 | 6 weeks | 480 | $63,840 |
+| 3.1: ML Pipeline | 3 | 6 weeks | 480 | $63,840 |
+| Overhead & Buffer | All | | 2,080 | $230,000 |
+
+### Budget Allocation
+
+```
+┌──────────────────────────────────────────────────────┐
+│              BUDGET ALLOCATION                        │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  Direct Engineering Labor:        $1,442,060  (86%) │
+│  ├─ Development                      $980,000        │
+│  ├─ Testing & QA                     $188,240        │
+│  ├─ DevOps & Infrastructure          $210,420        │
+│  └─ Architecture & Leadership         $63,400        │
+│                                                      │
+│  Overhead & Contingency:            $230,000  (14%) │
+│  ├─ Knowledge transfer                $50,000        │
+│  ├─ Training & onboarding             $40,000        │
+│  ├─ Technical spikes                  $60,000        │
+│  └─ Risk buffer (10%)                 $80,000        │
+│                                                      │
+│  AI Tooling:                          $1,560  (<1%) │
+│                                                      │
+│  TOTAL PROJECT BUDGET:            $1,673,620  (100%) │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+```
+
+### Cost Optimization Opportunities
+
+#### 1. AI Augmentation Impact
+
+**Current Estimate**: $1,673,620
+**With AI (38% efficiency gain)**: ~$1,285,000
+**Savings**: ~$388,000
+**AI Investment**: $1,560
+**Net Savings**: ~$386,440
+**ROI**: 248x
+
+#### 2. Geographic Distribution
+
+**Option**: Hybrid team (60% US, 40% Eastern Europe)
+
+| Location | Team Members | Quarterly Cost | Annual Savings |
+|----------|--------------|----------------|----------------|
+| US (Remote) | 5-6 | $250,000-$300,000 | Base |
+| Eastern Europe | 3-4 | $80,000-$120,000 | $200,000-$280,000 |
+
+**Potential Savings**: $400,000-$560,000 over 18 months
+
+#### 3. Contractor vs Full-Time
+
+**Short-term needs** (Kong specialist, data migration expert):
+- Contractors: $180-220/hour × 480 hours = $86,400-$105,600
+- vs Full-time hire: $150,000 (6 months fully loaded)
+- **Savings**: $44,400-$63,600 per contractor
+
+#### 4. Phased Hiring
+
+**Delay non-critical hires**:
+- Frontend Engineer (delay 3 months): Save $66,300
+- Additional QA (start in Phase 2): Save $41,600 in Phase 1
+- **Total**: ~$108,000
+
+### ROI Analysis
+
+**Investment**: $1,673,620
+
+**Business Value** (from Architecture Vision):
+- Annual cost savings: $300,000 (infrastructure optimization)
+- Revenue impact: $500,000 (50% faster time-to-market)
+- **Total Annual Benefit**: $800,000
+
+**Payback Period**: 2.1 years
+**3-Year ROI**: 43% ($2.4M benefit vs $1.67M cost)
+
+### Payment Schedule Projection
+
+```
+Q1 2026:  $262,190  (16%)  ██████████░░░░░░░░░░
+Q2 2026:  $262,190  (16%)  ██████████░░░░░░░░░░
+Q3 2026:  $435,340  (26%)  ████████████████░░░░
+Q4 2026:  $435,340  (26%)  ████████████████░░░░
+Q1 2027:  $139,280  (8%)   ████░░░░░░░░░░░░░░░░
+Q2 2027:  $139,280  (8%)   ████░░░░░░░░░░░░░░░░
+─────────────────────────────────────────────────
+Total:  $1,673,620 (100%)  ████████████████████
+```
+
+### Budget Risks & Contingencies
+
+| Risk | Probability | Impact | Mitigation | Reserved Budget |
+|------|-------------|--------|------------|-----------------|
+| Scope creep | High | +15-20% | Strict change control | $167,000 |
+| Extended timelines | Medium | +10-15% | Weekly tracking | $83,500 |
+| Talent acquisition delays | Medium | +5-10% | Contractor backup | $41,750 |
+| Technology learning curve | Low | +5% | Training investment | $20,875 |
+| **Total Contingency** | | | | **$313,125** |
+
+**Recommended Total Budget**: $1,673,620 + $313,125 = **$1,986,745**
+
+---
+
+## Cost Comparison: Different Team Configurations
+
+### Configuration A: Premium Team (US-based, Senior-heavy)
+
+**Team**: 7-9 people (70% Senior+)
+**Cost**: $2,200,000 over 18 months
+**Pros**: Faster execution, higher quality, less risk
+**Cons**: Higher cost, harder to hire
+**Best for**: Complex projects, tight timelines
+
+### Configuration B: Balanced Team (Remote US, Mixed seniority)
+
+**Team**: 6-8 people (40% Senior, 60% Mid)
+**Cost**: $1,673,620 over 18 months (baseline)
+**Pros**: Good balance of cost and capability
+**Cons**: Moderate risk, moderate speed
+**Best for**: Most projects, standard timelines
+
+### Configuration C: Cost-Optimized Team (Hybrid global)
+
+**Team**: 8-10 people (30% US, 70% distributed)
+**Cost**: $1,100,000 over 18 months
+**Pros**: Lowest cost, larger team
+**Cons**: Coordination overhead, timezone challenges
+**Best for**: Budget-constrained, less time-sensitive
+
+### Configuration D: AI-Augmented Small Team
+
+**Team**: 4-5 people (50% Senior+) + AI tools
+**Cost**: $950,000 over 18 months
+**Pros**: Lean team, AI force multiplier, agile
+**Cons**: Depends on AI effectiveness, less redundancy
+**Best for**: Tech-forward teams, iterative approach
+
+---
+
+## Invoking Financial Estimation
+
+**Invocation Patterns**:
+```
+"Calculate project cost"
+"Estimate budget for this roadmap"
+"What will this cost with a balanced team?"
+"Compare costs for different team configurations"
+"Calculate ROI including AI augmentation"
+"Show payment schedule by quarter"
+"What's the cost per initiative?"
+```
+
+**Workflow**:
+```
+User: "Calculate project cost for this roadmap"
+
+Agent:
+  1. Prompt for cost configuration:
+     "How would you like to estimate costs?
+      A) Standard team template (Startup/Small/Medium)
+      B) Custom rates per specialty
+      C) Geographic distribution
+      D) I'll provide custom rates"
+  
+  2. Prompt for location:
+     "What location/multiplier should I use?
+      - US Bay Area (1.5x)
+      - Remote US (1.0x - baseline)
+      - Hybrid (custom mix)
+      - Other (specify)"
+  
+  3. Calculate costs:
+     ├─ Apply rates to team composition
+     ├─ Calculate phase-by-phase costs
+     ├─ Add AI tooling costs
+     ├─ Include overhead and contingency
+     └─ Generate cost breakdown
+  
+  4. Provide optimization suggestions:
+     "Cost: $1.67M over 18 months
+      
+      Would you like to see:
+      - AI augmentation savings analysis?
+      - Alternative team configurations?
+      - Geographic cost optimization?
+      - Payment schedule projection?"
+  
+  5. Output:
+     roadmaps/analysis/team-planning/financial-estimate.md
+```
+
+**Output Location**: `roadmaps/analysis/team-planning/financial-estimate.md`
+
+---
+
+## Including Financial Data in PDFs
+
+When exporting roadmaps to PDF, financial estimates can be included:
+
+**Executive Package** (with financials):
+- Master roadmap
+- **Budget summary (1-2 pages)**
+- **Cost comparison table**
+- Complexity analysis
+- Risk register
+
+**Financial Deep-Dive Package**:
+- Complete financial estimation
+- Phase-by-phase cost breakdown
+- Cost per initiative
+- ROI analysis
+- Payment schedule
+- Configuration comparisons
+
+**Invocation**:
+```
+"Export roadmap to PDF with financial estimates"
+"Generate executive package including budget"
+"Create financial deep-dive PDF"
+```
 ```
 
 ### Workflow Overview
@@ -1542,15 +1981,16 @@ and documentation.
 │  └─────────────────────────────────────────────────┘       │
 │                                                             │
 │  ┌─────────────────────────────────────────────────┐       │
-│  │     MODE 7: Team Planning                        │       │
+│  │     MODE 7: Team Planning & Financial Estimation │       │
 │  ├─────────────────────────────────────────────────┤       │
 │  │  1. Analyze roadmap complexity                   │       │
 │  │  2. Determine required expertise                 │       │
 │  │  3. Calculate team composition                   │       │
 │  │  4. Assess seniority levels needed               │       │
 │  │  5. Create hiring timeline                       │       │
-│  │  6. Generate AI augmentation strategy            │       │
-│  │  Duration: 30-45 min for full roadmap           │       │
+│  │  6. Calculate financial estimates                │       │
+│  │  7. Generate AI augmentation strategy            │       │
+│  │  Duration: 45-60 min for full roadmap           │       │
 │  └─────────────────────────────────────────────────┘       │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
@@ -1592,6 +2032,14 @@ and documentation.
 "Generate hiring plan"
 "How can AI agents augment the team?"
 "Calculate team composition"
+"Calculate project cost"
+"Estimate budget for this roadmap"
+"What will this cost with a balanced team?"
+"Compare costs for different team configurations"
+"Calculate ROI including AI augmentation"
+"Show payment schedule by quarter"
+"What's the cost per initiative?"
+"Export roadmap PDF with financial estimates"
 ```
 
 ---
@@ -1625,7 +2073,17 @@ and documentation.
        └─ Generates AI augmentation strategy
        Output: roadmaps/analysis/team-planning/
 
-7. User: "Export roadmap to PDF for stakeholders"
+7. User: "Calculate project cost"
+   └─> roadmap-analysis skill:
+       ├─ Prompts for cost configuration (team template, per-specialty, etc.)
+       ├─ Applies rates to team composition
+       ├─ Calculates phase-by-phase costs
+       ├─ Includes AI augmentation impact
+       ├─ Generates budget scenarios and ROI analysis
+       └─ Creates financial summary with payment schedule
+       Output: roadmaps/analysis/team-planning/financial-estimate.md
+
+8. User: "Export roadmap to PDF for stakeholders"
    └─> roadmap-analysis skill:
        ├─ Exports Mermaid diagrams to PNG
        ├─ Invokes pdf-report skill
@@ -1714,6 +2172,7 @@ Both skills share common data structures:
 - [ ] Complexity calculation algorithms
 - [ ] Effort estimation models
 - [ ] Team planning algorithms (team composition, expertise mapping)
+- [ ] Financial estimation calculator (cost models, budget projections)
 - [ ] AI augmentation impact calculator
 - [ ] PDF export workflow (integration with pdf-report skill)
 - [ ] Mermaid diagram export automation
@@ -1809,9 +2268,13 @@ Both skills share common data structures:
 - [ ] Plans technical spikes effectively
 - [ ] Provides effort estimates with confidence levels
 - [ ] Generates staffing plans with team composition and expertise requirements
+- [ ] Calculates financial estimates with multiple pricing models
+- [ ] Provides budget breakdowns by phase, role, and initiative
+- [ ] Compares cost scenarios (team configurations, geographies)
+- [ ] Includes ROI analysis (project cost vs business value)
 - [ ] Includes AI augmentation recommendations in all team plans
 - [ ] Exports professional PDFs with embedded diagrams
-- [ ] Supports multiple export formats (executive, technical, per-initiative)
+- [ ] Supports multiple export formats (executive, technical, per-initiative, financial)
 
 ### Integration
 - [ ] Works seamlessly with existing skills
