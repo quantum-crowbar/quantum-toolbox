@@ -1,6 +1,10 @@
 # Skills Index
 
+> **Audience:** AI Agents + Humans (canonical skill listing)
+
 This document lists all available skills and how to activate them.
+
+**Machine-readable source**: [manifest.yaml](manifest.yaml) — canonical skill metadata (YAML).
 
 ## What Are Skills?
 
@@ -60,17 +64,75 @@ When a skill is enabled, AI agents should read all files in that skill's directo
 
 ---
 
+## Loading Strategy
+
+**Lazy loading**: Do NOT read all skill files at session start. Only load a skill when invoking it.
+
+- **Session start**: Read this index file (`_index.md`) for skill discovery
+- **On invocation**: Read the skill's `README.md` + `workflows.md`
+- **As needed**: Read `templates.md`, `examples.md`, `checklist.md` during skill execution
+
+## Token Budget
+
+Approximate context window cost when using this toolkit.
+
+### Session Start (~4,600 tokens)
+
+| File | Tokens |
+|------|--------|
+| Toolkit AGENTS.md | ~500 |
+| core/instructions.md | ~440 |
+| core/glossary.md | ~1,580 |
+| skills/_index.md (this file) | ~2,100 |
+| **Total** | **~4,620** |
+
+Additional core docs (read when needed): core/workflows.md (~1,940), core/architecture-thinking.md (~3,170).
+
+### Per-Skill Cost (on invocation)
+
+| Skill | Tokens | Skill | Tokens |
+|-------|--------|-------|--------|
+| arch-analysis | ~20,100 | security-analysis | ~20,100 |
+| architecture-synthesis | ~19,600 | fitness-functions | ~18,100 |
+| structurizr | ~15,600 | nonfunctional-analysis | ~12,700 |
+| code-conventions | ~8,500 | codebase-analysis | ~8,400 |
+| software-design | ~7,300 | tech-stack-decisions | ~6,900 |
+| analysis-outputs | ~3,900 | togaf (index only) | ~2,300 |
+| **TOGAF phases** | **~10K-24K each** | **TOGAF all phases** | **~154,500** |
+
+### Context Window Planning
+
+| Window Size | Budget After Session Start | Practical Limit |
+|-------------|---------------------------|-----------------|
+| 100K tokens | ~95K for skills + code | 1-2 large skills + codebase |
+| 200K tokens | ~195K for skills + code | 3-4 large skills + codebase |
+
+**Rule of thumb**: Reserve at least 50% of context for actual codebase content. A single analysis skill (arch, security, nonfunctional) uses ~15-20K tokens.
+
+---
+
 ## Skill File Structure
 
 Each skill contains these files:
 
 | File | Purpose | When to Read |
 |------|---------|--------------|
-| `README.md` | Guidelines and principles | Always read first |
-| `workflows.md` | Step-by-step procedures | When performing related tasks |
-| `examples.md` | Concrete examples | For reference and learning |
-| `templates.md` | Reusable templates | When creating documents |
-| `checklist.md` | Quick reference | During reviews |
+| `README.md` | Guidelines and principles | On skill invocation |
+| `workflows.md` | Step-by-step procedures | On skill invocation |
+| `examples.md` | Concrete examples | During execution (as needed) |
+| `templates.md` | Reusable templates | During execution (as needed) |
+| `checklist.md` | Quick reference | During execution (as needed) |
+
+---
+
+## Default Output Directories
+
+When skills generate output files, they use these defaults (confirm with user before generating):
+
+| Output Type | Default Directory |
+|-------------|-------------------|
+| Analysis | `analysis/` |
+| Presentations | `presentations/` |
 
 ---
 
@@ -147,12 +209,28 @@ See the skill's README for full invocation options. Skill Discovery is defined i
 
 ---
 
-## Future Skills (Roadmap)
+## Agent Notes
 
-Skills planned for future development:
+### Analysis Workflow
+- Use `codebase-analysis` as the base engine
+- Select output adapters based on user needs
+- Run analysis once, output multiple formats
+
+### TOGAF Integration
+- Core concepts in `core/architecture-thinking.md` apply automatically
+- ADM phases in `togaf/` are invokable as needed
+- Supports lightweight/partial use (not all-or-nothing)
+
+---
+
+## Future Skills (Ideas)
+
+Aspirational ideas — not yet planned or specified:
 
 - `testing-strategy` - Test pyramid, coverage, TDD/BDD
 - `api-design` - REST, GraphQL, versioning
 - `documentation` - Code docs, user docs, architecture docs
 - `performance` - Profiling, optimization, caching
 - `devops` - CI/CD, deployment, monitoring
+
+See [ROADMAP-TRACKER.md](../specs/ROADMAP-TRACKER.md) for planned work with specs and timelines.

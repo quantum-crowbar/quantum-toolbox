@@ -1,5 +1,7 @@
 # Architecture Thinking
 
+> **Audience:** AI Agents
+
 Core architectural concepts that apply automatically during architecture discussions and decision-making.
 
 ---

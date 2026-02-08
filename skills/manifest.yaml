@@ -1,0 +1,195 @@
+# Skills Manifest
+# Canonical source for skill metadata. Markdown tables in _index.md are derived from this file.
+# Schema: name, tier, path, description, dependencies, invocations, status
+
+skills:
+  # ── Core Skills (Always Active) ──────────────────────────────────────
+  - name: git-workflow
+    tier: core
+    path: core/git-workflow/
+    description: Git best practices, branching strategies, commit hygiene
+    dependencies: []
+    invocations: []
+    status: complete
+
+  - name: todo-workflow
+    tier: core
+    path: core/todo-workflow/
+    description: Invokable autonomous/semi-autonomous development workflow
+    dependencies: [git-workflow]
+    invocations:
+      - "Use todo workflow"
+    status: complete
+
+  # ── Analysis Skills ──────────────────────────────────────────────────
+  - name: codebase-analysis
+    tier: optional
+    path: optional/codebase-analysis/
+    description: Base analysis engine producing structured analysis model
+    dependencies: []
+    invocations:
+      - "Analyze this codebase"
+    status: complete
+
+  - name: arch-analysis
+    tier: optional
+    path: optional/arch-analysis/
+    description: Architecture documentation (codebase-analysis + architecture-docs)
+    dependencies: []
+    invocations:
+      - "Analyze the architecture"
+    status: complete
+
+  - name: security-analysis
+    tier: optional
+    path: optional/security-analysis/
+    description: Security posture assessment with dual output (human-readable + compliance)
+    dependencies: []
+    invocations:
+      - "Analyze security"
+    status: complete
+
+  - name: nonfunctional-analysis
+    tier: optional
+    path: optional/nonfunctional-analysis/
+    description: Testing coverage, configuration audit, performance, code health
+    dependencies: []
+    invocations:
+      - "Analyze code quality"
+    status: complete
+
+  - name: architecture-synthesis
+    tier: optional
+    path: optional/architecture-synthesis/
+    description: Middle-out architecture from diagrams and specs
+    dependencies: []
+    invocations:
+      - "Synthesize architecture from diagrams"
+    status: complete
+
+  - name: fitness-functions
+    tier: optional
+    path: optional/fitness-functions/
+    description: Evolutionary architecture fitness measurement and validation
+    dependencies: []
+    invocations:
+      - "Define fitness functions"
+      - "Analyze system fitness"
+    status: complete
+
+  # ── Architecture & Modeling Skills ───────────────────────────────────
+  - name: structurizr
+    tier: optional
+    path: optional/structurizr/
+    description: C4 architecture modeling with Structurizr DSL
+    dependencies: []
+    invocations:
+      - "Create C4 model"
+    status: complete
+
+  - name: togaf
+    tier: optional
+    path: optional/togaf/
+    description: Enterprise architecture framework (ADM phases A-H)
+    dependencies: []
+    invocations:
+      - "Apply TOGAF"
+      - "Create architecture vision"
+    status: complete
+    phases:
+      - name: preliminary
+        path: optional/togaf/preliminary/
+        description: Architecture capability setup
+      - name: vision
+        path: optional/togaf/vision/
+        description: "Phase A: Architecture Vision"
+      - name: business-architecture
+        path: optional/togaf/business-architecture/
+        description: "Phase B: Capabilities, value streams, processes"
+      - name: information-systems
+        path: optional/togaf/information-systems/
+        description: "Phase C: Data and application architecture"
+      - name: technology-architecture
+        path: optional/togaf/technology-architecture/
+        description: "Phase D: Infrastructure and platforms"
+      - name: opportunities-solutions
+        path: optional/togaf/opportunities-solutions/
+        description: "Phase E: Opportunities and Solutions"
+      - name: migration-planning
+        path: optional/togaf/migration-planning/
+        description: "Phase F: Migration Planning"
+      - name: implementation-governance
+        path: optional/togaf/implementation-governance/
+        description: "Phase G: Implementation Governance"
+      - name: change-management
+        path: optional/togaf/change-management/
+        description: "Phase H: Change Management"
+
+  # ── Development Workflow Skills ──────────────────────────────────────
+  - name: software-design
+    tier: optional
+    path: optional/software-design/
+    description: Design principles, patterns, architectural decisions
+    dependencies: []
+    invocations: []
+    status: complete
+
+  - name: tech-stack-decisions
+    tier: optional
+    path: optional/tech-stack-decisions/
+    description: Technology evaluation, decision frameworks, ADRs
+    dependencies: [software-design]
+    invocations: []
+    status: complete
+
+  - name: code-conventions
+    tier: optional
+    path: optional/code-conventions/
+    description: Style guides, naming conventions, structure standards
+    dependencies: []
+    invocations: []
+    status: complete
+
+  - name: presentation
+    tier: optional
+    path: optional/presentation/
+    description: Generate slide decks (PPTX, PDF) from Markdown using Marp CLI
+    dependencies: []
+    invocations:
+      - "Generate presentation"
+      - "Create slides"
+    status: complete
+
+  # ── Output Adapters ─────────────────────────────────────────────────
+  - name: analysis-outputs
+    tier: optional
+    path: optional/analysis-outputs/
+    description: Output adapters for analysis results
+    dependencies: [codebase-analysis]
+    invocations: []
+    status: complete
+    adapters:
+      - name: core-architecture
+        path: optional/analysis-outputs/core-architecture/
+        description: Canonical source of truth for TOGAF
+      - name: architecture-docs
+        path: optional/analysis-outputs/architecture-docs/
+        description: Detailed analysis documentation
+      - name: coding-context
+        path: optional/analysis-outputs/coding-context/
+        description: AGENTS.md and CONTEXT.md for AI context
+      - name: product-spec
+        path: optional/analysis-outputs/product-spec/
+        description: Product documentation (features, flows, data model)
+      - name: structurizr
+        path: optional/analysis-outputs/structurizr/
+        description: C4 model in Structurizr DSL
+      - name: archimate
+        path: optional/analysis-outputs/archimate/
+        description: ArchiMate enterprise architecture format
+      - name: presentation
+        path: optional/analysis-outputs/presentation/
+        description: Marp CLI slide generation (PPTX, PDF, HTML)
+      - name: pdf-report
+        path: optional/analysis-outputs/pdf-report/
+        description: Professional PDF reports from markdown

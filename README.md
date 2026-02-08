@@ -1,5 +1,7 @@
 # AI Agent Toolbox for Architects
 
+> **Audience:** Humans (GitHub landing page)
+
 A toolbox of skills, workflows, and patterns for AI coding agents - designed for software architects and senior developers.
 
 ## Overview
@@ -48,11 +50,9 @@ This re-reads the toolkit and presents all capabilities with invokable commands.
 
 ---
 
-## Skills Index
+## Skills at a Glance
 
-The toolkit provides **27+ specialized skills** organized into 4 categories. For complete documentation, see [Skills Documentation](docs/skills/README.md).
-
-### Quick Reference
+The toolkit provides **27+ specialized skills** organized into 4 categories:
 
 | Category | Count | Skills |
 |----------|-------|--------|
@@ -72,93 +72,7 @@ The toolkit provides **27+ specialized skills** organized into 4 categories. For
 "Generate presentation"                → presentation
 ```
 
-**Full documentation**: [docs/skills/README.md](docs/skills/README.md) (27 skills with detailed guides, workflows, templates, and examples)
-
----
-
-## What's Included
-
-### Analysis Skills
-
-| Skill | Description |
-|-------|-------------|
-| **codebase-analysis** | Base analysis engine with structured output model |
-| **arch-analysis** | Architecture documentation (8-phase workflow) |
-| **security-analysis** | Security posture + compliance frameworks (OWASP, NIST, CIS, ISO, NIS 2) |
-| **nonfunctional-analysis** | Testing, config, performance, code health |
-| **architecture-synthesis** | Middle-out from diagrams + specs (Excalidraw, Mermaid, Draw.io) |
-| **fitness-functions** | Evolutionary architecture fitness measurement and validation |
-
-### Architecture & Modeling
-
-| Skill | Description |
-|-------|-------------|
-| **structurizr** | C4 architecture modeling with Structurizr DSL |
-| **togaf/preliminary** | Preliminary: Architecture capability setup |
-| **togaf/vision** | Phase A: Architecture Vision |
-| **togaf/business-architecture** | Phase B: Capabilities, value streams, processes |
-| **togaf/information-systems** | Phase C: Data and application architecture |
-| **togaf/technology-architecture** | Phase D: Infrastructure and platforms |
-| **togaf/opportunities-solutions** | Phase E: Opportunities and Solutions |
-| **togaf/migration-planning** | Phase F: Migration Planning |
-| **togaf/implementation-governance** | Phase G: Implementation Governance |
-| **togaf/change-management** | Phase H: Change Management |
-
-### Development Workflows
-
-| Skill | Description |
-|-------|-------------|
-| **git-workflow** | Commit conventions, branching, PR workflow |
-| **todo-workflow** | Task tracking and autonomous development |
-| **software-design** | Design principles, patterns, decisions |
-| **tech-stack-decisions** | Technology evaluation frameworks, ADRs |
-| **code-conventions** | Style guides and standards |
-
-### Output Adapters
-
-Analysis can be exported in multiple formats:
-
-| Adapter | Output |
-|---------|--------|
-| **core-architecture** | Canonical source of truth (baseline, target, gaps, risks) |
-| **architecture-docs** | Detailed analysis documentation (7 reports) |
-| **coding-context** | AGENTS.md and CONTEXT.md for AI context |
-| **product-spec** | Product documentation (features, flows, data model) |
-| **structurizr** | C4 model in Structurizr DSL |
-| **archimate** | ArchiMate enterprise architecture format |
-| **presentation** | Marp CLI slide generation (PPTX, PDF, HTML) |
-| **pdf-report** | Professional PDF reports from markdown |
-
----
-
-## Default Output Directories
-
-When skills generate output files, they use these defaults (confirm with user):
-
-| Output Type | Default Directory | Content |
-|-------------|-------------------|---------|
-| Analysis | `analysis/` | Architecture, security, and code analysis reports |
-| Presentations | `presentations/` | Generated slide decks (PPTX, PDF, HTML) |
-
----
-
-## Invokable Commands
-
-Trigger specific workflows during your session:
-
-| Command | What It Does |
-|---------|--------------|
-| "What skills do you have?" | List all capabilities and offer to elaborate |
-| "Analyze the architecture" | Run full 8-phase codebase analysis |
-| "Analyze security" | Security assessment with compliance reports |
-| "Analyze code quality" | Testing, config, performance, health check |
-| "Synthesize architecture from diagrams" | Parse visual diagrams into architecture model |
-| "Define fitness functions" | Evolutionary architecture fitness assessment |
-| "Create C4 model" | Generate Structurizr architecture diagrams |
-| "Apply TOGAF" | Enterprise architecture using ADM phases |
-| "Generate core architecture docs" | Canonical documentation structure |
-| "Use todo workflow" | Autonomous task-based development |
-| "Generate presentation" | Create slide decks from Markdown |
+**Full skill documentation**: [docs/skills/README.md](docs/skills/README.md)
 
 ---
 
@@ -166,13 +80,14 @@ Trigger specific workflows during your session:
 
 ```
 .
-├── AGENTS.md              # Main agent instructions
-├── AI_TOOLKIT_CONTEXT.md  # Full context for AI assistants
+├── AGENTS.md              # Agent entry point (lean router)
 ├── core/                  # Core concepts and workflows
 │   ├── instructions.md    # Coding rules, safety
 │   ├── workflows.md       # Development processes
-│   └── architecture-thinking.md  # TOGAF foundations
+│   ├── architecture-thinking.md  # TOGAF foundations
+│   └── glossary.md        # Standard terminology
 ├── skills/                # Modular skill packages
+│   ├── _index.md          # Canonical skill catalog
 │   ├── core/              # Always-active skills
 │   └── optional/          # Opt-in skills
 ├── templates/             # Commit, PR templates
@@ -182,34 +97,16 @@ Trigger specific workflows during your session:
 
 ---
 
-## Skill Package Structure
-
-Each skill contains:
-
-| File | Purpose |
-|------|---------|
-| `README.md` | Concepts, principles, guidelines |
-| `workflows.md` | Step-by-step procedures |
-| `templates.md` | Reusable document formats |
-| `checklist.md` | Quick reference for reviews |
-| `examples.md` | Concrete demonstrations |
-
----
-
-## Roadmap
-
-All planned items are complete. See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history.
-
----
-
 ## Documentation
 
 | Resource | Description |
 |----------|-------------|
-| [Skills Index](skills/_index.md) | Full skill listing and activation guide |
+| [Skills Documentation](docs/skills/README.md) | Full skill listing with detailed guides |
+| [Skills Index](skills/_index.md) | Skill catalog and activation guide |
 | [TOGAF Index](skills/optional/togaf/_index.md) | ADM phases and when to use each |
 | [Analysis Outputs](skills/optional/analysis-outputs/_index.md) | Available export formats |
 | [Architecture Guide](docs/arch-analysis-guide.md) | How to analyze unfamiliar codebases |
+| [Roadmap](specs/ROADMAP-TRACKER.md) | Planned work and progress |
 
 ---
 

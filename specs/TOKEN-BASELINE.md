@@ -159,6 +159,76 @@ Per-skill token budgets (sorted by size).
 
 ---
 
+## Post-Optimization Results (2026-02-08)
+
+### What Changed
+
+| Optimization | Tokens Saved |
+|-------------|-------------|
+| O1: AGENTS.md rewrite (1,278 → 504) | 774 |
+| O1: AI_TOOLKIT_CONTEXT.md → redirect (3,578 → 158, removed from reading path) | 3,578 |
+| O1: skills/_index.md absorbed unique content (1,804 → 2,484) | -680 |
+| O2: Bash safety list removed from core/instructions.md (1,381 → 435) | 946 |
+| O7: todo-workflow dedup in core/workflows.md (2,293 → 1,939) | 354 |
+| **Net entry point + core savings** | **~4,972** |
+
+### Session Start Cost (toolkit files only)
+
+| File | Before | After |
+|------|--------|-------|
+| `AGENTS.md` | 1,278 | 504 |
+| `AI_TOOLKIT_CONTEXT.md` | 3,578 | _(not read)_ |
+| `core/instructions.md` | 1,381 | 435 |
+| `core/glossary.md` | 1,577 | 1,583 |
+| `skills/_index.md` | 1,804 | 2,484 |
+| **Total** | **9,618** | **5,006** |
+| **Reduction** | | **48%** |
+
+### Scenario A: Minimal Session (revised)
+
+| File | Before | After |
+|------|--------|-------|
+| Entry points + core docs | 14,873 | 10,113 |
+| Core skills (git-workflow + todo-workflow) | 16,654 | 16,651 |
+| **Total** | **31,727** | **26,764** |
+| **Reduction** | | **15.6%** |
+
+### Entry Points (agent-read)
+
+| File | Before | After |
+|------|--------|-------|
+| `AGENTS.md` | 1,278 | 504 |
+| `AI_TOOLKIT_CONTEXT.md` | 3,578 | 0 (redirect, not in reading path) |
+| `skills/_index.md` | 1,804 | 2,484 |
+| **Total** | **6,660** | **2,988** |
+| **Reduction** | | **55%** |
+
+### Redundancy Eliminated
+
+| Content | Before (duplicated) | After |
+|---------|-------------------|-------|
+| Skills table | 5 files | 1 canonical (skills/_index.md) + 1 human (docs/skills/README.md) |
+| Directory structure tree | 3 files | 1 (README.md, human-only) |
+| Invokable commands table | 3 files | 1 canonical (skills/_index.md) |
+| Skill package structure | 4 files | 1 canonical (skills/_index.md) |
+| Recommended models table | 2 files | 1 (README.md, human-only) |
+| Setup instructions | 2 files | 1 per audience (AGENTS.md, README.md) |
+| Bash safety list | 1 file | Removed |
+| todo-workflow duplication | 2 files | Pointer only in core/workflows.md |
+| **Estimated duplicate tokens** | **~5,594** | **~0** |
+
+### Summary
+
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| Session start tokens | 9,618 | 5,006 | **48% reduction** |
+| Agent entry point tokens | 6,660 | 2,988 | **55% reduction** |
+| Minimal session (Scenario A) | 31,727 | 26,764 | **15.6% reduction** |
+| Redundant tokens | ~5,594 | ~0 | **~100% eliminated** |
+| Total repo tokens | ~461,273 | ~456,943 | ~1% (content redistributed) |
+
+---
+
 ## How to Remeasure
 
 ```bash

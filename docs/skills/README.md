@@ -888,7 +888,7 @@ Enable in your project's `AGENTS.md`:
 - [TOGAF Index](../../skills/optional/togaf/_index.md) - ADM phases guide
 - [Analysis Outputs Index](../../skills/optional/analysis-outputs/_index.md) - Export formats
 - [Architecture Guide](../arch-analysis-guide.md) - Analysis methodology
-- [AI Toolkit Context](../../AI_TOOLKIT_CONTEXT.md) - Complete repository context
+- [AGENTS.md](../../AGENTS.md) - Agent entry point and reading order
 
 ---
 
@@ -897,8 +897,7 @@ Enable in your project's `AGENTS.md`:
 To add new skills or improve documentation:
 
 1. Follow the 5-file standard structure
-2. Update this index
-3. Update AI_TOOLKIT_CONTEXT.md
-4. Submit pull request
+2. Update `skills/_index.md`
+3. Submit pull request
 
 See [AGENTS.md](../../AGENTS.md) for contribution guidelines.

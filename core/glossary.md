@@ -1,5 +1,7 @@
 # Glossary
 
+> **Audience:** AI Agents
+
 Standard terminology and definitions for AI agents working with enterprise architecture, software design, and technical documentation.
 
 ## Architecture & Design Terms

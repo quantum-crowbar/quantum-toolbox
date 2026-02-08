@@ -1,5 +1,7 @@
 # Development Workflows
 
+> **Audience:** AI Agents
+
 Step-by-step processes for common development tasks.
 
 ---
@@ -60,72 +62,9 @@ REPEAT until all todo items are complete (max 10 retries per item):
 
 **An invokable workflow for autonomous and semi-autonomous development.**
 
-> **Full Documentation**: See [skills/core/todo-workflow/](../skills/core/todo-workflow/) for complete details.
+Invoke with: `"Use todo workflow"` | `"Use todo workflow, review code"` | `"Use todo workflow --dry-run"`
 
-### Quick Start
-
-```
-"Use todo workflow"                      # Full autonomous
-"Use todo workflow, review code"         # Stop for code reviews
-"Use todo workflow --dry-run"            # Preview without executing
-"Continue"                               # Resume after checkpoint
-```
-
-### Core Loop
-
-```
-FOR EACH todo item:
-  1. Mark as in_progress
-  2. Implement the change
-  3. Validate (tests, linter, structure)
-  4. Commit with descriptive message
-  5. Mark as completed
-```
-
-### Pre-Work Checks
-
-Before starting autonomous work:
-1. **Branch check** - Warn if on main/master
-2. **Test check** - Run tests, warn if failing
-3. **Working directory** - Warn if uncommitted changes
-
-### Review Modes
-
-| Mode | Stops For |
-|------|-----------|
-| `review all` | Every item |
-| `review code` | Code changes only |
-| `review tests` | After writing tests |
-| `review items 2,4` | Specific items |
-| `review critical` | Items marked `[critical]` |
-
-### Options
-
-| Option | Effect |
-|--------|--------|
-| `--dry-run` | Preview without making changes |
-| `--push` | Push after each commit |
-| `--push-end` | Push only at end |
-| `--branch <name>` | Create/use feature branch |
-| `--batch` | Group related items into single commits |
-
-### Item Features
-
-```
-[ ] Basic item
-[ ] Code item [code]
-[ ] Depends on item 1 (depends: 1)
-[ ] Security sensitive [critical]
-[ ] Part of group [batch: feature-x]
-```
-
-### Commit Message Pattern
-
-```
-<type>(<scope>): <description>
-
-Types: feat | fix | docs | refactor | test | chore
-```
+Full documentation: [skills/core/todo-workflow/](../skills/core/todo-workflow/)
 
 ---
 
