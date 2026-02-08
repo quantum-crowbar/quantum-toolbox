@@ -30,10 +30,27 @@ Master tracking document for all skill development roadmaps.
 | NIS 2 Compliance Framework | - | 🟢 Complete | Medium |
 | Excalidraw Diagram Support | - | 🟢 Complete | Medium |
 | TOGAF Preliminary Phase | - | 🟢 Complete | Low |
+| | | | |
+| **--- NEW SKILLS ---** | | | |
+| Roadmap Building Skill | Phase 1 | ⚪ Planned | High |
+| Roadmap Analysis Skill (7 modes) | Phase 2 | ⚪ Planned | High |
+| Roadmap Skills Documentation | Phase 3 | ⚪ Planned | Low |
+| | | | |
+| **--- OPTIMIZATION / REFACTOR ---** | | | |
+| Entry Point Consolidation | - | ⚪ Planned | High |
+| Remove Bash Safety List | - | ⚪ Planned | High |
+| Token Budget Guidance | - | ⚪ Planned | High |
+| Machine-Readable Skill Manifest | - | ⚪ Planned | Medium |
+| Explicit Lazy Loading Guidance | - | ⚪ Planned | Medium |
+| Clarify File Audiences | - | ⚪ Planned | Medium |
+| Resolve todo-workflow Dual Location | - | ⚪ Planned | Medium |
+| Fix .claude/settings.local.json | - | ⚪ Planned | Low |
+| Fix Duplicate Invokable Command | - | ⚪ Planned | Low |
+| Fix Output Adapter Paths | - | ⚪ Planned | Low |
+| Fix Presentation Skill Categorization | - | ⚪ Planned | Low |
+| Fix Contradictory Roadmap Status | - | ⚪ Planned | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
-
-**All planned roadmap items are now complete!**
 
 ---
 
@@ -349,11 +366,32 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ## Quick Summary: What's Left
 
-**All planned items complete!** The roadmap is fully implemented.
+**15 items remaining across 2 tracks.**
 
-| Task | Effort | Priority |
-|------|--------|----------|
-| *(None)* | - | - |
+### New Skills (3 items)
+
+| # | Task | Effort | Priority | Spec |
+|---|------|--------|----------|------|
+| N1 | **Roadmap Building** — generate implementation roadmaps from architecture (ADRs, deps, phases, risks) | Large | High | [roadmap-skills-spec.md](roadmap-skills-spec.md) |
+| N2 | **Roadmap Analysis** — 7 modes: expand, research, complexity, spikes, estimation, PDF export, team/financial planning | Large | High | [roadmap-skills-spec.md](roadmap-skills-spec.md) |
+| N3 | **Roadmap Skills Documentation** — update indexes, context files, end-to-end examples | Small | Low | - |
+
+### Optimization / Refactor (12 items)
+
+| # | Task | Effort | Priority |
+|---|------|--------|----------|
+| O1 | **Entry point consolidation** — deduplicate 5 overlapping files (~300-400 lines saved) | Large | High |
+| O2 | **Remove bash safety list** — cut ~100 lines from `core/instructions.md` | Small | High |
+| O3 | **Token budget guidance** — document token footprint per skill | Small | High |
+| O4 | **Machine-readable skill manifest** — single YAML/JSON source of truth | Medium | Medium |
+| O5 | **Explicit lazy loading guidance** — read-on-demand pattern | Small | Medium |
+| O6 | **Clarify file audiences** — tag files as human / agent / both | Small | Medium |
+| O7 | **Resolve todo-workflow dual location** — eliminate content split | Small | Medium |
+| O8 | **Fix `.claude/settings.local.json`** — hardcoded absolute path | Small | Low |
+| O9 | **Fix duplicate invokable command** — "Generate presentation" x2 | Small | Low |
+| O10 | **Fix output adapter paths** — wrong paths in AI_TOOLKIT_CONTEXT.md | Small | Low |
+| O11 | **Fix presentation skill categorization** — inconsistent across files | Small | Low |
+| O12 | **Fix contradictory roadmap status** — "Future Skills" vs "all complete" | Small | Low |
 
 ---
 
@@ -681,115 +719,266 @@ Add Excalidraw as a diagram format option alongside Mermaid, ASCII, and PlantUML
 
 ---
 
+### Execution Order (Previous - All Complete)
+
+All items in the previous execution order are complete:
+
+| Step | Task | Status |
+|------|------|--------|
+| 0 | Architecture Synthesis Skill | ✅ Complete |
+| 1 | Core Architecture Output Structure | ✅ Complete |
+| 2 | Update TOGAF phases to link to core | ✅ Complete |
+| 3 | Change Management Communication Plan | ✅ Complete |
+| 4 | Evolutionary Planning with Fitness Functions | ✅ Complete |
+| 5 | Excalidraw Diagram Support | ✅ Complete |
+| 6 | Presentation Generation | ✅ Complete |
+
+---
+
+## Planned Work: Token Optimization & Structural Cleanup
+
+> **Theme**: The toolkit's content is consumed by LLMs with finite context windows. Every redundant line costs tokens. This phase focuses on deduplication, lazy loading, and structural clarity.
+
+### High Priority
+
+#### 1. Entry Point Consolidation
+
+**Problem:** The same information is repeated across 5 files, wasting significant tokens when agents ingest the toolkit.
+
+| Content | Duplicated In |
+|---------|--------------|
+| Skills table (full listing) | `README.md`, `AGENTS.md`, `AI_TOOLKIT_CONTEXT.md`, `skills/_index.md`, `docs/skills/README.md` |
+| Directory structure tree | `AGENTS.md`, `AI_TOOLKIT_CONTEXT.md`, `README.md` |
+| Invokable commands table | `AI_TOOLKIT_CONTEXT.md`, `README.md`, `skills/_index.md` |
+| Skill package structure | `AGENTS.md`, `AI_TOOLKIT_CONTEXT.md`, `README.md`, `skills/_index.md` |
+| Recommended models table | `README.md`, `AI_TOOLKIT_CONTEXT.md` |
+| Setup instructions | `AGENTS.md`, `AI_TOOLKIT_CONTEXT.md` |
+
+**Solution:** Establish clear file roles and eliminate redundancy:
+
+| File | Role | Audience | Content |
+|------|------|----------|---------|
+| `README.md` | GitHub landing page | Humans only | Overview, quick start, link to docs |
+| `AGENTS.md` | Lean routing file | AI agents | Reading order, pointers to specific files, no duplicated tables |
+| `AI_TOOLKIT_CONTEXT.md` | Eliminate or merge | - | Merge unique content into `skills/_index.md` |
+| `skills/_index.md` | Single source of truth | Both | THE canonical skill listing, activation guide, invokable commands |
+| `docs/skills/README.md` | Deep reference | Both | Detailed per-skill documentation (keep as-is) |
+
+**Tasks:**
+- [ ] Rewrite `AGENTS.md` as lean pointer (remove all duplicated tables)
+- [ ] Rewrite `README.md` as human-only landing page (remove agent-targeted content)
+- [ ] Merge unique `AI_TOOLKIT_CONTEXT.md` content into `skills/_index.md`
+- [ ] Remove or redirect `AI_TOOLKIT_CONTEXT.md`
+- [ ] Update `AGENTS.md` structure tree to reflect actual repository contents
+- [ ] Verify all cross-references still work after consolidation
+
+**Estimated savings:** ~300-400 lines of duplicated markdown
+
+#### 2. Remove Bash Safety List from core/instructions.md
+
+**Problem:** Lines 45-151 of `core/instructions.md` enumerate allowed/restricted/prohibited bash commands (~100 lines). This is advisory markdown that:
+- Won't actually prevent an agent from running anything (it's not enforcement)
+- Duplicates safety mechanisms already built into modern AI agent hosts (Claude Code, Cursor, etc.)
+- Wastes ~100 lines of context on every session
+
+**Solution:** Remove the entire "Allowed Bash Scripts" section (Safe Operations, Restricted Operations, Prohibited Operations). Keep only:
+- Coding Rules
+- Testing Requirements
+- Code Review Checklist
+- Dependency Management
+- Security Guidelines
+
+**Tasks:**
+- [ ] Remove "Allowed Bash Scripts" section from `core/instructions.md`
+- [ ] Verify no other files reference the removed section
+
+#### 3. Token Budget Guidance
+
+**Problem:** The toolkit's entire value proposition is being fed into AI context windows, but there's no documentation about its own token footprint. Users can't make informed decisions about which skills to enable.
+
+**Solution:** Add a "Context Window Budget" section to `skills/_index.md` and/or `AGENTS.md` with approximate token counts.
+
+**Tasks:**
+- [ ] Measure approximate token count for core files
+- [ ] Measure approximate token count for each skill package
+- [ ] Add budget table showing cumulative cost of enabling skills
+- [ ] Add guidance on context window management (e.g., "for 100K context, enable max N skills")
+
+**Example format:**
+```markdown
+## Context Window Budget
+
+| Scope | Approx. Tokens | Files |
+|-------|---------------|-------|
+| Core only | ~2K | instructions.md, workflows.md, glossary.md |
+| Core + git-workflow | ~4K | + git-workflow skill (4 files) |
+| Core + analysis | ~12K | + codebase-analysis, arch-analysis |
+| Full toolkit (all skills) | ~35K+ | All 27 skills |
+```
+
+---
+
+### Medium Priority
+
+#### 4. Machine-Readable Skill Manifest
+
+**Problem:** Skill metadata (name, description, path, status, dependencies, invocation commands) is maintained in multiple markdown tables across 5 files. Adding or modifying a skill requires updating all of them.
+
+**Solution:** Create a single `skills/manifest.yaml` (or `.json`) as the canonical source. Markdown tables can reference or be generated from this manifest.
+
+**Tasks:**
+- [ ] Design manifest schema (name, description, path, tier, status, dependencies, invocations)
+- [ ] Create `skills/manifest.yaml` with all current skills
+- [ ] Document the manifest format
+- [ ] Consider a script to generate markdown tables from manifest (optional)
+
+**Example:**
+```yaml
+skills:
+  - name: git-workflow
+    tier: core
+    path: skills/core/git-workflow/
+    description: Git best practices, branching strategies, commit hygiene
+    dependencies: []
+    invocations:
+      - trigger: null  # always active
+  - name: arch-analysis
+    tier: optional
+    path: skills/optional/arch-analysis/
+    description: 8-phase architecture documentation workflow
+    dependencies: [codebase-analysis]
+    invocations:
+      - trigger: "Analyze the architecture"
+```
+
+#### 5. Explicit Lazy Loading Guidance
+
+**Problem:** The reading order in `AGENTS.md` tells agents to read core files + all enabled skills upfront. For a 27-skill toolkit, this could consume a large chunk of context before any actual work begins.
+
+**Solution:** Add explicit "read on demand" guidance: agents should only read a skill's files when they're about to invoke that skill, not at session start.
+
+**Tasks:**
+- [ ] Update reading order in `AGENTS.md` to specify lazy loading
+- [ ] Add "When to Read" column to skill listings (e.g., "on invocation", "always")
+- [ ] Update `skills/_index.md` with lazy loading instructions
+- [ ] Core files remain always-read; optional skills become read-on-demand
+
+**Proposed reading order:**
+```
+Session start (always read):
+  1. Project root AGENTS.md
+  2. Project root CONTEXT.md
+  3. Toolkit core/instructions.md
+  4. Toolkit core/glossary.md
+  5. Toolkit skills/_index.md (for discovery only)
+
+On demand (read when invoking):
+  6. Specific skill README.md + workflows.md
+  7. Skill templates.md, examples.md, checklist.md (as needed)
+```
+
+#### 6. Clarify File Audiences
+
+**Problem:** It's unclear which files are for humans, which for AI agents, and which for both. An agent reads AGENTS.md, then AI_TOOLKIT_CONTEXT.md, accumulating redundant content without knowing it's the same information.
+
+**Solution:** Add a clear audience tag at the top of each file.
+
+**Tasks:**
+- [ ] Add `> **Audience:** AI Agents` / `Humans` / `Both` frontmatter to each top-level file
+- [ ] Add audience guidance to skill file structure documentation
+- [ ] Review and tag all core/ and skills/ files
+
+#### 7. Resolve todo-workflow Dual Location
+
+**Problem:** `todo-workflow` content exists in two places:
+- Inline in `core/workflows.md` (lines 59-129) — a summary/quick reference
+- Full skill at `skills/core/todo-workflow/` — complete documentation
+
+This creates confusion about which is canonical.
+
+**Solution:** Keep the full skill as canonical, reduce `core/workflows.md` to a brief pointer.
+
+**Tasks:**
+- [ ] Reduce todo-workflow section in `core/workflows.md` to 5-10 line summary with link
+- [ ] Ensure `skills/core/todo-workflow/` has all the content currently in workflows.md
+- [ ] Verify no information is lost
+
+---
+
+### Low Priority (Bug Fixes)
+
+#### 8. Fix .claude/settings.local.json Hardcoded Path
+
+**Problem:** `.claude/settings.local.json` contains a hardcoded absolute path:
+```json
+"Bash(git -C /home/rastko/dev/agents-setup log --oneline -20)"
+```
+This is user-specific and won't work for anyone else cloning the repo.
+
+**Tasks:**
+- [ ] Remove the hardcoded path entry from settings
+- [ ] Consider adding `.claude/settings.local.json` to `.gitignore`
+
+#### 9. Fix Duplicate Invokable Command
+
+**Problem:** `AI_TOOLKIT_CONTEXT.md` lines 153 and 155 both list "Generate presentation":
+```
+| "Generate presentation" | Create slide decks from markdown (PPTX, PDF, HTML) |
+| "Generate presentation" | Create slide decks (PPTX, PDF) from Markdown |
+```
+
+**Tasks:**
+- [ ] Remove the duplicate entry (keep the more descriptive one)
+
+#### 10. Fix Output Adapter Paths
+
+**Problem:** `AI_TOOLKIT_CONTEXT.md` lines 127-134 use short paths like `analysis-outputs/core-architecture/` but the actual paths are `skills/optional/analysis-outputs/core-architecture/`.
+
+**Tasks:**
+- [ ] Update all adapter path references to use full paths from repository root
+
+#### 11. Fix Presentation Skill Categorization
+
+**Problem:** `presentation` skill is categorized inconsistently:
+- `README.md` lists it under "Development Workflows"
+- `AI_TOOLKIT_CONTEXT.md` lists it under "Output Adapters"
+- `skills/_index.md` lists it as standalone optional skill
+
+**Tasks:**
+- [ ] Decide canonical category (recommend: Output Adapters)
+- [ ] Update all references to use consistent categorization
+
+#### 12. Fix Contradictory Roadmap Status
+
+**Problem:** `skills/_index.md` lines 150-158 list "Future Skills (Roadmap)" including `testing-strategy`, `api-design`, etc. Meanwhile `AI_TOOLKIT_CONTEXT.md` and `ROADMAP-TRACKER.md` previously said "All planned items are complete."
+
+**Tasks:**
+- [ ] Either remove the "Future Skills" section from `skills/_index.md` or mark it clearly as aspirational/unplanned
+- [ ] Ensure roadmap status messaging is consistent across all files
+
+---
+
 ### Execution Order
 
-Build in sequence - synthesis enables better core architecture, then enhance phases:
+Address quick fixes first, then tackle structural changes:
 
-| Step | Task | Depends On |
-|------|------|------------|
-| 0 | Architecture Synthesis Skill | - (new capability) |
-| 1 | Core Architecture Output Structure | - |
-| 2 | Update TOGAF phases to link to core | Step 1 |
-| 3 | Change Management Communication Plan | Step 1 |
-| 4 | Evolutionary Planning with Fitness Functions | Step 1 |
-| 5 | Excalidraw Diagram Support | - (independent) |
+| Step | Task | Effort | Depends On |
+|------|------|--------|------------|
+| 1 | Fix duplicate invokable command (#9) | Small | - |
+| 2 | Fix output adapter paths (#10) | Small | - |
+| 3 | Fix presentation categorization (#11) | Small | - |
+| 4 | Fix contradictory roadmap status (#12) | Small | - |
+| 5 | Fix .claude/settings.local.json (#8) | Small | - |
+| 6 | Remove bash safety list (#2) | Small | - |
+| 7 | Clarify file audiences (#6) | Small | - |
+| 8 | Resolve todo-workflow dual location (#7) | Small | - |
+| 9 | Explicit lazy loading guidance (#5) | Small | #1 |
+| 10 | Entry point consolidation (#1) | Large | #6, #9, #10, #11 |
+| 11 | Token budget guidance (#3) | Small | #1 |
+| 12 | Machine-readable skill manifest (#4) | Medium | #1 |
 
-**Note:** Architecture Synthesis (Step 0) can be developed in parallel as it creates a new entry point into the TOGAF workflow.
-
----
-
-### Presentation & Export (Future Submodule Candidate)
-
-> **Note**: This section may be extracted to a separate git submodule in the future, but remains in the toolkit for now.
-
-#### Presentation Generation
-
-Generate PowerPoint/presentation decks from markdown specifications and architecture documentation.
-
-**Features:**
-- [ ] Markdown to PPT conversion
-  - Parse structured markdown (headers → slides)
-  - Support for speaker notes
-  - Code block formatting
-  - Table rendering
-- [ ] Template system
-  - Create custom slide templates
-  - Import existing corporate templates
-  - Theme customization (colors, fonts, logos)
-- [ ] Architecture diagram export
-  - Mermaid → PNG/JPG/SVG
-  - Excalidraw → PNG/JPG/SVG
-  - PlantUML → PNG/JPG/SVG
-  - Embed exported images in slides
-- [ ] Slide types
-  - Title slides
-  - Content slides (bullets, numbered lists)
-  - Diagram slides (full-bleed images)
-  - Comparison slides (before/after, baseline/target)
-  - Timeline/roadmap slides
-
-**Use Cases:**
-| Source | Output |
-|--------|--------|
-| Architecture Vision doc | Executive presentation |
-| Gap Analysis | Technical review deck |
-| Evolution Plan | Roadmap presentation |
-| Change Management Summary | Stakeholder briefing |
-
-**Technical Approach:**
-- **Marp CLI** (`@marp-team/marp-cli`) - Primary MD→PPTX tool (recommended)
-- **python-pptx** - For complex/dynamic presentations requiring programmatic control
-- **Mermaid CLI** (`@mermaid-js/mermaid-cli`) - Mermaid→PNG/SVG export
-- **PlantUML CLI** - PlantUML→PNG/SVG export (requires Java)
-- **Excalidraw** - Manual export via VS Code extension; CI automation possible with Puppeteer scripts
-
-> **Tooling Research:** See [tooling-research.md](tooling-research.md) for detailed analysis and recommendations.
-
-**Installation:**
-```bash
-# Diagram export
-npm install -g @mermaid-js/mermaid-cli
-brew install plantuml  # or download plantuml.jar
-
-# Presentation generation
-npm install -g @marp-team/marp-cli
-
-# Optional: Python for advanced PPTX
-pip install python-pptx
-```
-
-**VS Code Extensions:**
-| Extension | ID | Purpose |
-|-----------|-----|---------|
-| Excalidraw Editor | `pomdtr.excalidraw-editor` | Edit .excalidraw files |
-| Mermaid Preview | `bierner.markdown-mermaid` | Preview mermaid in MD |
-| Marp for VS Code | `marp-team.marp-vscode` | Preview/edit Marp slides |
-
-**Files/Structure:**
-```
-presentation/
-├── README.md           # Concepts and usage
-├── workflows.md        # Generation workflows
-├── templates/          # Slide templates
-│   ├── default/
-│   ├── technical/
-│   └── executive/
-├── exporters/          # Diagram export configs
-│   ├── mermaid.md
-│   ├── excalidraw.md
-│   └── plantuml.md
-└── examples/           # Sample presentations
-```
-
-**Dependencies:**
-- Excalidraw diagram support (Step 5)
-- Core architecture docs (provides source content)
-
----
-
-## Quick Summary: What's Left (Previous)
-
-All TOGAF ADM phases (A through H) are now complete.
+**Steps 1-8** can be done independently and in parallel.
+**Steps 9-12** depend on earlier cleanup being complete.
 
 ---
 
@@ -825,6 +1014,7 @@ All TOGAF ADM phases (A through H) are now complete.
 | 2026-02-05 | NIS 2 Compliance Framework complete (EU Directive 2022/2555 technical controls) | - |
 | 2026-02-05 | Excalidraw Diagram Support complete (4th output format option) | - |
 | 2026-02-06 | TOGAF Preliminary Phase complete (principles, governance, capability assessment) | - |
+| 2026-02-08 | Added token optimization & structural cleanup roadmap (12 items) | - |
 
 ---
 
@@ -850,3 +1040,13 @@ All TOGAF ADM phases (A through H) are now complete.
 18. ~~NIS 2 Compliance Framework~~ ✅ Complete (technical controls in security-analysis)
 19. ~~Excalidraw Diagram Support~~ ✅ Complete (4th output format with JSON templates)
 20. ~~TOGAF Preliminary Phase~~ ✅ Complete (full ADM cycle now implemented)
+21. Fix low-priority bugs (O8-O12) — quick wins
+22. Remove bash safety list from core/instructions.md (O2)
+23. Clarify file audiences and resolve todo-workflow location (O6, O7)
+24. Add lazy loading guidance (O5)
+25. Consolidate entry points (O1) — largest optimization effort
+26. Add token budget guidance (O3)
+27. Create machine-readable skill manifest (O4)
+28. **Build roadmap-building skill (N1)** — full spec at `specs/roadmap-skills-spec.md`
+29. **Build roadmap-analysis skill with 7 modes (N2)** — depends on N1
+30. **Update documentation for roadmap skills (N3)** — depends on N1, N2

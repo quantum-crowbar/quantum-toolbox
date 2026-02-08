@@ -2,7 +2,7 @@
 
 > **Repository**: AI Agent Toolbox for Architects
 > **Purpose**: Reusable submodule providing standardized instructions, workflows, and skills for AI coding agents
-> **Last Updated**: 2026-02-06
+> **Last Updated**: 2026-02-08
 
 ---
 
@@ -124,14 +124,14 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 
 | Adapter | Location | Status | Description |
 |---------|----------|--------|-------------|
-| **core-architecture** | `analysis-outputs/core-architecture/` | Complete | Canonical source of truth for TOGAF |
-| **architecture-docs** | `analysis-outputs/architecture-docs/` | Complete | Detailed analysis documentation |
-| **coding-context** | `analysis-outputs/coding-context/` | Complete | AGENTS.md and CONTEXT.md for AI context |
-| **product-spec** | `analysis-outputs/product-spec/` | Complete | Product documentation (features, flows, data model) |
-| **structurizr** | `analysis-outputs/structurizr/` | Complete | C4 model in Structurizr DSL |
-| **archimate** | `analysis-outputs/archimate/` | Complete | ArchiMate enterprise architecture format |
-| **presentation** | `analysis-outputs/presentation/` | Complete | Marp CLI slide generation (PPTX, PDF, HTML) |
-| **pdf-report** | `analysis-outputs/pdf-report/` | Complete | Professional PDF reports from markdown |
+| **core-architecture** | `skills/optional/analysis-outputs/core-architecture/` | Complete | Canonical source of truth for TOGAF |
+| **architecture-docs** | `skills/optional/analysis-outputs/architecture-docs/` | Complete | Detailed analysis documentation |
+| **coding-context** | `skills/optional/analysis-outputs/coding-context/` | Complete | AGENTS.md and CONTEXT.md for AI context |
+| **product-spec** | `skills/optional/analysis-outputs/product-spec/` | Complete | Product documentation (features, flows, data model) |
+| **structurizr** | `skills/optional/analysis-outputs/structurizr/` | Complete | C4 model in Structurizr DSL |
+| **archimate** | `skills/optional/analysis-outputs/archimate/` | Complete | ArchiMate enterprise architecture format |
+| **presentation** | `skills/optional/analysis-outputs/presentation/` | Complete | Marp CLI slide generation (PPTX, PDF, HTML) |
+| **pdf-report** | `skills/optional/analysis-outputs/pdf-report/` | Complete | Professional PDF reports from markdown |
 
 ---
 
@@ -152,7 +152,6 @@ When skills generate output files (analysis reports, presentations, etc.), they 
 | "Generate presentation" | Create slide decks from markdown (PPTX, PDF, HTML) |
 | "Export to PDF" | Convert markdown reports to professional PDFs |
 | "Use todo workflow" | Autonomous task-based development |
-| "Generate presentation" | Create slide decks (PPTX, PDF) from Markdown |
 
 ---
 
@@ -198,7 +197,36 @@ git submodule update --init --recursive
 
 ## Current Roadmap Status
 
-All planned roadmap items are complete. See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history.
+27+ skills are implemented. **15 items remaining** across 2 tracks.
+
+See [ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) for full history and planned work.
+
+### Planned: New Skills (3 items)
+
+| # | Item | Effort | Priority |
+|---|------|--------|----------|
+| N1 | **Roadmap Building** — generate implementation roadmaps from architecture (ADRs, deps, phases, risks) | Large | High |
+| N2 | **Roadmap Analysis** — 7 modes: expand, research, complexity, spikes, estimation, PDF export, team/financial planning | Large | High |
+| N3 | **Roadmap Skills Documentation** — update indexes, context files, end-to-end examples | Small | Low |
+
+Full spec: [roadmap-skills-spec.md](specs/roadmap-skills-spec.md)
+
+### Planned: Optimization / Refactor (12 items)
+
+| # | Item | Effort | Priority |
+|---|------|--------|----------|
+| O1 | Entry point consolidation (deduplicate 5 overlapping files) | Large | High |
+| O2 | Remove bash safety list from `core/instructions.md` | Small | High |
+| O3 | Token budget guidance for context window awareness | Small | High |
+| O4 | Machine-readable skill manifest (YAML/JSON) | Medium | Medium |
+| O5 | Explicit lazy loading guidance (read-on-demand pattern) | Small | Medium |
+| O6 | Clarify file audiences (human vs agent vs both) | Small | Medium |
+| O7 | Resolve `todo-workflow` dual location | Small | Medium |
+| O8 | Fix `.claude/settings.local.json` hardcoded path | Small | Low |
+| O9 | Fix duplicate invokable command entry | Small | Low |
+| O10 | Fix output adapter path references | Small | Low |
+| O11 | Fix inconsistent `presentation` skill categorization | Small | Low |
+| O12 | Fix contradictory roadmap status in `skills/_index.md` | Small | Low |
 
 ---
 
@@ -211,6 +239,7 @@ All planned roadmap items are complete. See [ROADMAP-TRACKER.md](specs/ROADMAP-T
 | Security Analysis | `specs/security-analysis-skill-spec.md` | Dual output format (human + compliance) |
 | Structurizr Skills | `specs/structurizr-skills-spec.md` | C4 authoring + export adapters |
 | TOGAF Skill Family | `specs/togaf-skill-family-roadmap.md` | ADM phases as layered skills |
+| Roadmap Skills | `specs/roadmap-skills-spec.md` | Roadmap building + analysis with 7 modes |
 
 ---
 
