@@ -2,18 +2,18 @@
 
 > **Audience:** Humans (GitHub landing page)
 
-A toolbox of skills, workflows, and patterns for AI coding agents - designed for software architects and senior developers.
+A structured knowledge base that turns AI coding agents into architecture-aware partners — built for senior software professionals: architects, tech leads, principal engineers, solution architects, technical consultants, and anyone working at the intersection of code and architecture decisions.
 
 ## Overview
 
-Equip your AI coding assistant with architectural knowledge, analysis skills, and proven patterns. This toolbox includes:
+Give your AI coding assistant the skills to do real architecture work — analysis, synthesis, auditing, contextualization, documentation, reporting, planning, and more.
 
-- **Analysis Skills** - Understand codebases systematically
-- **Architecture Patterns** - TOGAF ADM, C4 modeling, enterprise architecture
-- **Development Workflows** - Git conventions, task management, code quality
-- **Templates & Checklists** - Consistent, high-quality deliverables
+It ships as a git submodule your agent reads at session start. No plugins, no API calls — just markdown that teaches the agent how to think about architecture.
 
-Designed to be used as a git submodule that AI agents can reference when working on your code.
+- **Analysis** — Codebase analysis, security analysis, nonfunctional analysis, architecture synthesis, fitness functions
+- **Architecture** — TOGAF ADM (Preliminary + Phases A-H), C4 modeling with Structurizr DSL
+- **Workflows** — Git conventions, task management, autonomous development loop
+- **Outputs** — 8 structured formats: architecture docs, PDF reports, presentations, C4 workspaces, and more
 
 ---
 
