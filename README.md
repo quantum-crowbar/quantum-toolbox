@@ -54,28 +54,17 @@ This re-reads the toolkit and presents all capabilities with invokable commands.
 
 The toolkit is built around a single core idea: **the mental model is the engine**.
 
-```
-┌─────────────────────────────────────────────────┐
-│              Mental Model                       │
-│         (architecture-thinking.md)              │
-│                                                 │
-│  Domains · Stakeholders · Principles            │
-│  Gap Analysis · Risk · Prioritization           │
-└──────────────────┬──────────────────────────────┘
-                   │ drives
-        ┌──────────┼──────────┐
-        ▼          ▼          ▼
-   ┌─────────┐ ┌────────┐ ┌──────────┐
-   │Analysis │ │Modeling│ │Workflows │
-   │ Skills  │ │ Skills │ │  Skills  │
-   └────┬────┘ └───┬────┘ └────┬─────┘
-        │          │           │
-        └──────────┼───────────┘
-                   ▼
-            ┌────────────┐
-            │  Outputs   │
-            │ (8 formats)│
-            └────────────┘
+```mermaid
+graph TD
+    MM["<b>Mental Model</b><br/><i>architecture-thinking.md</i><br/><br/>Domains · Stakeholders · Principles<br/>Gap Analysis · Risk · Prioritization"]
+
+    MM --> A["Analysis Skills"]
+    MM --> M["Modeling Skills"]
+    MM --> W["Workflow Skills"]
+
+    A --> O["Outputs<br/><i>8 formats</i>"]
+    M --> O
+    W --> O
 ```
 
 [`core/architecture-thinking.md`](core/architecture-thinking.md) defines **how the agent thinks about architecture** — which domains to consider, which stakeholders matter, how to analyze gaps, assess risk, and prioritize work. Every analysis skill, every TOGAF phase, every output adapter inherits its lens from this file.
