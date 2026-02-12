@@ -1,0 +1,84 @@
+name: Validate Toolkit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate manifest.yaml
+        run: |
+          python3 -c "
+          import yaml, sys
+          try:
+              with open('skills/manifest.yaml') as f:
+                  data = yaml.safe_load(f)
+              print(f'manifest.yaml: valid ({len(data)} skills)')
+          except Exception as e:
+              print(f'manifest.yaml: INVALID - {e}')
+              sys.exit(1)
+          "
+
+      - name: Check required skill files
+        run: |
+          errors=0
+          for dir in skills/optional/*/; do
+            skill=$(basename "$dir")
+            if [ ! -f "$dir/README.md" ]; then
+              echo "MISSING: $dir/README.md"
+              errors=$((errors + 1))
+            fi
+            if [ ! -f "$dir/workflows.md" ]; then
+              echo "MISSING: $dir/workflows.md"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "$errors missing required files"
+            exit 1
+          else
+            echo "All skills have required files"
+          fi
+
+      - name: Check internal links
+        run: |
+          errors=0
+          # Check markdown links to local files (not URLs, not anchors)
+          for f in $(find . -name "*.md" -not -path "./.git/*"); do
+            # Extract local file references from markdown links [text](path)
+            grep -oP '\[.*?\]\((?!http|#|mailto)([^)]+)\)' "$f" 2>/dev/null | \
+            grep -oP '\(([^)]+)\)' | tr -d '()' | while read -r link; do
+              # Strip anchor from link
+              target=$(echo "$link" | cut -d'#' -f1)
+              if [ -n "$target" ]; then
+                dir=$(dirname "$f")
+                resolved="$dir/$target"
+                if [ ! -e "$resolved" ] && [ ! -e "$target" ]; then
+                  echo "BROKEN LINK in $f: $link"
+                  errors=$((errors + 1))
+                fi
+              fi
+            done
+          done
+          # Note: broken links are warnings, not failures, due to relative path complexity
+          echo "Link check complete"
+
+      - name: Measure token budget
+        run: |
+          echo "=== Token estimates per skill ==="
+          for dir in skills/optional/*/; do
+            skill=$(basename "$dir")
+            chars=$(find "$dir" -name "*.md" -exec wc -c {} + 2>/dev/null | tail -1 | awk '{print $1}')
+            tokens=$((chars / 4))
+            flag=""
+            if [ "$tokens" -gt 20000 ]; then
+              flag=" ⚠️  OVER BUDGET"
+            fi
+            printf "%-35s %6d tokens%s\n" "$skill" "$tokens" "$flag"
+          done

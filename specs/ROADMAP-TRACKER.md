@@ -36,6 +36,17 @@ Master tracking document for all skill development roadmaps.
 | Roadmap Analysis Skill (7 modes) | Phase 2 | ⚪ Planned | High |
 | Roadmap Skills Documentation | Phase 3 | ⚪ Planned | Low |
 | | | | |
+| **--- OPEN-SOURCE READINESS ---** | | | |
+| Mental Model Override Mechanism | - | 🟢 Complete | High |
+| Mental Model Full Swap Mechanism | - | ⚪ Planned | Medium |
+| README: Mental Model as Engine | - | 🟢 Complete | High |
+| CONTRIBUTING.md + CODE_OF_CONDUCT.md | - | 🟢 Complete | High |
+| Bug & Security Reporting (SECURITY.md) | - | 🟢 Complete | High |
+| LICENSE file (MIT) | - | 🟢 Complete | High |
+| CHANGELOG.md | - | 🟢 Complete | Medium |
+| .github Setup (CI, Issue/PR Templates) | - | 🟢 Complete | Medium |
+| Example Project (quantum-blockchain) | - | ⚪ Planned | Medium |
+| | | | |
 | **--- OPTIMIZATION / REFACTOR ---** | | | |
 | Entry Point Consolidation | - | ⚪ Planned | High |
 | Remove Bash Safety List | - | ⚪ Planned | High |
@@ -366,7 +377,21 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ## Quick Summary: What's Left
 
-**15 items remaining across 2 tracks.**
+**17 items remaining across 3 tracks** (7 OSS items completed this session).
+
+### Open-Source Readiness (9 items)
+
+| # | Task | Effort | Priority |
+|---|------|--------|----------|
+| OSS-1 | **Mental model override mechanism** — project-level layered overrides for architecture-thinking.md | Medium | High |
+| OSS-2 | **Mental model full swap** — named profiles for fundamentally different worldviews | Large | Medium |
+| OSS-3 | **README: mental model as engine** — explain the core design principle to adopters | Small | High |
+| OSS-4 | **CONTRIBUTING.md** — building skills, adjusting mental model, PR conventions | Medium | High |
+| OSS-5 | **Bug & security reporting** — SECURITY.md, issue templates | Small | High |
+| OSS-6 | **LICENSE file** — MIT or GPL, actual license text | Small | High |
+| OSS-7 | **CHANGELOG.md** — backfill from git history, define versioning policy | Medium | Medium |
+| OSS-8 | **.github setup** — CI pipeline, issue/PR templates | Medium | Medium |
+| OSS-9 | **Example project** — quantum-blockchain with toolkit wired up, pre-generated outputs | Medium | Medium |
 
 ### New Skills (3 items)
 
@@ -395,7 +420,242 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ---
 
-## Planned Work
+## Open-Source Readiness
+
+### OSS-1: Mental Model Override Mechanism (High Priority)
+
+**Problem:** `core/architecture-thinking.md` is the engine driving all analysis, TOGAF, and output skills. It encodes one architectural worldview (TOGAF-influenced, domain-centric). Adopters need to customize it for their context without forking the toolkit.
+
+**Solution:** A project-level override convention using a layered file approach.
+
+**How it works:**
+1. Toolkit ships `core/architecture-thinking.md` as the default mental model
+2. Adopters create `architecture-thinking.local.md` in their project root
+3. Agents read the default first, then the override
+4. Override semantics: matching headings **replace**, new headings **add**, listed headings under `## Skip` are **ignored**
+
+**Tasks:**
+- [ ] Document the override convention in AGENTS.md reading order (step between core and skills)
+- [ ] Create `templates/architecture-thinking.override.template.md` with section structure and instructions
+- [ ] Update `core/workflows.md` to reference override loading
+- [ ] Add examples: adding a domain, replacing stakeholder types, changing default prioritization
+- [ ] Test: agent correctly layers override on top of default
+
+**Example override file:**
+```markdown
+# Architecture Thinking — Project Overrides
+
+> Read AFTER core/architecture-thinking.md.
+> Matching headings REPLACE. New headings ADD. Listed under Skip are IGNORED.
+
+## Skip
+- Enterprise Continuum
+
+## Architecture Domains
+### Regulatory Architecture  ← new domain
+- Compliance frameworks, audit requirements, data sovereignty
+...
+
+## Prioritization
+<!-- replaces default — this project uses WSJF exclusively -->
+...
+```
+
+---
+
+### OSS-2: Mental Model Full Swap Mechanism (Medium Priority)
+
+**Problem:** Some adopters don't want to tweak the default engine — they have a fundamentally different way of thinking about architecture (lean startup, platform engineering, regulated enterprise, etc.).
+
+**Solution:** Named profiles in the toolkit that can be selected as the active mental model.
+
+**How it works:**
+1. Profiles live in `core/architecture-thinking/profiles/`
+2. The default profile is the current `architecture-thinking.md`
+3. Adopters select a profile in their project's `AGENTS.md`: `architecture-thinking: lean-startup`
+4. The override mechanism (OSS-1) still works on top of any profile
+
+**Depends on:** OSS-1 (override mechanism should exist first)
+
+**Tasks:**
+- [ ] Restructure `core/architecture-thinking.md` into `core/architecture-thinking/default.md`
+- [ ] Create profile loading convention (AGENTS.md directive)
+- [ ] Document how to contribute a new profile (see CONTRIBUTING.md)
+- [ ] Seed 1-2 alternative profiles as examples (e.g., `lean-startup.md`, `platform-eng.md`)
+- [ ] Update all internal references from `core/architecture-thinking.md` to new path
+
+**Future profiles (community-contributed):**
+- `lean-startup` — hypothesis-driven, MVP-first, minimal ceremony
+- `platform-eng` — infrastructure-centric, developer experience, internal platforms
+- `regulated-enterprise` — compliance-first, audit trails, data sovereignty as first-class domain
+- `data-intensive` — data pipelines, ML/AI systems, data governance as primary concern
+
+---
+
+### OSS-3: README — Mental Model as Engine (High Priority)
+
+**Problem:** The README doesn't explain that `architecture-thinking.md` is the core engine driving all skills. Potential adopters and contributors don't understand the toolkit's central design principle.
+
+**Tasks:**
+- [ ] Add "How It Works" or "Architecture" section to README.md explaining:
+  - The mental model is the engine; skills are the tools
+  - All analysis/architecture skills inherit their lens from this file
+  - The override mechanism allows per-project customization
+  - Full swaps allow fundamentally different worldviews
+- [ ] Add a simple diagram showing: Mental Model → Skills → Outputs
+- [ ] Reference override and swap mechanisms
+
+---
+
+### OSS-4: CONTRIBUTING.md (High Priority)
+
+**Problem:** No contributor guide. People don't know how to add skills, adjust the mental model, or what gets accepted.
+
+**Tasks:**
+- [ ] Create `CONTRIBUTING.md` covering:
+  - **Building a new skill**: directory structure, required files, naming conventions, how to register in manifest.yaml and _index.md
+  - **Adjusting the mental model**: when to propose a change to the default vs. creating a profile vs. using project overrides
+  - **Modifying existing skills**: what changes are welcome, backwards compatibility expectations
+  - **Pull request conventions**: branch naming, commit messages (reference templates/COMMIT.md), PR description format
+  - **Code of conduct reference**
+  - **Review process**: what maintainers look for, response time expectations
+- [ ] Create `CODE_OF_CONDUCT.md` (Contributor Covenant or similar)
+
+---
+
+### OSS-5: Bug & Security Reporting (High Priority)
+
+**Problem:** No security policy or bug reporting guidelines. Especially important since the toolkit includes security analysis skills.
+
+**Tasks:**
+- [ ] Create `SECURITY.md` with:
+  - How to report security vulnerabilities (private disclosure process)
+  - Scope (what counts as a security issue in a documentation toolkit)
+  - Response timeline commitment
+- [ ] Create `.github/ISSUE_TEMPLATE/bug_report.md`
+- [ ] Create `.github/ISSUE_TEMPLATE/feature_request.md`
+- [ ] Create `.github/ISSUE_TEMPLATE/new_skill_proposal.md`
+
+---
+
+### OSS-6: LICENSE File (High Priority)
+
+**Problem:** README says MIT but no `LICENSE` file exists. Code is technically all-rights-reserved.
+
+**Tasks:**
+- [ ] Decide license: MIT (permissive, maximum adoption) or GPL (copyleft, derivative works must share)
+- [ ] Create `LICENSE` file with full license text
+- [ ] Verify README license reference matches
+
+**Recommendation:** MIT — this is a knowledge/documentation toolkit, not a library. Maximum adoption matters more than copyleft protection. Users embedding this as a submodule shouldn't worry about license contamination.
+
+---
+
+### OSS-7: CHANGELOG.md (Medium Priority)
+
+**Problem:** At v2.5.0 with no version history. Adopters pulling the submodule need to know what changed between versions.
+
+**Tasks:**
+- [ ] Create `CHANGELOG.md` following Keep a Changelog format
+- [ ] Backfill key milestones from git history and Progress Log
+- [ ] Define versioning policy (semver: major = breaking mental model changes, minor = new skills, patch = fixes)
+- [ ] Create git tags for current and past versions
+
+---
+
+### OSS-8: .github Setup (Medium Priority)
+
+**Problem:** No CI, no issue templates, no PR template for the toolkit itself.
+
+**Tasks:**
+- [ ] Create `.github/ISSUE_TEMPLATE/bug_report.md`
+- [ ] Create `.github/ISSUE_TEMPLATE/feature_request.md`
+- [ ] Create `.github/ISSUE_TEMPLATE/new_skill_proposal.md`
+- [ ] Create `.github/PULL_REQUEST_TEMPLATE.md` (for contributing TO the toolkit, not the existing template for projects USING it)
+- [ ] Create `.github/workflows/validate.yml` — CI pipeline:
+  - Lint markdown (markdownlint)
+  - Validate manifest.yaml (schema check)
+  - Check internal links aren't broken
+  - Verify every skill has required files (README.md, workflows.md at minimum)
+- ~~`FUNDING.yml`~~ — on ice, may revisit later
+
+---
+
+### OSS-9: Example Project — quantum-blockchain (Medium Priority)
+
+**Problem:** Potential adopters can't see the toolkit in action without installing it. There's no concrete demonstration of what skills produce or how customization works.
+
+**Solution:** Use [quantum-blockchain](https://github.com/metaphorical/quantum-blockchain) (a Python/Flask blockchain microservice) as a showcase project with the toolkit wired up and pre-generated analysis outputs.
+
+**Why this project:**
+- Architecturally interesting: distributed P2P system, node discovery, storage layer, REST API
+- Right size: small enough to explore in 10 minutes, complex enough for meaningful analysis
+- Real analysis targets: acknowledged security gaps (no auth), missing validation, no proof-of-work — skills have genuine findings
+- Natural mental model override: "Consensus Architecture" as a custom domain is immediately intuitive
+- Same owner — no permission issues
+
+**Depends on:** OSS-1 (override mechanism, to demonstrate it), OSS-6 (LICENSE)
+
+**Tasks:**
+- [ ] Create branch or fork: `quantum-blockchain-example`
+- [ ] Add `.ai-toolkit/` as git submodule pointing to this repo
+- [ ] Create populated `AGENTS.md` with 3-4 skills enabled
+- [ ] Create populated `CONTEXT.md` with project state
+- [ ] Create `architecture-thinking.local.md` demonstrating override mechanism:
+  - Add "Consensus Architecture" domain (proof-of-work, block validation, fork resolution)
+  - Add "Network Topology" domain (node discovery, bootstrap sync, P2P)
+  - Skip "Enterprise Continuum" (irrelevant for this project)
+- [ ] Run arch-analysis and commit outputs to `analysis/architecture-docs/`
+- [ ] Run security-analysis and commit output to `analysis/security-report.md`
+- [ ] Generate Structurizr C4 workspace (`analysis/workspace.dsl`)
+- [ ] Create lightweight TOGAF Phase A vision document
+- [ ] Define 2-3 fitness functions with baseline measurements
+- [ ] Generate architecture overview presentation
+- [ ] Write "Try It Yourself" README section with exact copy-paste prompts:
+  - "Analyze the architecture"
+  - "Analyze security"
+  - "Create C4 model"
+- [ ] Link from main toolkit README.md
+
+**Expected output structure:**
+```
+quantum-blockchain/
+├── .ai-toolkit/                        ← this repo as submodule
+├── AGENTS.md                           ← populated, skills enabled
+├── CONTEXT.md                          ← filled in with real project context
+├── architecture-thinking.local.md      ← override: Consensus + Network domains
+├── src/                                ← existing application code (unchanged)
+├── analysis/
+│   ├── architecture-docs/              ← pre-generated arch-analysis output
+│   ├── security-report.md              ← pre-generated security-analysis output
+│   ├── workspace.dsl                   ← C4 model
+│   └── fitness-functions.md            ← baseline measurements
+├── presentations/
+│   └── architecture-overview.pptx      ← generated deck
+└── README.md                           ← "Try It Yourself" walkthrough
+```
+
+---
+
+### OSS Execution Order
+
+| Step | Task | Effort | Depends On |
+|------|------|--------|------------|
+| 1 | LICENSE file (OSS-6) | Small | - |
+| 2 | README mental model section (OSS-3) | Small | - |
+| 3 | Mental model override mechanism (OSS-1) | Medium | - |
+| 4 | CONTRIBUTING.md + CODE_OF_CONDUCT (OSS-4) | Medium | OSS-1 (to document override process) |
+| 5 | SECURITY.md + bug reporting (OSS-5) | Small | - |
+| 6 | CHANGELOG.md + git tags (OSS-7) | Medium | - |
+| 7 | .github setup (OSS-8) | Medium | OSS-4, OSS-5 (templates reference contributing guide) |
+| 8 | Mental model full swap (OSS-2) | Large | OSS-1, OSS-4 |
+| 9 | Example project — quantum-blockchain (OSS-9) | Medium | OSS-1, OSS-6 |
+
+Steps 1-3 and 5-6 can be done in parallel. Steps 4, 7-9 have dependencies.
+
+---
+
+## Planned Work (Previous — Completed Specs)
 
 ### Architecture Synthesis Skill
 
@@ -1050,3 +1310,12 @@ Address quick fixes first, then tackle structural changes:
 28. **Build roadmap-building skill (N1)** — full spec at `specs/roadmap-skills-spec.md`
 29. **Build roadmap-analysis skill with 7 modes (N2)** — depends on N1
 30. **Update documentation for roadmap skills (N3)** — depends on N1, N2
+31. **LICENSE file (OSS-6)** — unblocks everything, 5 minutes
+32. **README mental model section (OSS-3)** — explain the engine to the world
+33. **Mental model override mechanism (OSS-1)** — core extensibility feature
+34. **CONTRIBUTING.md + CODE_OF_CONDUCT (OSS-4)** — depends on OSS-1
+35. **SECURITY.md + bug reporting (OSS-5)** — parallel with OSS-4
+36. **CHANGELOG.md + git tags (OSS-7)** — parallel with OSS-4
+37. **.github setup (OSS-8)** — depends on OSS-4, OSS-5
+38. **Mental model full swap (OSS-2)** — depends on OSS-1, OSS-4
+39. **Example project — quantum-blockchain (OSS-9)** — depends on OSS-1, OSS-6

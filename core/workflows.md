@@ -6,6 +6,20 @@ Step-by-step processes for common development tasks.
 
 ---
 
+## Mental Model Loading
+
+The toolkit's architectural thinking is layered:
+
+1. **Default**: Read `core/architecture-thinking.md` (always, at session start)
+2. **Override**: Read project root `architecture-thinking.local.md` (if it exists)
+   - Sections with matching headings **replace** the default
+   - New sections are **added**
+   - Sections listed under `## Skip` are **ignored** from the default
+
+This allows projects to customize how the agent thinks about architecture without forking the toolkit. See [templates/architecture-thinking.override.template.md](../templates/architecture-thinking.override.template.md) for the override template.
+
+---
+
 ## Pre-Work Checklist
 
 **Run this before starting any development task:**

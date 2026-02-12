@@ -50,6 +50,45 @@ This re-reads the toolkit and presents all capabilities with invokable commands.
 
 ---
 
+## How It Works
+
+The toolkit is built around a single core idea: **the mental model is the engine**.
+
+```
+┌─────────────────────────────────────────────────┐
+│              Mental Model                       │
+│         (architecture-thinking.md)              │
+│                                                 │
+│  Domains · Stakeholders · Principles            │
+│  Gap Analysis · Risk · Prioritization           │
+└──────────────────┬──────────────────────────────┘
+                   │ drives
+        ┌──────────┼──────────┐
+        ▼          ▼          ▼
+   ┌─────────┐ ┌────────┐ ┌──────────┐
+   │Analysis │ │Modeling│ │Workflows │
+   │ Skills  │ │ Skills │ │  Skills  │
+   └────┬────┘ └───┬────┘ └────┬─────┘
+        │          │           │
+        └──────────┼───────────┘
+                   ▼
+            ┌────────────┐
+            │  Outputs   │
+            │ (8 formats)│
+            └────────────┘
+```
+
+[`core/architecture-thinking.md`](core/architecture-thinking.md) defines **how the agent thinks about architecture** — which domains to consider, which stakeholders matter, how to analyze gaps, assess risk, and prioritize work. Every analysis skill, every TOGAF phase, every output adapter inherits its lens from this file.
+
+**This means you can change how the toolkit thinks:**
+
+- **Override sections** — Add a domain, swap prioritization criteria, adjust stakeholder types. Drop an `architecture-thinking.local.md` in your project root and the agent layers your changes on top of the defaults.
+- **Swap the entire model** *(coming soon)* — Select a named profile (`lean-startup`, `platform-eng`, `regulated-enterprise`) for a fundamentally different architectural worldview.
+
+The skills are the tools. The mental model is what makes them coherent.
+
+---
+
 ## Skills at a Glance
 
 The toolkit provides **27+ specialized skills** organized into 4 categories:
