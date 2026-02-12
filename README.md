@@ -136,6 +136,12 @@ The toolkit provides **27+ specialized skills** organized into 4 categories:
 
 ---
 
+## Example Project
+
+See the toolkit in action on a real codebase: **[quantum-blockchain](https://github.com/metaphorical/quantum-blockchain/tree/ai-toolkit-example)** — a Python/Flask blockchain microservice with the toolkit wired up, custom mental model overrides (Consensus Architecture, Network Topology), and copy-paste prompts to try.
+
+---
+
 ## Documentation
 
 | Resource | Description |

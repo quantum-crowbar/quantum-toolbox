@@ -45,7 +45,7 @@ Master tracking document for all skill development roadmaps.
 | LICENSE file (MIT) | - | 🟢 Complete | High |
 | CHANGELOG.md | - | 🟢 Complete | Medium |
 | .github Setup (CI, Issue/PR Templates) | - | 🟢 Complete | Medium |
-| Example Project (quantum-blockchain) | - | ⚪ Planned | Medium |
+| Example Project (quantum-blockchain) | - | 🟢 Complete | Medium |
 | | | | |
 | **--- OPTIMIZATION / REFACTOR ---** | | | |
 | Entry Point Consolidation | - | ⚪ Planned | High |
@@ -377,7 +377,7 @@ See: [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md)
 
 ## Quick Summary: What's Left
 
-**17 items remaining across 3 tracks** (7 OSS items completed this session).
+**16 items remaining across 3 tracks** (8 OSS items completed this session).
 
 ### Open-Source Readiness (9 items)
 
