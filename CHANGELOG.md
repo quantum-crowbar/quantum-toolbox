@@ -121,12 +121,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/metaphorical/agents-setup/compare/v2.5.0...HEAD
-[2.5.0]: https://github.com/metaphorical/agents-setup/compare/v2.4.0...v2.5.0
-[2.4.0]: https://github.com/metaphorical/agents-setup/compare/v2.3.0...v2.4.0
-[2.3.0]: https://github.com/metaphorical/agents-setup/compare/v2.2.0...v2.3.0
-[2.2.0]: https://github.com/metaphorical/agents-setup/compare/v2.1.0...v2.2.0
-[2.1.0]: https://github.com/metaphorical/agents-setup/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/metaphorical/agents-setup/compare/v1.0.0...v2.0.0
-[1.0.0]: https://github.com/metaphorical/agents-setup/compare/v0.1.0...v1.0.0
-[0.1.0]: https://github.com/metaphorical/agents-setup/releases/tag/v0.1.0
+[Unreleased]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.4.0...v2.5.0
+[2.4.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.3.0...v2.4.0
+[2.3.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.2.0...v2.3.0
+[2.2.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/quantum-crowbar/quantum-toolbox/releases/tag/v0.1.0

@@ -29,7 +29,7 @@ It ships as a git submodule your agent reads at session start. No plugins, no AP
 
 Copy and paste this prompt to your AI assistant:
 
-> Add the AI architect toolbox by adding a git submodule from `https://github.com/rastko-vukasinovic/agents-setup.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
+> Add the AI architect toolbox by adding a git submodule from `https://github.com/quantum-crowbar/quantum-toolbox.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
 
 This will:
 1. Add the toolbox as a submodule
@@ -133,7 +133,7 @@ The toolkit provides **27+ specialized skills** organized into 4 categories:
 
 ## Example Project
 
-See the toolkit in action on a real codebase: **[quantum-blockchain](https://github.com/rastko-vukasinovic/quantum-blockchain/tree/ai-toolkit-example)** — a Python/Flask blockchain microservice with the toolkit wired up, custom mental model overrides (Consensus Architecture, Network Topology), and copy-paste prompts to try.
+See the toolkit in action on a real codebase: **[quantum-blockchain](https://github.com/quantum-crowbar/quantum-blockchain/tree/ai-toolkit-example)** — a Python/Flask blockchain microservice with the toolkit wired up, custom mental model overrides (Consensus Architecture, Network Topology), and copy-paste prompts to try.
 
 ---
 
