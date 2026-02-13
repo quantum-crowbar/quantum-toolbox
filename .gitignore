@@ -1,3 +1,7 @@
+# MkDocs
+_site/
+.venv/
+
 # Generated presentations
 docs/presentations/*.pptx
 docs/presentations/*.pdf

@@ -1,0 +1,105 @@
+site_name: quantum-toolbox
+site_description: AI Agent toolbox for software architecture
+site_url: https://quantum-crowbar.github.io/quantum-toolbox/
+repo_url: https://github.com/quantum-crowbar/quantum-toolbox
+repo_name: quantum-crowbar/quantum-toolbox
+
+docs_dir: docs/site
+site_dir: _site
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: light green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: light green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Agent Entry Point: AGENTS.md
+  - Core:
+    - Architecture Thinking: core/architecture-thinking.md
+    - Instructions: core/instructions.md
+    - Workflows: core/workflows.md
+    - Glossary: core/glossary.md
+  - Skills:
+    - Catalog: skills/_index.md
+    - Analysis:
+      - Codebase Analysis: skills/optional/codebase-analysis/README.md
+      - Architecture Analysis: skills/optional/arch-analysis/README.md
+      - Security Analysis: skills/optional/security-analysis/README.md
+      - Nonfunctional Analysis: skills/optional/nonfunctional-analysis/README.md
+      - Architecture Synthesis: skills/optional/architecture-synthesis/README.md
+      - Fitness Functions: skills/optional/fitness-functions/README.md
+    - Architecture (TOGAF):
+      - Overview: skills/optional/togaf/_index.md
+      - Preliminary: skills/optional/togaf/preliminary/README.md
+      - "Phase A: Vision": skills/optional/togaf/vision/README.md
+      - "Phase B: Business": skills/optional/togaf/business-architecture/README.md
+      - "Phase C: Information Systems": skills/optional/togaf/information-systems/README.md
+      - "Phase D: Technology": skills/optional/togaf/technology-architecture/README.md
+      - "Phase E: Opportunities": skills/optional/togaf/opportunities-solutions/README.md
+      - "Phase F: Migration Planning": skills/optional/togaf/migration-planning/README.md
+      - "Phase G: Governance": skills/optional/togaf/implementation-governance/README.md
+      - "Phase H: Change Management": skills/optional/togaf/change-management/README.md
+    - Modeling:
+      - Structurizr (C4): skills/optional/structurizr/README.md
+    - Workflow:
+      - Todo Workflow: skills/optional/todo-workflow/README.md
+    - Output Adapters:
+      - Overview: skills/optional/analysis-outputs/_index.md
+      - Architecture Docs: skills/optional/analysis-outputs/architecture-docs/README.md
+      - Core Architecture: skills/optional/analysis-outputs/core-architecture/README.md
+      - Coding Context: skills/optional/analysis-outputs/coding-context/README.md
+      - Product Spec: skills/optional/analysis-outputs/product-spec/README.md
+      - Structurizr Export: skills/optional/analysis-outputs/structurizr/README.md
+      - ArchiMate: skills/optional/analysis-outputs/archimate/README.md
+      - Presentation: skills/optional/analysis-outputs/presentation/README.md
+      - PDF Report: skills/optional/analysis-outputs/pdf-report/README.md
+  - Customization:
+    - Mental Model Override: core/architecture-thinking.md
+    - Skills Documentation: docs-skills/README.md
+  - Example Project: arch-analysis-guide.md
+  - Contributing: CONTRIBUTING.md
+  - Changelog: CHANGELOG.md
