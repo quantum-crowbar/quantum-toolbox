@@ -1,4 +1,10 @@
-# AI Agent Toolbox for Architects
+<p align="center">
+  <img src="assets/logo.png" alt="quantum-toolbox logo" width="200" />
+</p>
+
+<h1 align="center">quantum-toolbox</h1>
+
+<p align="center"><em>AI Agent toolbox for software architecture</em></p>
 
 > **Audience:** Humans (GitHub landing page)
 
