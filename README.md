@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="quantum-toolbox logo" width="200" />
+  <img src="assets/logo.png" alt="quantum-toolbox logo" width="260" />
 </p>
 
 <h1 align="center">quantum-toolbox</h1>
