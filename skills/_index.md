@@ -45,6 +45,9 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
 | **presentation** | Generate slide decks (PPTX, PDF) from Markdown using Marp CLI | [optional/presentation/](optional/presentation/) |
+| **release-notes** | Changelog format, semantic versioning, breaking change summary, audience-specific formats | [optional/release-notes/](optional/release-notes/) |
+| **sprint-plan** | Sprint plan output format, estimation conventions, dependency notation, risk register | [optional/sprint-plan/](optional/sprint-plan/) |
+| **review-output** | Severity tiers (blocking/recommended/nit), review report format, per-language checklists | [optional/review-output/](optional/review-output/) |
 
 ---
 
