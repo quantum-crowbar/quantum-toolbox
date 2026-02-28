@@ -54,6 +54,12 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **code-review** | Security, correctness, maintainability review patterns and checklists | [optional/code-review/](optional/code-review/) |
 | **qa-testing** | Test pyramid, unit/integration/API testing, mocking, coverage | [optional/qa-testing/](optional/qa-testing/) |
 | **qa-mobile** | Mobile QA, device matrix, Detox E2E, accessibility, release checklist | [optional/qa-mobile/](optional/qa-mobile/) |
+| **devops** | CI/CD, deployment strategies, IaC (Terraform/Pulumi), containers, Kubernetes, observability | [optional/devops/](optional/devops/) |
+| **ux-design** | Design thinking, user research, wireframing, design systems, WCAG accessibility | [optional/ux-design/](optional/ux-design/) |
+| **frontend** | React/Vue patterns, CSS architecture, Core Web Vitals, accessibility in code | [optional/frontend/](optional/frontend/) |
+| **sprint-planning** | Story mapping, estimation, capacity planning, dependency management, retrospectives | [optional/sprint-planning/](optional/sprint-planning/) |
+| **user-stories** | Acceptance criteria, BDD/Gherkin, INVEST, story splitting, DoR/DoD | [optional/user-stories/](optional/user-stories/) |
+| **tdd-workflow** | Red-green-refactor, test-first discipline, outside-in TDD, test doubles | [optional/tdd-workflow/](optional/tdd-workflow/) |
 
 ---
 
