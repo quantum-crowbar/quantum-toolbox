@@ -45,21 +45,6 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **tech-stack-decisions** | Technology evaluation, decision frameworks, ADRs | [optional/tech-stack-decisions/](optional/tech-stack-decisions/) |
 | **code-conventions** | Style guides, naming conventions, structure standards | [optional/code-conventions/](optional/code-conventions/) |
 | **presentation** | Generate slide decks (PPTX, PDF) from Markdown using Marp CLI | [optional/presentation/](optional/presentation/) |
-| **js-programming** | JavaScript idioms, async patterns, ESM, common pitfalls | [optional/js-programming/](optional/js-programming/) |
-| **ts-programming** | TypeScript type system, strict mode, generics, utility types | [optional/ts-programming/](optional/ts-programming/) |
-| **react-native** | Cross-platform mobile patterns, performance, platform-specific code | [optional/react-native/](optional/react-native/) |
-| **python-backend** | FastAPI, Pydantic v2, SQLAlchemy async, uv, Alembic | [optional/python-backend/](optional/python-backend/) |
-| **ts-backend** | Hono, Zod, Drizzle ORM, Bun runtime, error handling | [optional/ts-backend/](optional/ts-backend/) |
-| **database** | SQL schema design, indexing, migrations, connection pooling, security | [optional/database/](optional/database/) |
-| **code-review** | Security, correctness, maintainability review patterns and checklists | [optional/code-review/](optional/code-review/) |
-| **qa-testing** | Test pyramid, unit/integration/API testing, mocking, coverage | [optional/qa-testing/](optional/qa-testing/) |
-| **qa-mobile** | Mobile QA, device matrix, Detox E2E, accessibility, release checklist | [optional/qa-mobile/](optional/qa-mobile/) |
-| **devops** | CI/CD, deployment strategies, IaC (Terraform/Pulumi), containers, Kubernetes, observability | [optional/devops/](optional/devops/) |
-| **ux-design** | Design thinking, user research, wireframing, design systems, WCAG accessibility | [optional/ux-design/](optional/ux-design/) |
-| **frontend** | React/Vue patterns, CSS architecture, Core Web Vitals, accessibility in code | [optional/frontend/](optional/frontend/) |
-| **sprint-planning** | Story mapping, estimation, capacity planning, dependency management, retrospectives | [optional/sprint-planning/](optional/sprint-planning/) |
-| **user-stories** | Acceptance criteria, BDD/Gherkin, INVEST, story splitting, DoR/DoD | [optional/user-stories/](optional/user-stories/) |
-| **tdd-workflow** | Red-green-refactor, test-first discipline, outside-in TDD, test doubles | [optional/tdd-workflow/](optional/tdd-workflow/) |
 
 ---
 
@@ -245,6 +230,6 @@ Aspirational ideas — not yet planned or specified:
 - `api-design` - REST, GraphQL, versioning
 - `documentation` - Code docs, user docs, architecture docs
 - `performance` - Profiling, optimization, caching
-- `devops` - CI/CD, deployment, monitoring
 
-See [ROADMAP-TRACKER.md](../specs/ROADMAP-TRACKER.md) for planned work with specs and timelines.
+Note: delivery and implementation skills (programming languages, CI/CD, UX, testing) live in
+the quantum-crew repo at `skills/` — they are crew-specific, not architecture-toolbox skills.
