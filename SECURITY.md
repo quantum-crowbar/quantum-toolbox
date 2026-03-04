@@ -1,5 +1,7 @@
 # Security Policy
 
+> **Audience:** Humans (security and vulnerability reporting)
+
 ## Scope
 
 This toolkit is a collection of markdown documentation, templates, and workflows consumed by AI coding agents. It does not execute code, manage secrets, or handle user data directly.

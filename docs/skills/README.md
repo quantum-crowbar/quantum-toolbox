@@ -1,5 +1,7 @@
 # Skills Documentation
 
+> **Audience:** Humans (detailed per-skill reference)
+
 Comprehensive documentation for all available AI agent skills in the Architecture Toolkit.
 
 ---

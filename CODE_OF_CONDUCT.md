@@ -1,5 +1,7 @@
 # Code of Conduct
 
+> **Audience:** Humans (community guidelines)
+
 ## Our Pledge
 
 We as members, contributors, and maintainers pledge to make participation in our community a welcoming and respectful experience for everyone, regardless of background or identity.

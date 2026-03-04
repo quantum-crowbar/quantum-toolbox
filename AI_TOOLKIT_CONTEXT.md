@@ -1,5 +1,6 @@
 # AI Toolkit Context
 
+> **Audience:** Humans + AI Agents (index of canonical sources)
 > **This file has been consolidated.** All content has been merged into the canonical sources below.
 
 | What You're Looking For | Where to Find It |

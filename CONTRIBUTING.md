@@ -1,5 +1,7 @@
 # Contributing
 
+> **Audience:** Humans (contributor guide)
+
 Thank you for your interest in contributing to the AI Agent Toolbox. This guide covers how to add skills, adjust the mental model, and submit changes.
 
 ## Table of Contents

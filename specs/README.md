@@ -1,5 +1,7 @@
 # AI Specifications
 
+> **Audience:** Humans (developer specifications)
+
 This directory contains developer specifications for AI-related tooling and processes.
 
 ## Purpose
