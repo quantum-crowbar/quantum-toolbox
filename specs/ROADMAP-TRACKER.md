@@ -50,18 +50,18 @@ Master tracking document for all skill development roadmaps.
 | Example Project (quantum-blockchain) | - | 🟢 Complete | Medium |
 | | | | |
 | **--- OPTIMIZATION / REFACTOR ---** | | | |
-| Entry Point Consolidation | - | ⚪ Planned | High |
-| Remove Bash Safety List | - | ⚪ Planned | High |
-| Token Budget Guidance | - | ⚪ Planned | High |
-| Machine-Readable Skill Manifest | - | ⚪ Planned | Medium |
-| Explicit Lazy Loading Guidance | - | ⚪ Planned | Medium |
-| Clarify File Audiences | - | ⚪ Planned | Medium |
-| Resolve todo-workflow Dual Location | - | ⚪ Planned | Medium |
-| Fix .claude/settings.local.json | - | ⚪ Planned | Low |
-| Fix Duplicate Invokable Command | - | ⚪ Planned | Low |
-| Fix Output Adapter Paths | - | ⚪ Planned | Low |
-| Fix Presentation Skill Categorization | - | ⚪ Planned | Low |
-| Fix Contradictory Roadmap Status | - | ⚪ Planned | Low |
+| Entry Point Consolidation | - | 🟢 Complete | High |
+| Remove Bash Safety List | - | 🟢 Complete | High |
+| Token Budget Guidance | - | 🟢 Complete | High |
+| Machine-Readable Skill Manifest | - | 🟢 Complete | Medium |
+| Explicit Lazy Loading Guidance | - | 🟢 Complete | Medium |
+| Clarify File Audiences | - | 🟢 Complete | Medium |
+| Resolve todo-workflow Dual Location | - | 🟢 Complete | Medium |
+| Fix .claude/settings.local.json | - | 🟢 Complete | Low |
+| Fix Duplicate Invokable Command | - | 🟢 Complete | Low |
+| Fix Output Adapter Paths | - | 🟢 Complete | Low |
+| Fix Presentation Skill Categorization | - | 🟢 Complete | Low |
+| Fix Contradictory Roadmap Status | - | 🟢 Complete | Low |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 
