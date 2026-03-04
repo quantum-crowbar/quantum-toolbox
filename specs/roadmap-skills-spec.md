@@ -95,10 +95,15 @@ roadmaps/
 ├── risks/
 │   ├── risk-register.md
 │   └── mitigation-strategies.md
-└── decisions/
-    ├── adr-001-technology-stack.md      # Architecture Decision Records
-    ├── adr-002-deployment-strategy.md
-    └── adr-003-data-migration-approach.md
+├── decisions/
+│   ├── adr-001-technology-stack.md      # Architecture Decision Records
+│   ├── adr-002-deployment-strategy.md
+│   └── adr-003-data-migration-approach.md
+├── roadmap-tracker.md                   # Status overview table (machine-trackable)
+└── epics/
+    ├── epic-001-api-gateway.md          # Epic with child tickets
+    ├── epic-002-data-platform.md
+    └── epic-003-monitoring.md
 ```
 
 ### Roadmap Content
@@ -271,6 +276,125 @@ Kong Gateway (Open Source) with declarative configuration.
 - ADR-004: Deployment platform selection
 ```
 
+#### 8. Roadmap Tracker
+
+A status overview document for tracking progress across all initiatives — modeled after the format used in this toolkit's own `ROADMAP-TRACKER.md`.
+
+```markdown
+# Roadmap Tracker: [Project Name]
+
+> Status as of: YYYY-MM-DD
+
+## Status Overview
+
+| Initiative | Phase | Status | Team | Priority |
+|------------|-------|--------|------|----------|
+| API Gateway Setup | Phase 1 | ⚪ Planned | Platform | High |
+| Core Service Refactoring | Phase 1 | ⚪ Planned | Backend | High |
+| Data Platform | Phase 2 | ⚪ Planned | Data | Medium |
+| Monitoring Stack | Phase 1 | ⚪ Planned | Platform | Medium |
+| Analytics Pipeline | Phase 3 | ⚪ Planned | Data | Low |
+
+Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
+
+## Summary
+
+| Metric | Value |
+|--------|-------|
+| Total initiatives | N |
+| Phases | N |
+| Estimated duration | N months |
+| Estimated total effort | N person-weeks |
+| Teams involved | Team A, Team B, ... |
+```
+
+Purpose: single status snapshot that any stakeholder or agent can read to understand overall progress without opening individual initiative files.
+
+#### 9. Epic & Ticket Breakdown
+
+Each initiative is decomposed into epics and tickets. This is the bridge between the architecture roadmap and the delivery backlog.
+
+**Epic format** (`epics/epic-001-api-gateway.md`):
+
+```markdown
+# Epic: API Gateway Setup
+**Initiative**: 1.1 — API Gateway Setup
+**Phase**: 1 (Q1 2026)
+**Team**: Platform Engineering
+**Status**: ⚪ Planned
+**Complexity**: High
+**Estimated Duration**: 6 weeks
+**Story Points**: 42
+
+## Objective
+Deploy Kong Gateway as the centralized API management layer for all microservices.
+
+## Acceptance Criteria
+- [ ] Kong Gateway operational in staging and production
+- [ ] All internal services routed through gateway
+- [ ] Rate limiting and authentication plugins active
+- [ ] Observability dashboard showing gateway metrics
+- [ ] Runbook and on-call documentation complete
+
+## Tickets
+
+| ID | Title | Team | Complexity | Estimate | Status |
+|----|-------|------|------------|----------|--------|
+| T-001 | Provision Kong infrastructure | Platform | S | 2d | ⚪ |
+| T-002 | Configure declarative routing for Service A | Backend | M | 3d | ⚪ |
+| T-003 | Configure declarative routing for Service B | Backend | M | 3d | ⚪ |
+| T-004 | Implement rate limiting rules | Platform | S | 1d | ⚪ |
+| T-005 | Integrate JWT authentication plugin | Security | M | 4d | ⚪ |
+| T-006 | Set up Prometheus + Grafana dashboard | Platform | M | 3d | ⚪ |
+| T-007 | Load testing and performance validation | QA | L | 5d | ⚪ |
+| T-008 | Write runbook and on-call guide | Platform | S | 2d | ⚪ |
+```
+
+**Ticket format** (each ticket within the epic file):
+
+```markdown
+### T-001: Provision Kong infrastructure
+
+**Epic**: API Gateway Setup
+**Team**: Platform Engineering
+**Owner role**: Senior Platform Engineer
+**Complexity**: S (Small)
+**Estimate**: 2 days
+**Status**: ⚪ Planned
+**Dependencies**: Infrastructure setup (pre-existing)
+
+**Description**:
+Provision Kong Gateway 3.x in DB-less mode on Kubernetes.
+Deploy to both staging and production namespaces using Helm chart.
+Configure declarative YAML-based config stored in Git.
+
+**Acceptance Criteria**:
+- [ ] Kong pods running and healthy in both namespaces
+- [ ] Health check endpoint responds 200
+- [ ] Config loaded from Git via CI/CD
+- [ ] No admin API exposed externally
+
+**Technical Notes**:
+- Use Kong Helm chart v2.x
+- DB-less mode for GitOps compatibility
+- Reference: ADR-001 (API Gateway selection)
+```
+
+**Complexity scale**:
+
+| Size | Story Points | Typical Duration | Description |
+|------|-------------|-----------------|-------------|
+| XS | 1–2 | < 1 day | Trivial change, no unknowns |
+| S | 3–5 | 1–2 days | Well-understood, minimal risk |
+| M | 8–13 | 3–5 days | Some complexity or unknowns |
+| L | 20–21 | 1–2 weeks | Significant complexity |
+| XL | 40+ | 2+ weeks | High uncertainty — consider splitting |
+
+**Team assignment rules**:
+- Assign at epic level by owning team; individual tickets may involve multiple teams
+- Cross-team tickets must have a single DRI (directly responsible individual role)
+- Blocked tickets must name the blocking team and expected resolution date
+
 ### Workflow Overview
 
 ```
@@ -311,14 +435,21 @@ Kong Gateway (Open Source) with declarative configuration.
 │  ├─ Create contingency plans                                │
 │  └─ Assign risk owners                                      │
 │                                                             │
-│  Phase 6: Documentation (15-20 min)                        │
+│  Phase 6: Epic & Ticket Breakdown (20-30 min)              │
+│  ├─ Decompose each initiative into epics                    │
+│  ├─ Break epics into tickets with descriptions              │
+│  ├─ Assign owning team per epic, DRI role per ticket        │
+│  ├─ Size each ticket (XS/S/M/L/XL) and estimate days       │
+│  └─ Generate roadmap-tracker.md status overview            │
+│                                                             │
+│  Phase 7: Documentation (15-20 min)                        │
 │  ├─ Generate master roadmap                                 │
 │  ├─ Create detailed initiative documents                    │
 │  ├─ Build dependency diagrams                               │
 │  ├─ Compile ADRs                                            │
 │  └─ Generate metadata                                       │
 │                                                             │
-│  Total: ~1-2 hours for comprehensive roadmap               │
+│  Total: ~1.5-2.5 hours for comprehensive roadmap           │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -345,6 +476,9 @@ Kong Gateway (Open Source) with declarative configuration.
 "Create technical roadmap from gaps"
 "Build roadmap with ADRs"
 "Generate migration roadmap"
+"Build roadmap with epics and tickets"
+"Break roadmap into tickets for [team/initiative]"
+"Generate roadmap tracker"
 ```
 
 **TOGAF Phase Integration**:
