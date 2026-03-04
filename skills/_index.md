@@ -50,6 +50,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **review-output** | Severity tiers (blocking/recommended/nit), review report format, per-language checklists | [optional/review-output/](optional/review-output/) |
 | **roadmap-building** | Generate phased implementation roadmaps with ADRs, epics, tickets, risk register, and roadmap tracker | [optional/roadmap-building/](optional/roadmap-building/) |
 | **roadmap-analysis** | Deep-dive roadmap analysis: expand initiatives, research, complexity, spikes, estimation, PDF export, team/financial planning | [optional/roadmap-analysis/](optional/roadmap-analysis/) |
+| **coding-profile** | Generate per-stack coding skill files from real repository code — conventions, testing, error handling, API design | [optional/coding-profile/](optional/coding-profile/) |
 
 ---
 
@@ -191,6 +192,7 @@ Some skills may recommend reading other skills first:
 | `presentation` | None (standalone, uses exported diagrams) |
 | `roadmap-building` | `arch-analysis` or `architecture-synthesis` (recommended); `togaf` (optional for Phase E/F integration) |
 | `roadmap-analysis` | `roadmap-building` (recommended; can also parse external roadmaps) |
+| `coding-profile` | None (reads source directly; `codebase-analysis` output can supplement) |
 
 ---
 
@@ -213,6 +215,7 @@ Some skills can be explicitly invoked during a session:
 | `presentation` | `"Generate presentation"` / `"Create slides"` | Markdown to PPTX/PDF slide generation |
 | `roadmap-building` | `"Build implementation roadmap"` / `"Build roadmap with epics and tickets"` | Generate phased roadmap with ADRs, epics, tickets, and tracker |
 | `roadmap-analysis` | `"Analyze roadmap complexity"` / `"Expand initiative [N]"` / `"Plan team for roadmap"` | 7-mode deep analysis of an existing roadmap |
+| `coding-profile` | `"Create coding profile"` / `"Profile this directory"` / `"Profile repos: ..."` | Generate per-stack coding skill files from real repo code |
 
 See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
 

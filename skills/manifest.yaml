@@ -188,6 +188,19 @@ skills:
       - "Export roadmap to PDF"
     status: complete
 
+  # ── Coding Skills ────────────────────────────────────────────────────
+  - name: coding-profile
+    tier: optional
+    path: optional/coding-profile/
+    description: Generate per-stack coding skill files from real repository code — conventions, testing, error handling, API design, observability
+    dependencies: []
+    invocations:
+      - "Create coding profile"
+      - "Profile this directory"
+      - "Profile repos: ..."
+      - "Refresh coding profile"
+    status: complete
+
   # ── Output Adapters ─────────────────────────────────────────────────
   - name: analysis-outputs
     tier: optional

@@ -37,6 +37,7 @@ Master tracking document for all skill development roadmaps.
 | Roadmap Building Skill | Phase 1 | 🟢 Complete | High |
 | Roadmap Analysis Skill (7 modes) | Phase 2 | 🟢 Complete | High |
 | Roadmap Skills Documentation | Phase 3 | 🟢 Complete | Low |
+| Coding Profile Skill | - | 🟢 Complete | High |
 | | | | |
 | **--- OPEN-SOURCE READINESS ---** | | | |
 | Mental Model Override Mechanism | - | 🟢 Complete | High |
