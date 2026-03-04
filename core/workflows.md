@@ -208,9 +208,14 @@ Full documentation: [skills/core/todo-workflow/](../skills/core/todo-workflow/)
    - software-design: Patterns and principles
    - tech-stack-decisions: Technology evaluation, ADRs
    - code-conventions: Style guides
-   - presentation: Slide generation (PPTX, PDF)
 
-   **Output Formats** (export options)
+   **Output Generation** (reports, slides, docs)
+   - presentation: Slide generation (PPTX, PDF)
+   - release-notes: Changelog and release summaries
+   - sprint-plan: Sprint planning output
+   - review-output: Code review reports
+
+   **Output Formats** (analysis export adapters)
    - core-architecture, architecture-docs, coding-context
    - product-spec, structurizr, archimate
 
