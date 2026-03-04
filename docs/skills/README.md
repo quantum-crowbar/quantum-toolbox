@@ -8,39 +8,20 @@ Comprehensive documentation for all available AI agent skills in the Architectur
 
 1. [Overview](#overview)
 2. [Quick Start](#quick-start)
-3. [Skill Categories](#skill-categories)
-4. [Analysis Skills](#analysis-skills)
-5. [Architecture & Modeling Skills](#architecture--modeling-skills)
-6. [Development Workflow Skills](#development-workflow-skills)
-7. [Output Adapters](#output-adapters)
-8. [Skill Activation](#skill-activation)
-9. [Invocation Patterns](#invocation-patterns)
-10. [Skill Dependencies](#skill-dependencies)
+3. [Analysis Skills](#analysis-skills)
+4. [Architecture & Modeling Skills](#architecture--modeling-skills)
+5. [Development Workflow Skills](#development-workflow-skills)
+6. [Output Adapters](#output-adapters)
+7. [Skill Activation](#skill-activation)
+8. [Invocation Patterns](#invocation-patterns)
 
 ---
 
 ## Overview
 
-The Architecture Toolkit provides **25+ specialized skills** organized into 4 main categories:
+For the full skill catalog, activation guide, token budget, and loading strategy, see [skills/_index.md](../../skills/_index.md).
 
-| Category | Count | Purpose |
-|----------|-------|---------|
-| **Analysis** | 6 | Understand codebases and systems |
-| **Architecture & Modeling** | 11 | TOGAF ADM, Structurizr, enterprise patterns |
-| **Workflow** | 2 | Git operations, task management |
-| **Output Adapters** | 8 | Export to various formats |
-
-### Skill Structure
-
-Each skill contains 5 standard files:
-
-| File | Purpose |
-|------|---------|
-| `README.md` | Concepts, principles, guidelines |
-| `workflows.md` | Step-by-step procedures |
-| `templates.md` | Reusable document formats |
-| `checklist.md` | Quick reference for reviews |
-| `examples.md` | Concrete demonstrations |
+This document provides **detailed per-skill documentation** for each skill in the toolkit.
 
 ---
 
@@ -78,63 +59,6 @@ In your project's `AGENTS.md`:
 - [ ] software-design (optional)
 ```
 
----
-
-## Skill Categories
-
-### Analysis Skills
-
-**Purpose**: Understand codebases, identify patterns, assess quality and security.
-
-| Skill | Use When |
-|-------|----------|
-| `codebase-analysis` | Base analysis engine (internal) |
-| `arch-analysis` | Document architecture comprehensively |
-| `security-analysis` | Assess security posture + compliance |
-| `nonfunctional-analysis` | Check testing, config, performance |
-| `architecture-synthesis` | Start from diagrams/specs |
-| `fitness-functions` | Define architecture guardrails |
-
-### Architecture & Modeling Skills
-
-**Purpose**: Apply enterprise architecture frameworks, create architectural models.
-
-| Skill | Use When |
-|-------|----------|
-| `structurizr` | Create C4 diagrams |
-| `togaf/preliminary` | Set up architecture capability |
-| `togaf/vision` | Define architecture vision |
-| `togaf/business-architecture` | Model capabilities, processes |
-| `togaf/information-systems` | Data and application architecture |
-| `togaf/technology-architecture` | Infrastructure design |
-| `togaf/opportunities-solutions` | Evaluate implementation options |
-| `togaf/migration-planning` | Plan transformation roadmap |
-| `togaf/implementation-governance` | Govern implementation |
-| `togaf/change-management` | Manage architecture changes |
-
-### Development Workflow Skills
-
-**Purpose**: Software development best practices.
-
-| Skill | Use When |
-|-------|----------|
-| `git-workflow` | Commits, branching, PRs (always active) |
-| `todo-workflow` | Autonomous task management |
-
-### Output Adapters
-
-**Purpose**: Export analysis results to different formats.
-
-| Adapter | Use When |
-|---------|----------|
-| `core-architecture` | TOGAF canonical documentation |
-| `architecture-docs` | Detailed technical analysis |
-| `coding-context` | Generate AGENTS.md, CONTEXT.md |
-| `product-spec` | Product documentation |
-| `structurizr` | C4 model DSL |
-| `archimate` | Enterprise architecture XML |
-| `presentation` | Slide decks (Marp, PPTX, PDF) |
-| `pdf-report` | PDF reports from markdown |
 
 ---
 
@@ -863,22 +787,6 @@ Enable in your project's `AGENTS.md`:
 "Create PDF report"
 "Make a presentation"
 ```
-
----
-
-## Skill Dependencies
-
-| Skill | Prerequisites | Optional Dependencies |
-|-------|--------------|----------------------|
-| `arch-analysis` | None | `codebase-analysis` (uses internally) |
-| `security-analysis` | None | `arch-analysis` (recommended) |
-| `nonfunctional-analysis` | None | `codebase-analysis` (optional) |
-| `architecture-synthesis` | None | None |
-| `fitness-functions` | None | `togaf/migration-planning` (optional) |
-| `structurizr` | None | None |
-| `togaf/*` | None | `arch-analysis` (for baseline) |
-| `todo-workflow` | `git-workflow` | None |
-| `analysis-outputs/*` | `codebase-analysis` | Varies by adapter |
 
 ---
 
