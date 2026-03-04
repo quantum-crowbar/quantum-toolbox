@@ -6,6 +6,8 @@
 
 <p align="center"><em>AI Agent toolbox for software architecture</em></p>
 
+<p align="center"><a href="CHANGELOG.md#260---2026-03-04">What's new in v2.6.0</a></p>
+
 > **Audience:** Humans (GitHub landing page)
 
 A structured knowledge base that turns AI coding agents into architecture-aware partners — built for senior software professionals: architects, tech leads, principal engineers, solution architects, technical consultants, and anyone working at the intersection of code and architecture decisions.
