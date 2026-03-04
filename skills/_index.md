@@ -48,6 +48,8 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **release-notes** | Changelog format, semantic versioning, breaking change summary, audience-specific formats | [optional/release-notes/](optional/release-notes/) |
 | **sprint-plan** | Sprint plan output format, estimation conventions, dependency notation, risk register | [optional/sprint-plan/](optional/sprint-plan/) |
 | **review-output** | Severity tiers (blocking/recommended/nit), review report format, per-language checklists | [optional/review-output/](optional/review-output/) |
+| **roadmap-building** | Generate phased implementation roadmaps with ADRs, epics, tickets, risk register, and roadmap tracker | [optional/roadmap-building/](optional/roadmap-building/) |
+| **roadmap-analysis** | Deep-dive roadmap analysis: expand initiatives, research, complexity, spikes, estimation, PDF export, team/financial planning | [optional/roadmap-analysis/](optional/roadmap-analysis/) |
 
 ---
 
@@ -187,6 +189,8 @@ Some skills may recommend reading other skills first:
 | `tech-stack-decisions` | `software-design` (optional) |
 | `code-conventions` | None |
 | `presentation` | None (standalone, uses exported diagrams) |
+| `roadmap-building` | `arch-analysis` or `architecture-synthesis` (recommended); `togaf` (optional for Phase E/F integration) |
+| `roadmap-analysis` | `roadmap-building` (recommended; can also parse external roadmaps) |
 
 ---
 
@@ -207,6 +211,8 @@ Some skills can be explicitly invoked during a session:
 | `structurizr` | `"Create C4 model"` | Architecture modeling with Structurizr DSL |
 | `togaf` | `"Apply TOGAF"` / `"Create architecture vision"` | Enterprise architecture using ADM |
 | `presentation` | `"Generate presentation"` / `"Create slides"` | Markdown to PPTX/PDF slide generation |
+| `roadmap-building` | `"Build implementation roadmap"` / `"Build roadmap with epics and tickets"` | Generate phased roadmap with ADRs, epics, tickets, and tracker |
+| `roadmap-analysis` | `"Analyze roadmap complexity"` / `"Expand initiative [N]"` / `"Plan team for roadmap"` | 7-mode deep analysis of an existing roadmap |
 
 See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
 

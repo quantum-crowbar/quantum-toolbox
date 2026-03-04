@@ -160,6 +160,34 @@ skills:
       - "Create slides"
     status: complete
 
+  # ── Roadmap Skills ──────────────────────────────────────────────────
+  - name: roadmap-building
+    tier: optional
+    path: optional/roadmap-building/
+    description: Generate phased implementation roadmaps with ADRs, epics, tickets, risk register, and roadmap tracker
+    dependencies: [arch-analysis, architecture-synthesis]
+    invocations:
+      - "Build implementation roadmap"
+      - "Generate roadmap from target architecture"
+      - "Build roadmap with epics and tickets"
+      - "Generate roadmap tracker"
+    status: complete
+
+  - name: roadmap-analysis
+    tier: optional
+    path: optional/roadmap-analysis/
+    description: 7-mode deep-dive roadmap analysis — expand, research, complexity, spikes, estimation, PDF export, team/financial planning
+    dependencies: [roadmap-building]
+    invocations:
+      - "Analyze roadmap complexity"
+      - "Expand initiative"
+      - "Identify research needs"
+      - "Find what needs a spike"
+      - "Estimate effort for the roadmap"
+      - "Plan team for roadmap"
+      - "Export roadmap to PDF"
+    status: complete
+
   # ── Output Adapters ─────────────────────────────────────────────────
   - name: analysis-outputs
     tier: optional
