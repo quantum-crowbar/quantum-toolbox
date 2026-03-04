@@ -10,6 +10,8 @@
 
 Current project context and state information for AI agents.
 
+> **Skill-first rule**: Before starting any task, check `.quantum-toolbox/skills/_index.md` for a skill that covers the work. Load and follow the matching skill — it encodes the preferred approach, templates, and quality bar.
+
 ## Project Overview
 
 <!-- Brief description of what this project is -->

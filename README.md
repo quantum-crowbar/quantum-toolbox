@@ -29,7 +29,7 @@ It ships as a git submodule your agent reads at session start. No plugins, no AP
 
 Copy and paste this prompt to your AI assistant:
 
-> Add the AI architect toolbox by adding a git submodule from `https://github.com/quantum-crowbar/quantum-toolbox.git` into `.ai-toolkit`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
+> Add the AI architect toolbox by adding a git submodule from `https://github.com/quantum-crowbar/quantum-toolbox.git` into `.quantum-toolbox`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
 
 This will:
 1. Add the toolbox as a submodule

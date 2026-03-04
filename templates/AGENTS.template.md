@@ -2,7 +2,7 @@
 
 > **Instructions**: Copy this file to your project root as `AGENTS.md` and customize the sections below.
 > Remove all `<!-- instruction -->` comments after customizing.
-> Replace `.ai-toolkit` with your actual submodule directory name.
+> Replace `.quantum-toolbox` with your actual submodule directory name.
 
 ---
 
@@ -17,8 +17,11 @@ This document provides instructions for AI coding agents working on this project
 
 1. Read this file first
 2. Read project context: [CONTEXT.md](./CONTEXT.md)
-3. Read core instructions: [.ai-toolkit/core/instructions.md](.ai-toolkit/core/instructions.md)
-4. Read workflows: [.ai-toolkit/core/workflows.md](.ai-toolkit/core/workflows.md)
+3. Read core instructions: [.quantum-toolbox/core/instructions.md](.quantum-toolbox/core/instructions.md)
+4. Read workflows: [.quantum-toolbox/core/workflows.md](.quantum-toolbox/core/workflows.md)
+5. Read skill catalog: [.quantum-toolbox/skills/_index.md](.quantum-toolbox/skills/_index.md)
+
+> **Before starting any task**, check `.quantum-toolbox/skills/_index.md` for a matching skill. If one exists, load and follow it — skills encode the preferred approach, templates, and quality bar for that type of work.
 
 ## Project-Specific Guidelines
 
@@ -46,27 +49,27 @@ This document provides instructions for AI coding agents working on this project
 
 The following optional skills are enabled for this project:
 
-- [ ] `software-design` - [.ai-toolkit/skills/optional/software-design/](.ai-toolkit/skills/optional/software-design/)
-- [ ] `tech-stack-decisions` - [.ai-toolkit/skills/optional/tech-stack-decisions/](.ai-toolkit/skills/optional/tech-stack-decisions/)
-- [ ] `code-conventions` - [.ai-toolkit/skills/optional/code-conventions/](.ai-toolkit/skills/optional/code-conventions/)
+- [ ] `software-design` - [.quantum-toolbox/skills/optional/software-design/](.quantum-toolbox/skills/optional/software-design/)
+- [ ] `tech-stack-decisions` - [.quantum-toolbox/skills/optional/tech-stack-decisions/](.quantum-toolbox/skills/optional/tech-stack-decisions/)
+- [ ] `code-conventions` - [.quantum-toolbox/skills/optional/code-conventions/](.quantum-toolbox/skills/optional/code-conventions/)
 
 <!-- Check the skills you want to enable and remove the unchecked ones -->
 
 ## Core Documentation
 
-These files are always loaded from the `.ai-toolkit` submodule:
+These files are always loaded from the `.quantum-toolbox` submodule:
 
 | Document | Purpose | Path |
 |----------|---------|------|
-| Instructions | Coding rules, bash safety | [core/instructions.md](.ai-toolkit/core/instructions.md) |
-| Workflows | Development processes | [core/workflows.md](.ai-toolkit/core/workflows.md) |
-| Glossary | Standard terminology | [core/glossary.md](.ai-toolkit/core/glossary.md) |
-| Skills Index | Available skills | [skills/_index.md](.ai-toolkit/skills/_index.md) |
+| Instructions | Coding rules, bash safety | [core/instructions.md](.quantum-toolbox/core/instructions.md) |
+| Workflows | Development processes | [core/workflows.md](.quantum-toolbox/core/workflows.md) |
+| Glossary | Standard terminology | [core/glossary.md](.quantum-toolbox/core/glossary.md) |
+| Skills Index | Available skills | [skills/_index.md](.quantum-toolbox/skills/_index.md) |
 
 ## Templates
 
-- [Commit Message Format](.ai-toolkit/templates/COMMIT.md)
-- [Pull Request Template](.ai-toolkit/templates/PULL_REQUEST.md)
+- [Commit Message Format](.quantum-toolbox/templates/COMMIT.md)
+- [Pull Request Template](.quantum-toolbox/templates/PULL_REQUEST.md)
 
 ## When to Update This File
 
@@ -93,8 +96,11 @@ This document provides instructions for AI coding agents working on the Acme E-c
 
 1. Read this file first
 2. Read project context: [CONTEXT.md](./CONTEXT.md)
-3. Read core instructions: [.ai-toolkit/core/instructions.md](.ai-toolkit/core/instructions.md)
-4. Read workflows: [.ai-toolkit/core/workflows.md](.ai-toolkit/core/workflows.md)
+3. Read core instructions: [.quantum-toolbox/core/instructions.md](.quantum-toolbox/core/instructions.md)
+4. Read workflows: [.quantum-toolbox/core/workflows.md](.quantum-toolbox/core/workflows.md)
+5. Read skill catalog: [.quantum-toolbox/skills/_index.md](.quantum-toolbox/skills/_index.md)
+
+> **Before starting any task**, check `.quantum-toolbox/skills/_index.md` for a matching skill. If one exists, load and follow it.
 
 ## Project-Specific Guidelines
 
@@ -122,6 +128,6 @@ This document provides instructions for AI coding agents working on the Acme E-c
 
 ## Enabled Skills
 
-- [x] `software-design` - [.ai-toolkit/skills/optional/software-design/](.ai-toolkit/skills/optional/software-design/)
-- [x] `code-conventions` - [.ai-toolkit/skills/optional/code-conventions/](.ai-toolkit/skills/optional/code-conventions/)
+- [x] `software-design` - [.quantum-toolbox/skills/optional/software-design/](.quantum-toolbox/skills/optional/software-design/)
+- [x] `code-conventions` - [.quantum-toolbox/skills/optional/code-conventions/](.quantum-toolbox/skills/optional/code-conventions/)
 ```

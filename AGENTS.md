@@ -51,11 +51,11 @@
 ## Quick Start (project setup)
 
 ```bash
-git submodule add <this-repo-url> .ai-toolkit
-cp .ai-toolkit/templates/AGENTS.template.md ./AGENTS.md
-cp .ai-toolkit/templates/CONTEXT.template.md ./CONTEXT.md
+git submodule add <this-repo-url> .quantum-toolbox
+cp .quantum-toolbox/templates/AGENTS.template.md ./AGENTS.md
+cp .quantum-toolbox/templates/CONTEXT.template.md ./CONTEXT.md
 # Optional: customize the architectural mental model for your project
-cp .ai-toolkit/templates/architecture-thinking.override.template.md ./architecture-thinking.local.md
+cp .quantum-toolbox/templates/architecture-thinking.override.template.md ./architecture-thinking.local.md
 ```
 
 Enable optional skills by checking them in your project's `AGENTS.md`.
