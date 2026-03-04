@@ -2,6 +2,9 @@
 _site/
 .venv/
 
+# Local Claude settings (may contain user-specific paths)
+.claude/settings.local.json
+
 # Generated presentations
 docs/presentations/*.pptx
 docs/presentations/*.pdf
