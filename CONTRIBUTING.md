@@ -13,6 +13,7 @@ Thank you for your interest in contributing to the AI Agent Toolbox. This guide 
 - [Modifying Existing Skills](#modifying-existing-skills)
 - [Pull Request Process](#pull-request-process)
 - [Commit Conventions](#commit-conventions)
+- [Release Checklist](#release-checklist)
 - [Review Process](#review-process)
 
 ---
@@ -226,6 +227,50 @@ Common types for this repo:
 - `docs(core)`: Core documentation changes
 - `refactor(core)`: Restructuring without content change
 - `feat(mental-model)`: Mental model changes
+
+---
+
+## Release Checklist
+
+Follow these steps when cutting a new version. Maintainers only.
+
+### 1. Determine Version
+
+| Change type | Bump |
+|-------------|------|
+| Breaking change to mental model, skill interfaces, or reading order | **Major** |
+| New skill, new feature, new output adapter | **Minor** |
+| Bug fix, documentation improvement, token optimisation | **Patch** |
+
+### 2. Write Release Notes in CHANGELOG.md
+
+Move `[Unreleased]` content to a new `[X.Y.Z] - YYYY-MM-DD` section. Use this structure:
+
+1. **New Skills** — one paragraph per skill, what it does and what it produces
+2. **Quick Start & Onboarding** — any changes to setup, templates, or agent instructions
+3. **Core Tooling & Conventions** — structural changes, audience tags, workflow updates
+4. **Improvements & Optimisations** — concrete numbers where possible (token delta, lines removed)
+
+### 3. Update the README "What's new" Link
+
+At the top of `README.md`, update the `What's new in vX.Y.Z` link to point to the new version's CHANGELOG anchor:
+
+```markdown
+<p align="center"><a href="CHANGELOG.md#XYZ---YYYY-MM-DD">What's new in vX.Y.Z</a></p>
+```
+
+The anchor format GitHub generates from `## [X.Y.Z] - YYYY-MM-DD` is `#xyz---yyyy-mm-dd` (lowercase, dots and spaces become hyphens).
+
+**This step is mandatory on every release.** The README link is the first thing users see — it must point to the current version.
+
+### 4. Commit, Tag, Push
+
+```bash
+git add CHANGELOG.md README.md
+git commit -m "chore: release vX.Y.Z"
+git tag vX.Y.Z
+git push && git push origin vX.Y.Z
+```
 
 ---
 
