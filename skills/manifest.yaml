@@ -77,6 +77,16 @@ skills:
       - "Analyze system fitness"
     status: complete
 
+  - name: analysis-tracking
+    tier: optional
+    path: optional/analysis-tracking/
+    description: Track analyzed commits, detect staleness, enable incremental updates
+    dependencies: []
+    invocations:
+      - "Set up analysis tracking"
+      - "Check analysis staleness"
+    status: complete
+
   # ── Architecture & Modeling Skills ───────────────────────────────────
   - name: structurizr
     tier: optional
