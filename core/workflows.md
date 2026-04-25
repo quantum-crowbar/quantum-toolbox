@@ -376,9 +376,26 @@ Full documentation: [skills/core/bootstrap/](../skills/core/bootstrap/)
 ### Summary Workflow
 
 ```
+FIRST — detect mode:
+  IF .quantum-toolbox/ AND AGENTS.md both exist:
+    MODE A: session start (toolkit already set up)
+    → read env → print status block → "Ready. What would you like to work on?"
+    → DO NOT offer metarepo setup
+
+  ELSE:
+    MODE B: first-time bootstrap
+    → read env → print status block → present two paths (below)
+
+--- MODE A ---
+1. Read AGENTS.md + toolkit files
+2. Report: toolkit version, domain, analysis status, last session
+3. "Ready. What would you like to work on?"
+   (Offer /help and /skills as starting points)
+
+--- MODE B ---
 1. Read AGENTS.md + toolkit core files (instructions.md, architecture-thinking.md)
 2. Introduce self: name the toolkit, version, what it is
-3. Check for analysis-manifest.json → if found, report staleness summary
+3. Check for analysis-manifest.json — if found, report staleness summary
 4. Present two paths:
 
    PATH A — DIY (run skills yourself)

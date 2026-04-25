@@ -30,7 +30,16 @@ Bootstrap closes that gap. It reads the environment, introduces itself, reports 
 
 ## What Bootstrap Does
 
-### Phase 1 — Read the environment
+Bootstrap detects which mode it's in before doing anything else:
+
+| Condition | Mode | Behaviour |
+|-----------|------|-----------|
+| `.quantum-toolbox/` + `AGENTS.md` both exist | **Session Start** | Read env → status block → "Ready. What would you like to work on?" |
+| Either missing | **First-Time Bootstrap** | Read env → status block → offer two paths (DIY or metarepo setup) |
+
+### Mode A — Session Start (already bootstrapped)
+
+The common case. User opens a session in a workspace that already has the toolkit set up.
 
 1. Read `AGENTS.md` (project root) — understand what skills are enabled, what domain this is
 2. Read `.quantum-toolbox/skills/manifest.yaml` — get toolkit version
@@ -39,7 +48,7 @@ Bootstrap closes that gap. It reads the environment, introduces itself, reports 
 
 ### Phase 2 — Introduce
 
-Greet the user with a concise status block:
+Greet the user with a concise status block (same in both modes):
 
 ```
 quantum-toolbox v{version} — ready
@@ -49,7 +58,19 @@ Analysis:    {timestamp + staleness summary, or "not run yet"}
 Last session: {most recent update-log date, or "none found"}
 ```
 
-### Phase 3 — Offer two paths
+### Phase 2b — Session Ready (Mode A only)
+
+```
+Ready. What would you like to work on?
+
+  /skills   Explore available skills
+  /help     See enabled skills and commands
+  Or just tell me what you'd like to do.
+```
+
+Stop here. Do not offer metarepo setup — it's already done.
+
+### Phase 3 — Offer two paths (Mode B only)
 
 ```
 How would you like to work?

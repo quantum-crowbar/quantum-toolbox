@@ -8,9 +8,30 @@
 
 Triggers: `/start` | `"Bootstrap this repo"` | `"Get started"` | `"Introduce yourself"` | `"Set up the toolkit"` | first message where no context is established
 
+### Mode Detection (run first — before anything else)
+
+```
+Check for .quantum-toolbox/ directory AND AGENTS.md in project root
+
+IF both exist:
+  → MODE A: Session Start (toolkit already bootstrapped)
+  → Skip metarepo setup entirely
+  → Run Phase 1 → Phase 2 → done
+
+IF either is missing:
+  → MODE B: First-Time Bootstrap
+  → Run Phase 1 → Phase 2 → Phase 3 → Phase 4B (guided setup)
+```
+
+**Mode A** is the common case — the user just opened a session in a workspace that already has the toolkit. Greet, orient, report status, get to work.
+
+**Mode B** is first-time setup — the user just installed the toolkit or is starting from scratch.
+
 ---
 
 ## Phase 1: Read the Environment
+
+> Runs in both Mode A and Mode B.
 
 ### 1.1 — Toolkit version
 
@@ -59,6 +80,8 @@ If not found:
 
 ## Phase 2: Introduce
 
+> Runs in both Mode A and Mode B. Output is the same — only Phase 3 differs.
+
 Present a compact status block. Do NOT use lengthy prose — one screen, scannable:
 
 ```
@@ -80,7 +103,23 @@ If toolkit version differs from manifest's `toolboxVersion`:
 
 ---
 
-## Phase 3: Offer Two Paths
+## Phase 2b: Session Ready (Mode A only)
+
+After the status block, if the toolkit is already bootstrapped:
+
+```
+Ready. What would you like to work on?
+
+  /skills   Explore available skills
+  /help     See enabled skills and commands
+  Or just tell me what you'd like to do.
+```
+
+Do NOT offer metarepo setup — that's already done. Do NOT run Phase 3/4.
+
+---
+
+## Phase 3: Offer Two Paths (Mode B only)
 
 Present the choice clearly. Do not elaborate further until the user picks:
 
