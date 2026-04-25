@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Tracks which code repository commits were analyzed to generate architecture docs and coding profiles. Also tracks which quantum-toolbox version was used, enabling incremental view updates after toolkit upgrades.",
-  "toolboxVersion": "2.6.2",
+  "toolboxVersion": "TOOLKIT_VERSION",
   "lastAnalysis": {
     "date": "2026-03-03",
     "repositories": {
@@ -24,7 +24,7 @@
     "artifacts": {
       "architecture-docs": {
         "path": "docs/architecture-docs/",
-        "toolboxVersion": "2.6.2",
+        "toolboxVersion": "TOOLKIT_VERSION",
         "sourceCommits": [
           "a1b2c3d",
           "e4f5g6h",
@@ -54,14 +54,14 @@
       "coding-profiles": {
         "typescript-api-service.md": {
           "path": ".ai-coding-skills/typescript-api-service.md",
-          "toolboxVersion": "2.6.2",
+          "toolboxVersion": "TOOLKIT_VERSION",
           "sourceRepo": "api-service",
           "sourceCommit": "a1b2c3d",
           "description": "Backend service coding conventions"
         },
         "typescript-worker-service.md": {
           "path": ".ai-coding-skills/typescript-worker-service.md",
-          "toolboxVersion": "2.6.2",
+          "toolboxVersion": "TOOLKIT_VERSION",
           "sourceRepo": "worker-service",
           "sourceCommit": "e4f5g6h",
           "description": "Worker service coding conventions"
@@ -73,7 +73,7 @@
     {
       "date": "2026-03-03",
       "action": "Initial analysis",
-      "toolboxVersion": "2.6.2",
+      "toolboxVersion": "TOOLKIT_VERSION",
       "artifacts": [
         "architecture-docs",
         "coding-profiles"

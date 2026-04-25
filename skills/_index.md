@@ -105,9 +105,11 @@ Additional core docs (read when needed): core/workflows.md (~1,940), core/archit
 | arch-analysis | ~20,100 | security-analysis | ~20,100 |
 | architecture-synthesis | ~19,600 | fitness-functions | ~18,100 |
 | structurizr | ~15,600 | nonfunctional-analysis | ~12,700 |
-| code-conventions | ~8,500 | codebase-analysis | ~8,400 |
+| code-graph | ~8,200 | codebase-analysis | ~8,400 |
+| code-conventions | ~8,500 | analysis-tracking | ~7,700 |
 | software-design | ~7,300 | tech-stack-decisions | ~6,900 |
-| analysis-outputs | ~3,900 | togaf (index only) | ~2,300 |
+| update-logs | ~5,400 | analysis-outputs | ~3,900 |
+| togaf (index only) | ~2,300 | bootstrap | ~2,800 |
 | **TOGAF phases** | **~10K-24K each** | **TOGAF all phases** | **~154,500** |
 
 ### Context Window Planning

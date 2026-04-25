@@ -25,7 +25,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 MANIFEST="$REPO_ROOT/specs/analysis-manifest.json"
 CODE_DIR="$REPO_ROOT/code"
 TOOLBOX_MANIFEST="$REPO_ROOT/.quantum-toolbox/skills/manifest.yaml"
-TEMP_MANIFEST="/tmp/analysis-manifest-$$.json"
+TEMP_MANIFEST=$(mktemp /tmp/analysis-manifest-XXXXXX.json)
+trap 'rm -f "$TEMP_MANIFEST" "${TEMP_MANIFEST}.tmp"' EXIT
 
 print_header() {
   echo ""
@@ -167,14 +168,16 @@ update_manifest() {
   cp "$MANIFEST" "$TEMP_MANIFEST"
 
   # Update last analysis date and top-level toolboxVersion
-  jq ".lastAnalysis.date = \"$today\" | .toolboxVersion = \"$toolbox_version\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+  jq --arg date "$today" --arg tv "$toolbox_version" \
+    '.lastAnalysis.date = $date | .toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
   mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
 
   # Update repository commits
   for repo in "${!REPO_COMMITS[@]}"; do
     local commit="${REPO_COMMITS[$repo]}"
     if [ "$commit" != "NOT_CLONED" ]; then
-      jq ".lastAnalysis.repositories[\"$repo\"].commit = \"$commit\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+      jq --arg repo "$repo" --arg commit "$commit" \
+        '.lastAnalysis.repositories[$repo].commit = $commit' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
       mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
       print_ok "Updated $repo → $commit"
     fi
@@ -184,7 +187,8 @@ update_manifest() {
   if [ "$UPDATE_ARCH_DOCS" = true ]; then
     local all_commits
     all_commits=$(printf '%s\n' "${REPO_COMMITS[@]}" | grep -v "NOT_CLONED" | jq -R . | jq -s .)
-    jq ".lastAnalysis.artifacts.\"architecture-docs\".sourceCommits = $all_commits | .lastAnalysis.artifacts.\"architecture-docs\".toolboxVersion = \"$toolbox_version\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+    jq --argjson commits "$all_commits" --arg tv "$toolbox_version" \
+      '.lastAnalysis.artifacts."architecture-docs".sourceCommits = $commits | .lastAnalysis.artifacts."architecture-docs".toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
     mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
     print_ok "Updated architecture-docs sourceCommits + toolboxVersion"
   fi
@@ -193,10 +197,11 @@ update_manifest() {
   if [ "$UPDATE_CODING_PROFILES" = true ]; then
     for profile in $(jq -r '.lastAnalysis.artifacts."coding-profiles" | keys[]' "$MANIFEST" 2>/dev/null); do
       local repo
-      repo=$(jq -r ".lastAnalysis.artifacts.\"coding-profiles\".\"$profile\".sourceRepo" "$MANIFEST")
+      repo=$(jq -r --arg profile "$profile" '.lastAnalysis.artifacts."coding-profiles"[$profile].sourceRepo' "$MANIFEST")
       local commit="${REPO_COMMITS[$repo]:-NOT_CLONED}"
       if [ "$commit" != "NOT_CLONED" ]; then
-        jq ".lastAnalysis.artifacts.\"coding-profiles\".\"$profile\".sourceCommit = \"$commit\" | .lastAnalysis.artifacts.\"coding-profiles\".\"$profile\".toolboxVersion = \"$toolbox_version\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+        jq --arg profile "$profile" --arg commit "$commit" --arg tv "$toolbox_version" \
+          '.lastAnalysis.artifacts."coding-profiles"[$profile].sourceCommit = $commit | .lastAnalysis.artifacts."coding-profiles"[$profile].toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
         mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
       fi
     done
@@ -221,7 +226,7 @@ update_manifest() {
     --arg note "$UPDATE_NOTE" \
     '{date: $date, action: $action, toolboxVersion: $toolboxVersion, artifacts: $artifacts, note: $note}')
 
-  jq ".updateHistory += [$history_entry]" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+  jq --argjson entry "$history_entry" '.updateHistory += [$entry]' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
   mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
 
   # Write back to original file

@@ -43,7 +43,7 @@ Master tracking document for all skill development roadmaps.
 | | | | |
 | **--- ARCHITECTURE-DOCS VIEWS ---** | | | |
 | View 08: SRE & Reliability Analysis | - | � Complete | High |
-| View 09: Code Graph | Phase 1B | 🟡 In Progress | High |
+| View 09: Code Graph | Phase 1 | 🟢 Complete | High |
 | View 10: Deployment Architecture | - | ⚪ Planned | High |
 | View 11: Security Posture (Code-Layer) | - | ⚪ Planned | High |
 | View 12: Scalability & Capacity | - | ⚪ Planned | Medium |
