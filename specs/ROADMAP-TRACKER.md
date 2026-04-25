@@ -58,6 +58,10 @@ Master tracking document for all skill development roadmaps.
 | Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
 | Phase 2: SQLite export path | - | ⚪ Planned | Medium |
 | | | | |
+| **--- UPDATE-LOGS SKILL ---** | | | |
+| Skill files (README, workflows, templates, examples) | - | 🟢 Complete | High |
+| Registered in manifest.yaml + _index.md | - | 🟢 Complete | High |
+| | | | |
 | **--- ANALYSIS TRACKING ---** | | | |
 | View-staleness detection (toolkit version tracking) | - | ⚪ Planned | High |
 | "Update analysis views" command | - | ⚪ Planned | High |

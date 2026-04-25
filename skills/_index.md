@@ -52,6 +52,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **roadmap-analysis** | Deep-dive roadmap analysis: expand initiatives, research, complexity, spikes, estimation, PDF export, team/financial planning | [optional/roadmap-analysis/](optional/roadmap-analysis/) |
 | **coding-profile** | Generate per-stack coding skill files from real repository code — conventions, testing, error handling, API design | [optional/coding-profile/](optional/coding-profile/) |
 | **code-graph** | Function-level call graph: hot paths, dead code, entry point tracing, cycle detection. Adaptive YAML/SQLite backend | [optional/code-graph/](optional/code-graph/) |
+| **update-logs** | Structured audit trail for agentic multi-file changes — what changed, why, what was read, what is still open | [optional/update-logs/](optional/update-logs/) |
 
 ---
 
@@ -194,6 +195,8 @@ Some skills may recommend reading other skills first:
 | `roadmap-building` | `arch-analysis` or `architecture-synthesis` (recommended); `togaf` (optional for Phase E/F integration) |
 | `roadmap-analysis` | `roadmap-building` (recommended; can also parse external roadmaps) |
 | `coding-profile` | None (reads source directly; `codebase-analysis` output can supplement) |
+| `code-graph` | `codebase-analysis` (required — provides source model); `arch-analysis` (optional, for View 09 output) |
+| `update-logs` | None (standalone; recommended alongside any analysis skill that modifies docs) |
 
 ---
 
@@ -217,6 +220,8 @@ Some skills can be explicitly invoked during a session:
 | `roadmap-building` | `"Build implementation roadmap"` / `"Build roadmap with epics and tickets"` | Generate phased roadmap with ADRs, epics, tickets, and tracker |
 | `roadmap-analysis` | `"Analyze roadmap complexity"` / `"Expand initiative [N]"` / `"Plan team for roadmap"` | 7-mode deep analysis of an existing roadmap |
 | `coding-profile` | `"Create coding profile"` / `"Profile this directory"` / `"Profile repos: ..."` | Generate per-stack coding skill files from real repo code |
+| `code-graph` | `"Build code graph"` / `"Trace call graph for <entry point>"` / `"Find hot paths"` | Function-level call graph analysis with adaptive YAML/SQLite backend |
+| `update-logs` | `"Create update log"` / `"Write update log"` | Structured audit trail for the current session's changes |
 
 See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
 

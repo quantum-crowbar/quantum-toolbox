@@ -100,6 +100,17 @@ skills:
       - "Check analysis staleness"
     status: complete
 
+  - name: update-logs
+    tier: optional
+    path: optional/update-logs/
+    description: Structured audit trail for agentic multi-file changes — what changed, why, what was read, what is still open. Produced after every incremental analysis or external data fetch.
+    dependencies: []
+    invocations:
+      - "Create update log"
+      - "Write update log"
+      - "Document this session"
+    status: complete
+
   # ── Architecture & Modeling Skills ───────────────────────────────────
   - name: structurizr
     tier: optional
