@@ -63,8 +63,8 @@ Master tracking document for all skill development roadmaps.
 | Registered in manifest.yaml + _index.md | - | 🟢 Complete | High |
 | | | | |
 | **--- ANALYSIS TRACKING ---** | | | |
-| View-staleness detection (toolkit version tracking) | - | ⚪ Planned | High |
-| "Update analysis views" command | - | ⚪ Planned | High |
+| View-staleness detection (toolkit version tracking) | - | 🟢 Complete | High |
+| "Update analysis views" command | - | 🟢 Complete | High |
 | | | | |
 | **--- OPEN-SOURCE READINESS ---** | | | |
 | Mental Model Override Mechanism | - | 🟢 Complete | High |

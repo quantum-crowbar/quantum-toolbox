@@ -15,8 +15,9 @@ When maintaining architecture documentation and coding profiles:
 
 This skill provides:
 1. **Manifest structure** — JSON schema to track analyzed commits and artifacts
-2. **Staleness detection** — Script to compare current vs. analyzed commits
-3. **Manifest updater** — Helper to update tracking after regenerating analysis
+2. **Toolkit version tracking** — Detect when quantum-toolbox was upgraded and new views are available
+3. **Staleness detection** — Script to compare current vs. analyzed commits
+4. **Manifest updater** — Helper to update tracking after regenerating analysis
 
 ---
 
@@ -51,27 +52,40 @@ Which commit SHA was analyzed for each source repository:
 }
 ```
 
-### 2. Generated Artifacts
-Which artifacts were generated from which commits:
+### 2. Toolkit Version (per artifact)
+Which quantum-toolbox version was used to generate each artifact:
 ```json
 {
-  "artifacts": {
-    "architecture-docs": {
-      "path": "docs/architecture/",
-      "sourceCommits": ["a1b2c3d", "e4f5g6h"],
-      "files": ["index.md", "api-spec.md"]
-    },
-    "coding-profiles": {
-      "typescript-api.md": {
-        "sourceRepo": "api-service",
-        "sourceCommit": "a1b2c3d"
+  "toolboxVersion": "2.6.2",
+  "lastAnalysis": {
+    "artifacts": {
+      "architecture-docs": {
+        "toolboxVersion": "2.6.2",
+        "views": ["01-technology-manifest", "02-interface-specification", "..."]
       }
     }
   }
 }
 ```
 
-### 3. Update History
+This enables detecting when a toolkit upgrade brings new views that weren't generated in a prior analysis. The check script compares `.toolboxVersion` in the manifest against the current version in `.quantum-toolbox/skills/manifest.yaml`.
+
+### 3. Generated Artifacts
+Which artifacts were generated from which commits:
+```json
+{
+  "artifacts": {
+    "architecture-docs": {
+      "path": "docs/architecture/",
+      "toolboxVersion": "2.6.2",
+      "sourceCommits": ["a1b2c3d", "e4f5g6h"],
+      "views": ["01-technology-manifest", "..."]
+    }
+  }
+}
+```
+
+### 4. Update History
 Log of analysis updates:
 ```json
 {
@@ -79,6 +93,7 @@ Log of analysis updates:
     {
       "date": "2026-03-03",
       "action": "Initial analysis",
+      "toolboxVersion": "2.6.2",
       "artifacts": ["architecture-docs", "coding-profiles"],
       "updateLog": "docs/update-logs/2026-03-03-initial-full-scan.md",
       "note": "Created from initial codebase scan"
@@ -123,6 +138,25 @@ Based on staleness report:
 - **Minor changes** (bug fixes, small features): Usually OK to skip
 - **Significant changes** (new patterns, major refactors): Re-run analysis
 - **Specific repos**: Regenerate only affected analysis files
+
+### 3b. Update Analysis Views (toolkit upgrade path)
+
+If the check reports a **toolkit version change** — quantum-toolbox was updated in `.quantum-toolbox/` — you may have new views available that weren't generated with the prior version.
+
+**Trigger phrase:** `"Update analysis views"`
+
+**Agent workflow:**
+
+1. Read `specs/analysis-manifest.json` — note `lastAnalysis.artifacts["architecture-docs"].toolboxVersion` and `views[]`
+2. Read `.quantum-toolbox/skills/optional/analysis-outputs/architecture-docs/README.md` — note all views the current toolkit supports
+3. Diff: which views are in the toolkit but absent from the manifest's `views[]` list?
+4. For each missing view: generate it from the **existing analysis model** in memory (no re-cloning or re-scanning of source code)
+5. Write the new view files to `docs/architecture-docs/analysis/`
+6. Update `manifest.json`: add new view IDs to `views[]`, update `toolboxVersion`
+7. Create an update log in `docs/update-logs/` documenting which views were added
+8. Commit everything together
+
+**Key principle:** If the analysis model is still current (source code hasn't changed significantly), new views can be generated without touching the source repos. The model already exists in the prior analysis docs — the agent reads those and synthesises the new view format.
 
 ### 4. Create Update Log
 
@@ -191,6 +225,7 @@ The `updateHistory` entry must include a `updateLog` field pointing to the file 
 {
   "date": "YYYY-MM-DD",
   "action": "Incremental update — <topic>",
+  "toolboxVersion": "2.6.2",
   "artifacts": ["architecture-docs"],
   "repos": ["repo-a", "repo-b"],
   "updateLog": "docs/update-logs/YYYY-MM-DD-<topic-slug>.md",
@@ -297,6 +332,7 @@ Track analysis for multiple branches:
 3. **Create an update log on every analysis pass** — Before committing, write `docs/update-logs/YYYY-MM-DD-<topic>.md`; link it in the manifest `updateHistory[].updateLog` field
 4. **Document update decisions** — Use `note` field in update history + update log trigger field
 5. **Incremental updates** — Don't always regenerate everything
+6. **After toolkit upgrade** — Run `bash scripts/check-analysis-status.sh` first; if version changed, use `"Update analysis views"` to generate only the new views without re-scanning code
 6. **Automate checks** — Run staleness check in CI for visibility
 
 ---
