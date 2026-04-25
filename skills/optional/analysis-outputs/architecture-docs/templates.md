@@ -46,6 +46,19 @@ Templates for generating architecture documentation from analysis model.
 | [Dependency Health](analysis/05-dependency-health.md) | ✅ | Security and maintenance status |
 | [Data Flow Map](analysis/06-data-flow-map.md) | ✅ | Data lifecycle and movement |
 | [Error Handling](analysis/07-error-handling.md) | ✅ | Error patterns and recovery |
+| [SRE & Reliability](analysis/08-sre-reliability.md) | ✅ | Observability, reliability patterns, SLO readiness |
+| [Code Graph](analysis/09-code-graph.md) | {code_graph active ? ✅ : ⬜ requires code-graph skill} | Call graph, dead code, hotspots |
+
+---
+
+## Reports
+
+| Report | Status | Description |
+|--------|--------|-------------|
+| [Findings Summary](reports/findings-summary.md) | {generated last, after all views} | Aggregated findings, priority action list |
+| [Entry Point Map](reports/entry-point-map.md) | {code_graph active ? ✅ : ⬜ requires code-graph} | All entry points traced to leaves |
+| [Dead Code](reports/dead-code.md) | {code_graph active ? ✅ : ⬜ requires code-graph} | Unreachable functions inventory |
+| [SRE Hot Paths](reports/sre-hot-paths.md) | {code_graph + sre active ? ✅ : ⬜ requires code-graph + view 08} | Critical call chains with SRE annotations |
 
 ---
 

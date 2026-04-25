@@ -58,6 +58,19 @@ skills:
       - "Analyze code quality"
     status: complete
 
+  - name: code-graph
+    tier: optional
+    path: optional/code-graph/
+    description: Function-level call graph analysis with adaptive YAML/SQLite backend — hot paths, dead code, entry point tracing, cycle detection
+    dependencies: [codebase-analysis]
+    invocations:
+      - "Analyze code graph"
+      - "Build call graph"
+      - "Find dead code"
+      - "Trace entry points"
+      - "Show me hot paths"
+    status: planned
+
   - name: architecture-synthesis
     tier: optional
     path: optional/architecture-synthesis/

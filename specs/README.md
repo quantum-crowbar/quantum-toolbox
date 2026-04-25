@@ -18,6 +18,7 @@ This directory contains developer specifications for AI-related tooling and proc
 | [workflow-system-spec.md](workflow-system-spec.md) | Workflow structure, patterns, and extension guidelines |
 | [codebase-analysis-refactor-spec.md](codebase-analysis-refactor-spec.md) | Shared analysis engine + output adapter pattern |
 | [security-analysis-skill-spec.md](security-analysis-skill-spec.md) | Security posture + compliance frameworks |
+| [code-graph-skill-spec.md](code-graph-skill-spec.md) | Function-level call graph analysis with adaptive YAML/SQLite backend |
 | [structurizr-skills-spec.md](structurizr-skills-spec.md) | C4 authoring + export adapters |
 | [roadmap-skills-spec.md](roadmap-skills-spec.md) | **NEW**: Roadmap building and analysis capabilities |
 | [output-directories-spec.md](output-directories-spec.md) | Default output directory conventions |

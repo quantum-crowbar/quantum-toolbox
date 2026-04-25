@@ -39,6 +39,29 @@ Master tracking document for all skill development roadmaps.
 | Roadmap Skills Documentation | Phase 3 | 🟢 Complete | Low |
 | Coding Profile Skill | - | 🟢 Complete | High |
 | | | | |
+| **--- v3.0 ---** | | | |
+| | | | |
+| **--- ARCHITECTURE-DOCS VIEWS ---** | | | |
+| View 08: SRE & Reliability Analysis | - | 🟡 In Progress | High |
+| View 09: Code Graph | Phase 1B | 🟡 In Progress | High |
+| View 10: Deployment Architecture | - | ⚪ Planned | High |
+| View 11: Security Posture (Code-Layer) | - | ⚪ Planned | High |
+| View 12: Scalability & Capacity | - | ⚪ Planned | Medium |
+| View 13: Developer Experience (DX) | - | ⚪ Planned | Medium |
+| View 14: API Contract & Versioning | - | ⚪ Planned | Medium |
+| View 15: Cost Architecture | - | ⚪ Planned | Low |
+| Architecture-Docs Reports Section | - | 🟡 In Progress | High |
+| | | | |
+| **--- CODE-GRAPH SKILL ---** | | | |
+| Phase 1A: code_graph model section spec | - | 🟢 Complete | High |
+| Phase 1B: Skill files (README, workflows, templates, checklist) | - | 🟢 Complete | High |
+| Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
+| Phase 2: SQLite export path | - | ⚪ Planned | Medium |
+| | | | |
+| **--- ANALYSIS TRACKING ---** | | | |
+| View-staleness detection (toolkit version tracking) | - | ⚪ Planned | High |
+| "Update analysis views" command | - | ⚪ Planned | High |
+| | | | |
 | **--- OPEN-SOURCE READINESS ---** | | | |
 | Mental Model Override Mechanism | - | 🟢 Complete | High |
 | Mental Model Full Swap Mechanism | - | ⚪ Planned | Medium |

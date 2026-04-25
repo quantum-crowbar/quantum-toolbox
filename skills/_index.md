@@ -51,6 +51,7 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **roadmap-building** | Generate phased implementation roadmaps with ADRs, epics, tickets, risk register, and roadmap tracker | [optional/roadmap-building/](optional/roadmap-building/) |
 | **roadmap-analysis** | Deep-dive roadmap analysis: expand initiatives, research, complexity, spikes, estimation, PDF export, team/financial planning | [optional/roadmap-analysis/](optional/roadmap-analysis/) |
 | **coding-profile** | Generate per-stack coding skill files from real repository code — conventions, testing, error handling, API design | [optional/coding-profile/](optional/coding-profile/) |
+| **code-graph** | Function-level call graph: hot paths, dead code, entry point tracing, cycle detection. Adaptive YAML/SQLite backend | [optional/code-graph/](optional/code-graph/) |
 
 ---
 

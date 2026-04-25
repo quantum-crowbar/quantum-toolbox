@@ -844,16 +844,18 @@ After analysis is complete:
 
 ```
 {docs-directory}/
-└── architecture-docs/
-    ├── index.md                              # Main entry, links to all reports
-    └── analysis/
-        ├── 01-technology-manifest.md         # Complete
-        ├── 02-interface-specification.md     # Complete
-        ├── 03-architecture-diagrams.md       # Complete
-        ├── 04-documentation-audit.md         # Complete
-        ├── 05-dependency-health.md           # Complete
-        ├── 06-data-flow-map.md               # Complete
-        └── 07-error-handling.md              # Complete
+├── architecture-docs/
+│   ├── index.md                              # Main entry, links to all reports
+│   └── analysis/
+│       ├── 01-technology-manifest.md         # Complete
+│       ├── 02-interface-specification.md     # Complete
+│       ├── 03-architecture-diagrams.md       # Complete
+│       ├── 04-documentation-audit.md         # Complete
+│       ├── 05-dependency-health.md           # Complete
+│       ├── 06-data-flow-map.md               # Complete
+│       └── 07-error-handling.md              # Complete
+└── update-logs/
+    └── YYYY-MM-DD-<topic-slug>.md        # Created last (see below)
 ```
 
 ### Deliverable Checklist
@@ -885,3 +887,79 @@ Update `index.md` status for each completed section:
 - [ ] Index.md updated with correct status for each document
 - [ ] Executive summary added to index.md
 - [ ] All internal links verified working
+- [ ] **Update log created in `{docs-directory}/update-logs/`** (see below)
+- [ ] **`specs/analysis-manifest.json` updated** with current commit SHAs and new history entry
+
+---
+
+## Phase 9: Update Log
+
+**Goal**: Record what was analysed, why, and what changed. Runs on every analysis — both initial and incremental.
+
+### 9.1 Create the Update Log File
+
+Create `{docs-directory}/update-logs/YYYY-MM-DD-<topic-slug>.md` using this template:
+
+```markdown
+# Update: <short human-readable title>
+
+**Date**: YYYY-MM-DD
+**Changed by**: <name or agent>
+**Topic**: <tech stack / initiative slug, e.g. `drm-dream-events-gw` + ML 5.1>
+**Trigger**: <why this update ran — new repos cloned, stale analysis detected, new URLs, etc.>
+**Method**: quantum-toolbox `arch-analysis` skill
+
+---
+
+## Files Changed
+
+| File | Change |
+|------|--------|
+| `docs/architecture-docs/index.md` | ... |
+| `docs/architecture-docs/analysis/01-technology-manifest.md` | ... |
+
+---
+
+## Key Findings
+
+- ...
+
+---
+
+## Repos Examined at HEAD
+
+| Repo | Key files read |
+|------|---------------|
+| `repo-name` | `file1`, `file2` |
+```
+
+**Naming rules**:
+- `YYYY-MM-DD` = analysis date
+- `<topic-slug>` = kebab-case key repos or initiative: `hero-product-search-gw`, `events-gw-ml51`, `initial-full-scan`
+- One file per session; incremental passes get their own file
+
+### 9.2 Update Analysis Manifest
+
+After creating the update log, update `specs/analysis-manifest.json`:
+
+1. Update `lastAnalysis.date` and per-repo `commit` SHAs
+2. Add entry to `updateHistory`:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "action": "Incremental update — <topic>",
+  "artifacts": ["architecture-docs"],
+  "repos": ["repo-a", "repo-b"],
+  "updateLog": "docs/update-logs/YYYY-MM-DD-<topic-slug>.md",
+  "note": "<one-line summary of what changed>"
+}
+```
+
+The `updateLog` field links the manifest history entry directly to the human-readable log.
+
+### 9.3 Staleness Check Connection
+
+After committing, the staleness check script (`scripts/check-analysis-status.sh`) uses `lastAnalysis.date` and per-repo commit SHAs from the manifest. **The update log is the human-readable companion to that machine-readable state** — it answers *why* the manifest changed, not just *what* changed.
+
+If staleness is detected in future runs, reference the most recent update log to understand the current analysis state before deciding which files need regeneration.

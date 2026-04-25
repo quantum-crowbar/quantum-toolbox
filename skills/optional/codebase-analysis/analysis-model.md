@@ -238,6 +238,7 @@ analysis_model:
 | 6: Dependency Health | `dependencies` | Package health, vulnerabilities |
 | 7: Error Handling | `error_handling` | Error patterns, gaps |
 | - | `quality`, `recommendations` | Cross-cutting findings |
+| *optional* | `code_graph` | Function call graph (code-graph skill only) |
 
 ---
 
@@ -310,6 +311,79 @@ extensions:
 ```
 
 Output adapters can define their own extension schemas.
+
+---
+
+## code_graph Section (code-graph skill)
+
+Populated by the optional `code-graph` skill. Not present in standard codebase analysis.
+
+```yaml
+analysis_model:
+  code_graph:
+    meta:
+      node_count: number          # Total function/method nodes extracted
+      edge_count: number          # Total call edges extracted
+      extraction_method: string   # static | ai | mixed
+      tool_used: string           # e.g. "ts-morph 21.0", "pyan3 0.7", "ai-only"
+      backend: string             # yaml | sqlite
+      generated: string           # ISO date
+
+    nodes:
+      - id: string                # Canonical: "file/path.ext:QualifiedName"
+        type: string              # function | method | constructor | lambda | handler
+        name: string              # Short function name
+        qualified_name: string    # Class.method or module.function
+        signature: string         # Full signature with types if available
+        location: string          # file/path.ext:line
+        fan_in: number            # Count of inbound call edges
+        fan_out: number           # Count of outbound call edges
+        cyclomatic_complexity: number
+        is_entry_point: boolean   # True if HTTP/CLI/event/scheduler handler
+        is_dead_code: boolean     # fan_in = 0 AND is_entry_point = false
+        extraction_method: string # static | ai
+        tags: string[]            # db | cache | external | auth | async | handler
+
+    edges:
+      - from: string              # Caller node id
+        to: string                # Callee node id
+        type: string              # call | import | implements | extends | instantiates
+        call_site: string         # file/path.ext:line of the call
+        is_dynamic: boolean       # True if resolved via interface/virtual dispatch
+        is_conditional: boolean   # True if inside if/try/catch
+        is_async: boolean         # True if async/await or Promise chain
+
+    views:
+      hot_nodes:                  # Pre-sorted by fan_in descending
+        - id: string
+          fan_in: number
+          fan_out: number
+          location: string
+
+      dead_code:                  # fan_in = 0 AND is_entry_point = false
+        - id: string
+          location: string
+          last_modified: string   # From git log, or "unknown"
+
+      entry_point_traces:         # Depth-first path from each entry point to leaves
+        - entry: string           # Entry point node id
+          entry_type: string      # http | cli | event | scheduler | export
+          path: string[]          # Ordered node ids from entry to leaf
+          external_calls: string[] # Nodes tagged 'external' in path
+          data_stores: string[]   # Nodes tagged 'db' or 'cache' in path
+
+      cycles:                     # Circular call chains
+        - nodes: string[]         # All node ids in the cycle
+
+      complexity_hotspots:        # cyclomatic_complexity > 10, sorted desc
+        - id: string
+          cyclomatic_complexity: number
+          location: string
+```
+
+> **SQLite backend**: When `meta.preferences.code_graph_backend = sqlite`, this section
+> is omitted from the YAML model and the graph is stored in `code_graph.sqlite` instead.
+> See `skills/optional/code-graph/workflows.md` for the SQLite schema.
 
 ---
 

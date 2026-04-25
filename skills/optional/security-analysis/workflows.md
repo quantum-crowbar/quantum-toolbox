@@ -765,3 +765,83 @@ Update `index.md` with:
 - [ ] Compliance reports generated (per selection)
 - [ ] All links verified working
 - [ ] Findings prioritized and actionable
+- [ ] **Update log created in `{docs-directory}/update-logs/`** (see below)
+- [ ] **`specs/analysis-manifest.json` updated** with current commit SHAs and new history entry
+
+---
+
+## Phase 8: Update Log
+
+**Goal**: Record what was analysed, what findings were added, and why. Runs on every security analysis — both initial and incremental.
+
+### 8.1 Create the Update Log File
+
+Create `{docs-directory}/update-logs/YYYY-MM-DD-<topic-slug>.md` using this template:
+
+```markdown
+# Update: <short human-readable title>
+
+**Date**: YYYY-MM-DD
+**Changed by**: <name or agent>
+**Topic**: <tech stack / initiative slug, e.g. `drm-dream-events-gw` + ML 5.1>
+**Trigger**: <why this update ran — new repos cloned, stale analysis detected, etc.>
+**Method**: quantum-toolbox `security-analysis` skill
+
+---
+
+## Files Changed
+
+| File | Change |
+|------|--------|
+| `docs/security-docs/index.md` | ... |
+| `docs/security-docs/analysis/01-security-surface.md` | ... |
+
+---
+
+## New Security Findings
+
+| ID | Severity | Finding | Code Location |
+|----|----------|---------|---------------|
+| SEC-XXX | High | ... | `src/...` |
+
+---
+
+## Repos Examined at HEAD
+
+| Repo | Key files read |
+|------|---------------|
+| `repo-name` | `file1`, `file2` |
+```
+
+**Naming rules**:
+- `YYYY-MM-DD` = analysis date
+- `<topic-slug>` = kebab-case key repos or initiative
+- If running alongside `arch-analysis` in the same session, use one shared update log file
+- One file per session; incremental passes on new repos get their own file
+
+### 8.2 Update Analysis Manifest
+
+After creating the update log, update `specs/analysis-manifest.json`:
+
+1. Update `lastAnalysis.date` and per-repo `commit` SHAs
+2. Add entry to `updateHistory`:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "action": "Security analysis — <topic>",
+  "artifacts": ["security-docs"],
+  "repos": ["repo-a", "repo-b"],
+  "updateLog": "docs/update-logs/YYYY-MM-DD-<topic-slug>.md",
+  "note": "<one-line summary: X new findings, key issue>"
+}
+```
+
+### 8.3 Connection to Staleness Detection
+
+The staleness check script (`scripts/check-analysis-status.sh`) compares current repo HEAD SHAs against those in the manifest. When stale repos are flagged:
+
+1. Read the most recent `updateLog` path from `updateHistory` to understand the last known analysis state
+2. Determine whether stale repos affect security surface, auth, or data flows
+3. Re-run only the relevant security analysis phases (not necessarily all 7)
+4. Create a new update log for the incremental pass
