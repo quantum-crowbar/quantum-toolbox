@@ -8,7 +8,7 @@ Systematic methodology for analyzing and documenting unknown codebases.
 
 | Phase | When | Files to read |
 |-------|------|---------------|
-| On invocation | Always | `README.md` + `workflows.md` (~14,000 tokens) |
+| On invocation | Always | `README.md` + `workflows.md` (~8,500 tokens) |
 | Generating output | When producing documents | `templates.md` (~7,000 tokens) |
 | On uncertainty | When examples would help | `examples.md` (~2,500 tokens) |
 | Quick reference | During execution | `checklist.md` (~2,800 tokens) |

@@ -16,7 +16,7 @@
 4. **[core/architecture-thinking.md](core/architecture-thinking.md)** - Mental model: domains, stakeholders, gap analysis, risk, prioritization
 5. **Project root `architecture-thinking.local.md`** *(if it exists)* - Project-specific overrides to the mental model. Matching headings replace defaults, new headings are added, sections listed under `## Skip` are ignored.
 6. **[core/glossary.md](core/glossary.md)** - Standard terminology
-7. **[skills/_index.md](skills/_index.md)** - Skill catalog, activation, invocation commands
+7. **[skills/_index.md](skills/_index.md)** - Skill catalog, token budget, activation
 
 ### On Demand (read only when invoking a skill)
 
