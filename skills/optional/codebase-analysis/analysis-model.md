@@ -238,6 +238,7 @@ analysis_model:
 | 6: Dependency Health | `dependencies` | Package health, vulnerabilities |
 | 7: Error Handling | `error_handling` | Error patterns, gaps |
 | - | `quality`, `recommendations` | Cross-cutting findings |
+| *adapter* | `extensions.sre` | SRE signals derived by architecture-docs View 08 |
 | *optional* | `code_graph` | Function call graph (code-graph skill only) |
 
 ---
@@ -308,6 +309,50 @@ extensions:
     # Performance-specific data
     hotspots: [...]
     caching: [...]
+
+  sre:
+    # SRE-specific signals derived from existing model sections during View 08 generation.
+    # Not a separate analysis phase — populated by the architecture-docs SRE adapter.
+    observability:
+      logging_detected: boolean
+      metrics_detected: boolean
+      tracing_detected: boolean
+      structured_logging: boolean       # true if JSON/structured output detected
+      metrics_libraries: string[]       # e.g. ["prom-client", "micrometer"]
+      metrics_endpoints: string[]       # e.g. ["/metrics", "/actuator/prometheus"]
+      tracing_libraries: string[]       # e.g. ["opentelemetry", "jaeger-client"]
+
+    health_checks:
+      - path: string                    # e.g. /health/live
+        type: string                    # liveness | readiness | startup | general
+        handler: string                 # file:line
+        checks_dependencies: boolean    # true if it verifies DB, cache, etc.
+
+    reliability_patterns:
+      - name: string                    # circuit_breaker | retry | timeout | bulkhead | rate_limiter | fallback | idempotency
+        detected: boolean
+        library: string                 # e.g. "resilience4j", "opossum", "axios-retry"
+        location: string                # file:line or component name
+        evidence: string[]
+
+    slo_readiness:
+      availability_instrumented: boolean
+      latency_instrumented: boolean
+      throughput_instrumented: boolean
+      saturation_instrumented: boolean
+
+    deployment:
+      feature_flags_detected: boolean
+      feature_flag_library: string      # e.g. "launchdarkly", "unleash", "env-based"
+      graceful_shutdown_detected: boolean
+      rollback_capability: boolean      # migrations + versioned artifacts
+      progressive_delivery: boolean     # canary / blue-green signals
+
+    spofs:
+      - component: string
+        type: string                    # database | cache | queue | service
+        mitigation: string              # replica | fallback | DLQ | "none"
+        risk: string                    # high | medium | low
 ```
 
 Output adapters can define their own extension schemas.

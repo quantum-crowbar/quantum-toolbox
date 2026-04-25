@@ -531,3 +531,265 @@ flowchart LR
 | `{gap.location}` | {gap.risk} | {gap.description} | {gap.recommendation} |
 {/for}
 ```
+
+---
+
+## 08 - SRE & Reliability Template
+
+```markdown
+# SRE & Reliability Analysis
+
+**Project**: {meta.project_name}
+**Generated**: {meta.analysis_date}
+
+---
+
+## Summary
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Observability | {observability_status} | {observability_note} |
+| Health & Readiness | {health_status} | {health_note} |
+| Reliability Patterns | {reliability_status} | {reliability_note} |
+| SLO Readiness | {slo_status} | {slo_note} |
+| Deployment Model | {deployment_status} | {deployment_note} |
+| Operational Runbooks | {runbooks_status} | {runbooks_note} |
+
+> Status values: ✅ Present | ⚠️ Partial | ❌ Missing | ❓ Unknown
+
+---
+
+## 1. Observability
+
+### Logging
+
+- **Framework**: {error_handling.logging.framework | "Not detected"}
+- **Log levels in use**: {error_handling.logging.levels.join(", ") | "Unknown"}
+- **Log destinations**: {error_handling.logging.destinations.join(", ") | "Unknown"}
+- **Structured logging**: {detect from logging library — yes/no/partial}
+
+### Metrics
+
+| Signal | Detected | Library / Endpoint | Notes |
+|--------|----------|--------------------|-------|
+| Application metrics | {yes/no} | {e.g. Prometheus client, Micrometer, OpenTelemetry} | {evidence} |
+| Metrics endpoint | {yes/no} | {e.g. GET /metrics, /actuator/prometheus} | {location} |
+| Custom business metrics | {yes/no} | {library} | {what is tracked} |
+
+### Distributed Tracing
+
+| Signal | Detected | Library | Notes |
+|--------|----------|---------|----|
+| Trace instrumentation | {yes/no} | {e.g. OpenTelemetry, Jaeger client, Zipkin} | {evidence} |
+| Context propagation | {yes/no} | {W3C TraceContext / B3 headers} | {evidence} |
+| Span creation (manual) | {yes/no} | — | {evidence} |
+
+### Alerting
+
+| Signal | Detected | Notes |
+|--------|----------|-------|
+| Alert rules / definitions | {yes/no} | {e.g. Prometheus rules, PagerDuty config, alertmanager.yml} |
+| Error budget / burn rate | {yes/no} | {evidence} |
+
+### Observability Gaps
+
+{If any signals missing:}
+
+| Gap | Severity | Recommendation |
+|-----|----------|----------------|
+{for gap in observability_gaps}
+| {gap.description} | {gap.severity} | {gap.recommendation} |
+{/for}
+
+---
+
+## 2. Health & Readiness
+
+### Detected Health Endpoints
+
+| Endpoint | Type | Location | What It Checks |
+|----------|------|----------|----------------|
+{for api in interfaces.apis where path matches /health|/ready|/live|/ping|/status|/actuator}
+| `{api.method} {api.path}` | {liveness/readiness/startup/general} | `{api.handler}` | {inferred checks} |
+{/for}
+
+{If no health endpoints detected:}
+> ❌ No health or readiness endpoints detected. Services without health checks cannot
+> be reliably managed by orchestration platforms (Kubernetes, ECS, etc.).
+
+### Health Check Coverage Assessment
+
+| Component | Health Checked | Notes |
+|-----------|---------------|-------|
+{for component in architecture.components}
+| {component.name} | {yes / no / partial} | {evidence or gap} |
+{/for}
+
+### Recommendations
+
+{If missing liveness:}  ❌ Add `GET /health/live` — returns 200 if process is alive
+{If missing readiness:} ❌ Add `GET /health/ready` — returns 200 only when all dependencies are up
+{If checks are shallow:} ⚠️ Health checks should verify DB connectivity, cache availability, and required external services
+
+---
+
+## 3. Reliability Patterns
+
+### Pattern Inventory
+
+| Pattern | Status | Location | Library / Implementation |
+|---------|--------|----------|--------------------------|
+| Circuit breaker | {detected/missing} | {location or "—"} | {e.g. resilience4j, Polly, cockatiel, opossum} |
+| Retry with backoff | {detected/missing} | {location or "—"} | {e.g. axios-retry, retry, spring-retry} |
+| Timeout | {detected/missing} | {location or "—"} | {e.g. axios timeout, AbortController, http.Client timeout} |
+| Bulkhead | {detected/missing} | {location or "—"} | {e.g. thread pool isolation, p-limit} |
+| Rate limiter | {detected/missing} | {location or "—"} | {e.g. express-rate-limit, bucket4j, throttle-debounce} |
+| Fallback / default | {detected/missing} | {location or "—"} | {implementation} |
+| Idempotency | {detected/missing} | {location or "—"} | {idempotency-key headers, deduplication logic} |
+
+### Reliability Pattern Assessment
+
+```mermaid
+flowchart LR
+    Client --> RateLimit{Rate Limiter?}
+    RateLimit -->|{detected: ✅ / missing: ❌}| Timeout{Timeout?}
+    Timeout -->|{detected: ✅ / missing: ❌}| CB{Circuit Breaker?}
+    CB -->|{detected: ✅ / missing: ❌}| Retry{Retry?}
+    Retry -->|{detected: ✅ / missing: ❌}| Service[Downstream Service]
+```
+
+### Missing Pattern Risks
+
+{for pattern in missing_reliability_patterns}
+| **{pattern.name}** missing | Risk: {pattern.risk} | Recommendation: {pattern.recommendation} |
+{/for}
+
+---
+
+## 4. SLO Readiness
+
+Assesses how measurable this system is — whether SLIs (Service Level Indicators) can be
+computed from current instrumentation.
+
+### SLI Coverage
+
+| SLI Type | Instrumented | How Measured | Gap |
+|----------|-------------|--------------|-----|
+| Availability (error rate) | {yes/partial/no} | {e.g. HTTP 5xx rate from metrics} | {gap if any} |
+| Latency (p99 response time) | {yes/partial/no} | {e.g. histogram metric, trace spans} | {gap if any} |
+| Throughput (request rate) | {yes/partial/no} | {e.g. request counter metric} | {gap if any} |
+| Saturation (resource usage) | {yes/partial/no} | {e.g. CPU/memory metrics, queue depth} | {gap if any} |
+
+### SLO Readiness Assessment
+
+{If all SLIs instrumented:}
+> ✅ System is SLO-ready. All four golden signal SLIs can be computed from existing instrumentation.
+
+{If partially instrumented:}
+> ⚠️ Partial SLO readiness. {list missing SLIs}. SLOs can be defined for available signals only.
+
+{If no instrumentation:}
+> ❌ SLO not possible with current instrumentation. No metrics or tracing detected.
+> Add application metrics library and expose a metrics endpoint before defining SLOs.
+
+---
+
+## 5. Deployment Model
+
+### Detected Signals
+
+| Signal | Detected | Evidence |
+|--------|----------|----------|
+| Feature flags | {yes/no} | {e.g. LaunchDarkly, Unleash, env-based flags, config flags} |
+| Canary / progressive delivery | {yes/no} | {e.g. Argo Rollouts config, Spinnaker pipeline, weighted routing} |
+| Blue/green deployment | {yes/no} | {e.g. deployment config, traffic switching config} |
+| Database migration strategy | {yes/no} | {e.g. Flyway, Liquibase, backward-compatible migrations} |
+| Rollback capability | {yes/no} | {e.g. versioned artifacts, migration rollback scripts} |
+| Graceful shutdown | {yes/no} | {e.g. SIGTERM handler, drain logic, connection.close on exit} |
+
+### Assessment
+
+{Summarise: is the deployment model conducive to low-risk releases?}
+{Key risks: e.g. no feature flags → all-or-nothing releases; no graceful shutdown → request drops on deploy}
+
+---
+
+## 6. Operational Runbooks
+
+### Documentation Inventory
+
+| Document | Location | Coverage | Quality |
+|----------|----------|----------|---------|
+{for doc in reconnaissance.documentation where type matches runbook|playbook|on-call|incident|ops}
+| {doc.location} | [{doc.location}]({doc.location}) | {doc.coverage} | {doc.accuracy} |
+{/for}
+
+{If no runbooks detected:}
+> ❌ No operational runbooks, playbooks, or on-call documentation detected.
+
+### Coverage Assessment
+
+| Scenario | Runbook Exists | Notes |
+|----------|---------------|-------|
+| Service down / restart | {yes/no} | |
+| High error rate | {yes/no} | |
+| Database connection failure | {yes/no} | |
+| Dependency outage (downstream) | {yes/no} | |
+| Deployment rollback | {yes/no} | |
+| Data recovery | {yes/no} | |
+
+---
+
+## 7. Incident Response Gaps
+
+### Single Points of Failure
+
+| Component | Type | Mitigation Present | Risk |
+|-----------|------|--------------------|------|
+{for component in architecture.components where is_spof = true}
+| {component.name} | {component.type} | {mitigation or "None detected"} | {risk} |
+{/for}
+
+{Detect SPOFs from: single database with no replica config, single cache node, no queue DLQ,
+ components with fan_in >> 10 and no fallback pattern detected.}
+
+### Infrastructure Reliability Signals
+
+| Infrastructure | HA Configured | Backup / Failover | Notes |
+|----------------|--------------|-------------------|-------|
+{for infra in technologies.infrastructure}
+| {infra.name} ({infra.type}) | {yes/no/unknown} | {yes/no/unknown} | {evidence} |
+{/for}
+
+### Observability Blind Spots
+
+{Cross-reference error_handling.gaps with observability signals:}
+
+| Component / Path | Gap Type | Severity | Recommendation |
+|------------------|----------|----------|----------------|
+{for gap in error_handling.gaps where risk = high}
+| `{gap.location}` | No error handling | High | {gap.recommendation} |
+{/for}
+{for component lacking metrics or tracing}
+| {component.name} | No observability signals | Medium | Add metrics + structured logging |
+{/for}
+
+---
+
+## Reliability Score
+
+| Area | Score | Weight | Notes |
+|------|-------|--------|-------|
+| Observability | {0-3} / 3 | High | Logging/metrics/tracing |
+| Health checks | {0-2} / 2 | High | Liveness + readiness |
+| Reliability patterns | {0-5} / 5 | High | CB, retry, timeout, bulkhead, rate limit |
+| SLO readiness | {0-4} / 4 | Medium | 4 golden signals |
+| Deployment safety | {0-3} / 3 | Medium | Feature flags, graceful shutdown, rollback |
+| Runbooks | {0-2} / 2 | Low | Presence + scenario coverage |
+| **Total** | **{sum}** / **19** | | |
+
+> **{0-6}: ❌ Critical gaps** — reliability incidents likely; address immediately
+> **{7-12}: ⚠️ Partial** — foundational elements present; significant gaps remain
+> **{13-17}: ✅ Good** — solid foundation; targeted improvements recommended
+> **{18-19}: 🟢 Excellent** — production-grade reliability posture
+```
