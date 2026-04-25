@@ -4,6 +4,19 @@ Create and maintain C4 architecture models using Structurizr DSL.
 
 ---
 
+## File Loading Guide
+
+| Phase | When | Files to read |
+|-------|------|---------------|
+| On invocation | Always | `README.md` + `workflows.md` (~8,000 tokens) |
+| Generating output | When producing DSL | `templates.md` (~5,500 tokens) |
+| On uncertainty | When examples would help | `examples.md` (~2,100 tokens) |
+| Quick reference | During execution | `checklist.md` (~1,000 tokens) |
+
+Do **not** load all files upfront. Load templates and examples only when needed.
+
+---
+
 ## Purpose
 
 Enable architecture-as-code using the C4 model and Structurizr:

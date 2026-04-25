@@ -4,6 +4,19 @@ Evolutionary architecture assessment using fitness functions to guide system evo
 
 ---
 
+## File Loading Guide
+
+| Phase | When | Files to read |
+|-------|------|---------------|
+| On invocation | Always | `README.md` + `workflows.md` (~6,700 tokens) |
+| Generating output | When producing documents | `templates.md` (~3,900 tokens) |
+| On uncertainty | When examples would help | `examples.md` (~5,300 tokens) |
+| Quick reference | During execution | `checklist.md` (~2,100 tokens) |
+
+Do **not** load all files upfront. Load templates and examples only when needed.
+
+---
+
 ## Overview
 
 Fitness functions are objective measures used to assess how well a system supports specific architectural characteristics. Derived from evolutionary computing, they provide quantifiable targets that guide architectural decisions and validate that changes maintain or improve system quality.

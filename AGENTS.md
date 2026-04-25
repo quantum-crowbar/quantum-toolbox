@@ -20,10 +20,10 @@
 
 ### On Demand (read only when invoking a skill)
 
-8. **Skill `README.md` + `workflows.md`** - Read when about to use a specific skill
-9. **Skill `templates.md`, `examples.md`, `checklist.md`** - Read as needed during execution
-
-**Do NOT read all optional skills upfront.** Only load a skill's files when the user invokes it or when the task requires it.
+8. **[skills/_detail.md](skills/_detail.md)** - Skill Dependencies + Invokable Skills tables — read before loading any skill
+9. **Skill `README.md` + `workflows.md`** - Read when about to use a specific skill
+10. **Skill `templates.md`, `examples.md`, `checklist.md`** - Read as needed during execution (see File Loading Guide in each skill README)
+Large skills have 4-phase loading — only Phase 1 (README + workflows) is required on invocation.
 
 ---
 
@@ -42,7 +42,9 @@
 
 | Resource | Purpose |
 |----------|---------|
-| [skills/_index.md](skills/_index.md) | Full skill catalog, dependencies, invokable commands |
+| [skills/_index.md](skills/_index.md) | Full skill catalog, token budget, activation |
+| [skills/_detail.md](skills/_detail.md) | Skill dependencies + invokable commands (load on skill invocation) |
+| [scripts/measure-tokens.sh](scripts/measure-tokens.sh) | Measure current token counts per skill |
 | [specs/ROADMAP-TRACKER.md](specs/ROADMAP-TRACKER.md) | Roadmap and planned work |
 | [templates/](templates/) | AGENTS.md, CONTEXT.md, commit, PR templates |
 

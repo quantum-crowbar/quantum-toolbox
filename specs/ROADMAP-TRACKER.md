@@ -96,24 +96,24 @@ Master tracking document for all skill development roadmaps.
 | **Context:** session-start = ~4,600 tokens (always). Large skills = 18-20K tokens each. Several | | | |
 | optimisations below reduce tokens without changing skill fidelity, by splitting or deferring. | | | |
 | | | | |
-| **OPT-1: Split _index.md into core + detail** | - | ⚪ Planned | High |
+| **OPT-1: Split _index.md into core + detail** | - | 🟢 Complete | High |
 | `Skill Dependencies` + `Invokable Skills` + `Creating New Skills` sections (~2,000 tokens) are | | | |
 | only needed when invoking a skill, not at session start. Extract to `skills/_detail.md`, | | | |
 | loaded on demand. Session-start saves ~2,000 tokens on every session where no skill is invoked. | | | |
 | | | | |
-| **OPT-2: Glossary domain split** | - | ⚪ Planned | Medium |
+| **OPT-2: Glossary domain split** | - | 🟢 Complete | Medium |
 | `core/glossary.md` is always loaded (~1,735 tokens). TOGAF terms (~300t) and Security terms | | | |
 | (~350t) are only needed when those skills are active. Extract to `togaf/glossary.md` and | | | |
 | `security-analysis/glossary.md`, loaded on skill invocation. Core glossary drops ~38% (~650t). | | | |
 | | | | |
-| **OPT-3: Remove command workflow duplication in workflows.md** | - | ⚪ Planned | Medium |
+| **OPT-3: Remove command workflow duplication in workflows.md** | - | 🟢 Complete | Medium |
 | Bootstrap/`/update`/`/help`/`/skills` sections in `core/workflows.md` (~2,500 tokens) are now | | | |
 | fully defined in `skills/core/bootstrap/workflows.md`. Double-loading happens when both are | | | |
 | read. Remove the command sections from `core/workflows.md`; keep only base dev workflows | | | |
 | (Pre-Work, Autonomous Dev Loop, Feature/Bug/Hotfix/Refactor/Review, Context Update). | | | |
 | Saves ~2,500 tokens when bootstrap skill is loaded. | | | |
 | | | | |
-| **OPT-4: Phased skill loading annotations** | - | ⚪ Planned | Medium |
+| **OPT-4: Phased skill loading annotations** | - | 🟢 Complete | Medium |
 | Large skills (arch-analysis 20K, security-analysis 20K, fitness-functions 18K) have | | | |
 | `templates.md` and `examples.md` flagged as "read as needed" in the reading order, but nothing | | | |
 | in the skill README reinforces this. Add explicit "Phase loading" table to each README: | | | |
@@ -121,13 +121,13 @@ Master tracking document for all skill development roadmaps.
 | Phase 3 (on uncertainty): examples. Estimated savings: 7-14K tokens per large skill invocation | | | |
 | when agent reads only README + workflows upfront. | | | |
 | | | | |
-| **OPT-5: Token baseline script** | - | ⚪ Planned | Low |
+| **OPT-5: Token baseline script** | - | 🟢 Complete | Low |
 | The Per-Skill Cost table in `_index.md` is manually maintained and drifted out of date | | | |
 | (discovered in v3.0 compliance pass — 4 skills missing). Build a script | | | |
 | `scripts/measure-tokens.sh` that enumerates all skill dirs, counts bytes, converts to ~tokens | | | |
 | (~4 chars/token), and prints a markdown table. Run before major releases to keep table current. | | | |
 | | | | |
-| **OPT-6: Slim bootstrap for Mode A** | - | ⚪ Planned | Low |
+| **OPT-6: Slim bootstrap for Mode A** | - | 🟢 Complete | Low |
 | `skills/core/bootstrap/workflows.md` loads in full for every `/start` call, even Mode A | | | |
 | (established project, session start only). The 8-step guided setup (Phase 4B) is Mode B only | | | |
 | and adds ~1,000 tokens to Mode A sessions. Extract Phase 4B into a separate | | | |

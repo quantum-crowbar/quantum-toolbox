@@ -4,6 +4,19 @@ Synthesize unified architecture models from visual diagrams, specifications, and
 
 ---
 
+## File Loading Guide
+
+| Phase | When | Files to read |
+|-------|------|---------------|
+| On invocation | Always | `README.md` + `workflows.md` (~8,000 tokens) |
+| Generating output | When producing documents | `templates.md` (~6,700 tokens) |
+| On uncertainty | When examples would help | `examples.md` (~4,000 tokens) |
+| Quick reference | During execution | `checklist.md` (~2,100 tokens) |
+
+Do **not** load all files upfront. Load templates and examples only when needed.
+
+---
+
 ## Purpose
 
 This skill provides a **middle-out** approach to architecture documentation:

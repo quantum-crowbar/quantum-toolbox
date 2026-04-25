@@ -4,6 +4,19 @@ Systematic methodology for analyzing and documenting unknown codebases.
 
 ---
 
+## File Loading Guide
+
+| Phase | When | Files to read |
+|-------|------|---------------|
+| On invocation | Always | `README.md` + `workflows.md` (~14,000 tokens) |
+| Generating output | When producing documents | `templates.md` (~7,000 tokens) |
+| On uncertainty | When examples would help | `examples.md` (~2,500 tokens) |
+| Quick reference | During execution | `checklist.md` (~2,800 tokens) |
+
+Do **not** load all files upfront. Load templates and examples only when needed.
+
+---
+
 ## Architecture Note
 
 This skill is now a wrapper that combines:
