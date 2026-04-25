@@ -23,6 +23,20 @@ skills:
       - "Use todo workflow"
     status: complete
 
+  - name: bootstrap
+    tier: core
+    path: core/bootstrap/
+    description: Session bootstrap — introduce toolkit, report project state, guide user to first action via direct skill use or metarepo setup
+    dependencies: []
+    invocations:
+      - "/start"
+      - "/help"
+      - "/skills"
+      - "Bootstrap this repo"
+      - "Get started"
+      - "Introduce yourself"
+    status: complete
+
   # ── Analysis Skills ──────────────────────────────────────────────────
   - name: codebase-analysis
     tier: optional

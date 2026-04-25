@@ -25,6 +25,7 @@ These skills are automatically loaded for every project:
 |-------|-------------|------|
 | **git-workflow** | Git best practices, branching strategies, commit hygiene | [core/git-workflow/](core/git-workflow/) |
 | **todo-workflow** | Invokable autonomous/semi-autonomous development workflow | [core/todo-workflow/](core/todo-workflow/) |
+| **bootstrap** | Session bootstrap — orient the agent, report project state, guide to first action | [core/bootstrap/](core/bootstrap/) |
 
 ### Optional Skills (Opt-In)
 
@@ -180,6 +181,7 @@ Some skills may recommend reading other skills first:
 |-------|--------------------------|
 | `git-workflow` | None |
 | `todo-workflow` | `git-workflow` (uses git operations) |
+| `bootstrap` | None (reads environment; no skill dependencies) |
 | `codebase-analysis` | None (base analysis engine) |
 | `analysis-outputs` | `codebase-analysis` (consumes analysis model) |
 | `arch-analysis` | None (uses codebase-analysis internally) |
@@ -208,7 +210,9 @@ Some skills can be explicitly invoked during a session:
 
 | Skill | Invocation | Description |
 |-------|------------|-------------|
-| `skill-discovery` | `"What skills do you have?"` / `"List your capabilities"` | List all skills with offer to elaborate |
+| `bootstrap` | `/start` | Bootstrap the session — read environment, report status, offer paths forward |
+| `bootstrap` | `/help` | Context-aware help — enabled skills, commands, analysis status, one screen |
+| `bootstrap` | `/skills` | Interactive skill explorer — full list, pick to learn, offer to run |
 | `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
 | `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
 | `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
@@ -226,7 +230,7 @@ Some skills can be explicitly invoked during a session:
 | `analysis-tracking` | `"Check analysis staleness"` / `"Update analysis views"` / `"Set up analysis tracking"` | Detect code staleness or toolkit version changes; generate new views incrementally |
 | `update-logs` | `"Create update log"` / `"Write update log"` | Structured audit trail for the current session's changes |
 
-See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
+See the skill's README for full invocation options. `/start`, `/help`, `/skills` are defined in [core/workflows.md](../core/workflows.md). Skill Discovery flow is part of the Bootstrap skill.
 
 ---
 

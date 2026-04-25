@@ -162,129 +162,235 @@ Full documentation: [skills/core/todo-workflow/](../skills/core/todo-workflow/)
 
 ---
 
-## Skill Discovery
+## Help
 
-**An invokable workflow for listing capabilities and offering elaboration.**
+**Context-aware help — what this workspace can do right now.**
 
 ### Triggers
 
-- "What skills do you have?"
-- "List your capabilities"
-- "What can you do?"
-- "Show me your skills"
-- After toolkit installation or update
-
-### When to Use
-
-1. **Initial onboarding** - After installing the toolkit, introduce capabilities
-2. **Refresh** - User wants a reminder of available skills
-3. **After update** - Toolkit was updated, show what's new or changed
-4. **Exploration** - User is deciding which skill to use
+- `/help`
+- `"Help"`
+- `"What can I do here?"`
+- `"Show me what's available"`
+- `"/help all"` — extended version including disabled skills
 
 ### Workflow
 
 ```
-1. READ toolkit skill index (skills/_index.md)
-2. READ TOGAF index (skills/optional/togaf/_index.md)
-3. READ analysis outputs index (skills/optional/analysis-outputs/_index.md)
+1. Read AGENTS.md (project root)
+   - Identify enabled skills [ x ]
+   - Identify domain + team context
 
-4. PRESENT skills organized by category:
+2. Read .quantum-toolbox/skills/manifest.yaml
+   - Get version
+   - Get all core skills (always active)
 
-   **Analysis Skills** (understand codebases)
-   - codebase-analysis: Base analysis engine
-   - arch-analysis: 8-phase architecture documentation
-   - security-analysis: Security + compliance (OWASP, NIST, CIS, ISO, NIS 2)
-   - nonfunctional-analysis: Testing, config, performance, health
-   - architecture-synthesis: From diagrams to architecture model
-   - fitness-functions: Evolutionary architecture fitness
+3. Build context-aware output:
 
-   **Architecture & Modeling** (enterprise patterns)
-   - structurizr: C4 modeling with Structurizr DSL
-   - TOGAF ADM: Full cycle (Preliminary + Phases A-H)
+   ─────────────────────────────────────────────────
+     quantum-toolbox {version}  |  {domain}
 
-   **Development Workflows** (coding practices)
-   - git-workflow: Commits, branching, PRs
-   - todo-workflow: Autonomous task-based development
-   - software-design: Patterns and principles
-   - tech-stack-decisions: Technology evaluation, ADRs
-   - code-conventions: Style guides
+     Commands
+       /start    Bootstrap or re-orient this session
+       /help     This screen
+       /skills   Interactive skill explorer
 
-   **Output Generation** (reports, slides, docs)
-   - presentation: Slide generation (PPTX, PDF)
-   - release-notes: Changelog and release summaries
-   - sprint-plan: Sprint planning output
-   - review-output: Code review reports
+     Active Skills (always available)
+       git-workflow:   Commits, branches, PRs
+       todo-workflow:  Autonomous task-based dev  → "Use todo workflow"
+       bootstrap:      Session setup + metarepo    → /start
 
-   **Output Formats** (analysis export adapters)
-   - core-architecture, architecture-docs, coding-context
-   - product-spec, structurizr, archimate
+     Enabled for this project
+       {skill}:   {one-line description}    → "{invocation}"
+       {skill}:   ...
 
-5. PRESENT invokable commands:
-   - "Analyze the architecture"
-   - "Analyze security"
-   - "Analyze code quality"
-   - "Create C4 model"
-   - "Apply TOGAF"
-   - "Use todo workflow"
-   - "Generate presentation"
-   - etc.
+     Workflows
+       {from AGENTS.md Key Workflows section — one per line}
 
-6. OFFER to elaborate:
-   "Would you like me to explain any of these skills in more detail?
-    Just name the skill or category you're interested in."
+     Analysis Status
+       {from analysis-manifest.json if present:
+        Last run: {date} | {N} repos | toolkit {version} | {up to date / stale}}
+   ─────────────────────────────────────────────────
 
-7. IF user requests elaboration:
-   - Read the skill's README.md
-   - Summarize key concepts and use cases
-   - Show example invocations
-   - Offer to demonstrate or run the skill
+   Run /skills to explore all available skills in detail.
+
+4. For "/help all":
+   After the above, append:
+
+   ─────────────────────────────────────────────────
+     Available but not enabled
+     (add [ x ] to AGENTS.md to enable)
+
+       {skill}: {one-liner}
+       ...
+   ─────────────────────────────────────────────────
 ```
 
-### Output Format
+### Notes for Agents
 
-```markdown
-## What I Can Do
-
-I've learned the AI Architect Toolbox. Here's what I can help you with:
-
-### Analysis Skills
-| Skill | What It Does | Try It |
-|-------|--------------|--------|
-| arch-analysis | Document your codebase architecture | "Analyze the architecture" |
-| security-analysis | Security assessment + compliance | "Analyze security" |
-| ... | ... | ... |
-
-### Architecture & Modeling
-...
-
-### Development Workflows
-...
+- `/help` is intentionally compact — one screen, no scrolling
+- It reads only what's enabled in AGENTS.md, not the full catalog
+- Invocation phrases are shown only for enabled skills
+- `/help all` is the escape hatch for users who want to see everything
 
 ---
 
-**Want details on any skill?** Just ask, and I'll explain what it does and show examples.
+## Skill Discovery
+
+**An invokable workflow for interactive skill exploration.**
+
+### Triggers
+
+- `/skills`
+- `"What skills do you have?"`
+- `"List your capabilities"`
+- `"What can you do?"`
+- `"Show me your skills"`
+
+### Workflow
+
+```
+PHASE 1 — Build the full skill inventory
+
+1. READ skills/manifest.yaml
+   - Collect ALL skills: tier (core / optional), name, description, status
+   - Note which are always active (core) vs require activation (optional)
+
+2. READ AGENTS.md (if present in project root)
+   - Check which optional skills are explicitly enabled [ x ] in project AGENTS.md
+   - Mark those as "active in this project"
+   - All others are "available but not active"
+
+3. PRESENT the menu:
+
+   ---
+   ## Skills
+
+   ### Active Skills (always loaded)
+   | Skill | What it does |
+   |-------|--------------|
+   | git-workflow | ... |
+   | todo-workflow | ... |
+   | bootstrap | ... |
+
+   ### Enabled for this project
+   | Skill | What it does | Invoke with |
+   |-------|--------------|-------------|
+   | arch-analysis | ... | "Analyze the architecture" |
+   | ... | | |
+
+   ### Available (not enabled)
+   | Skill | What it does |
+   |-------|--------------|
+   | structurizr | ... |
+   | togaf | ... |
+   | ... | |
+
+   ---
+   **Options:**
+   A) Show a full description table for all skills
+   B) Pick a skill from the list to learn about it
+   Q) Quit skill exploration
+
+   What would you like? (A / B / Q or skill name)
+   ---
+
+
+PHASE 2A — If user chooses "A" (full table)
+
+4. Read every active + enabled skill's README.md (first 20 lines each)
+5. Present a single wide table:
+
+   | Skill | Category | What it does | When to use | Invoke with |
+   |-------|----------|--------------|-------------|-------------|
+   | arch-analysis | Analysis | ... | When you need full architecture docs | "Analyze the architecture" |
+   | ... | | | | |
+
+6. After table, offer:
+   "Want details on any specific skill? Tell me the name."
+   → If user names a skill: jump to PHASE 2B
+   → Otherwise: end flow
+
+
+PHASE 2B — If user picks a specific skill (name or letter choice)
+
+4. READ that skill's README.md in full
+5. Present structured explanation:
+
+   ---
+   ## {Skill Name}
+
+   **What it does:** {one-liner}
+   **Category:** {Analysis / Modeling / Output / Workflow / Tracking}
+
+   **When to use:**
+   - {use case 1}
+   - {use case 2}
+
+   **What it produces:**
+   - {output 1}
+   - {output 2}
+
+   **How to invoke:**
+   - "{invocation phrase 1}"
+   - "{invocation phrase 2}"
+
+   **Prerequisites:** {none / or list}
+   ---
+
+6. Ask:
+   "What would you like to do?
+    U) Use this skill now
+    M) Return to skill menu
+    Q) Quit skill exploration"
+
+   → U: Invoke the skill immediately (follow its README trigger)
+   → M: Return to PHASE 1 step 3 (re-show the menu)
+   → Q: End flow cleanly
 ```
 
-### Elaboration Response
+### Notes for Agents
 
-When user asks for details on a specific skill:
+- Always show the three-tier split (active / enabled / available) — this helps users understand what they already have vs. what they can enable
+- "Available but not enabled" skills can still be loaded on request — direct invocation bypasses the enabled check
+- When reading skill READMEs for the full table (Phase 2A), use the first 2-3 paragraphs only to keep the table concise
+- The menu loop (M → back to menu) can repeat as many times as the user wants
 
-```markdown
-## {Skill Name}
+---
 
-**Purpose**: {One-line description}
+## Bootstrap
 
-**When to use**:
-- {Use case 1}
-- {Use case 2}
+**An invokable workflow for introducing the toolkit to a new user or project.**
 
-**What it produces**:
-- {Output 1}
-- {Output 2}
+Full documentation: [skills/core/bootstrap/](../skills/core/bootstrap/)
 
-**Example commands**:
-- "{Example invocation 1}"
-- "{Example invocation 2}"
+### Triggers
 
-**Want me to run this skill now?**
+- `/start`
+- `"Bootstrap this repo"`
+- `"Set up the toolkit"`
+- `"Introduce yourself"`
+- `"Get started"`
+- First message that mentions "quantum-toolbox" or asks what the agent can do
+
+### Summary Workflow
+
+```
+1. Read AGENTS.md + toolkit core files (instructions.md, architecture-thinking.md)
+2. Introduce self: name the toolkit, version, what it is
+3. Check for analysis-manifest.json → if found, report staleness summary
+4. Present two paths:
+
+   PATH A — DIY (run skills yourself)
+   "I can help you run analysis skills directly on any repo.
+    Tell me what you'd like to analyze and I'll guide you through it.
+    Run /skills to explore what's available."
+
+   PATH B — Metarepo template
+   "For ongoing AI-native work across multiple repos, I recommend
+    setting up a metarepo. This gives you a persistent workspace
+    with analysis outputs, coding profiles, and update logs — all
+    version-controlled. Want me to walk you through the setup?"
+
+5. Wait for user choice
 ```
