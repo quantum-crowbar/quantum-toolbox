@@ -194,6 +194,7 @@ Full documentation: [skills/core/todo-workflow/](../skills/core/todo-workflow/)
        /start    Bootstrap or re-orient this session
        /help     This screen
        /skills   Interactive skill explorer
+       /update   Check qt version, analysis views, code & doc staleness
 
      Active Skills (always available)
        git-workflow:   Commits, branches, PRs
@@ -411,3 +412,185 @@ FIRST — detect mode:
 
 5. Wait for user choice
 ```
+
+---
+
+## Update
+
+**Check all update dimensions, report status, let the user drive what happens next.**
+
+### Triggers
+
+- `/update`
+- `"Check for updates"`
+- `"What needs updating?"`
+- `"Is everything up to date?"`
+- `"Update status"`
+
+### Overview
+
+`/update` is a read-first, act-second command. It never changes anything automatically. It checks four dimensions, builds a status report, then asks the user which updates to run.
+
+If a quantum-toolbox version update is available and the user picks it — `/update` runs again automatically after the upgrade to get a fresh, post-upgrade status picture.
+
+---
+
+### Phase 1: Check All Dimensions
+
+Run all four checks in parallel. Each check produces a status: `✓ up to date` | `⚠ update available` | `✗ missing`.
+
+#### 1.1 — quantum-toolbox version
+
+```
+Read .quantum-toolbox/skills/manifest.yaml → get version field
+Check .quantum-toolbox/ git state:
+  git -C .quantum-toolbox fetch --dry-run 2>&1 (or check remote tracking)
+  Compare local HEAD vs origin/main HEAD
+
+Status:
+  ✓  Local matches remote HEAD
+  ⚠  Remote has N commits ahead — new skills/views may be available
+  ✗  .quantum-toolbox/ not found or not a git repo
+```
+
+#### 1.2 — Analysis outputs completeness
+
+```
+Read specs/analysis-manifest.json (if exists)
+  → Get artifacts[] and their views[]
+Read .quantum-toolbox/skills/optional/analysis-outputs/architecture-docs/README.md
+  → Get the full list of views the current toolkit version supports
+
+Cross-reference: which views are in the toolkit but absent from the manifest?
+
+Also check: are expected output files actually present on disk?
+  For each artifact.files[] entry: does the file exist?
+
+Status per artifact:
+  ✓  All toolkit views present and files exist
+  ⚠  N views missing (list them): toolkit has [08-sre, 09-code-graph] but manifest only has [01-07]
+  ✗  analysis-manifest.json not found — analysis not set up yet
+  ✗  N output files listed in manifest are missing from disk
+```
+
+#### 1.3 — Code staleness
+
+```
+Read specs/analysis-manifest.json → lastAnalysis.repositories
+For each repo: compare analyzed commit vs current HEAD in code/{repo}/
+  (same logic as check-analysis-status.sh)
+
+Status:
+  ✓  All repos up to date
+  ⚠  N repos stale: {repo}: X commits behind (list each)
+  ✗  No repos tracked in manifest
+  -  code/ not present (repos not cloned — skip silently)
+```
+
+#### 1.4 — Documentation staleness
+
+```
+Check docs/ directory for externally-fetched content:
+  - docs/update-logs/ → read most recent log's date
+  - docs/dxp/ or docs/external/ → check file mtimes vs last analysis date
+  - If Atlassian MCP is available: could check Confluence page versions
+    (optional enhancement, skip if MCP not configured)
+
+Status:
+  ✓  Docs current (last fetch aligns with last analysis date)
+  ⚠  Docs may be stale (last fetch: {date}, last analysis: {date})
+  -  No external docs present (skip)
+```
+
+---
+
+### Phase 2: Build Status Report
+
+Present a compact status table — one line per dimension:
+
+```
+─────────────────────────────────────────────────────────
+  /update status  —  {date}
+─────────────────────────────────────────────────────────
+
+  [1] quantum-toolbox   ⚠  v2.6.2 → v3.0.0 available (N commits ahead)
+  [2] Analysis outputs  ⚠  Views 08-09 missing (toolkit has them, manifest does not)
+  [3] Code staleness    ⚠  2 repos stale: api-service (12 commits), worker-svc (3 commits)
+  [4] Docs              ✓  Up to date
+
+─────────────────────────────────────────────────────────
+  Actions:
+    1  Update quantum-toolbox to latest
+    2  Generate missing analysis views (no re-scan needed)
+    3  Re-run analysis on stale repos
+    4  (nothing to do)
+    A  Do all of the above in sequence
+    Q  Quit — I'll handle it manually
+─────────────────────────────────────────────────────────
+
+What would you like to do? (1 / 2 / 3 / A / Q)
+```
+
+If everything is up to date:
+```
+─────────────────────────────────────────────────────────
+  /update status  —  {date}
+─────────────────────────────────────────────────────────
+  [1] quantum-toolbox   ✓  v3.0.0 (current)
+  [2] Analysis outputs  ✓  All views present
+  [3] Code staleness    ✓  All repos up to date
+  [4] Docs              ✓  Up to date
+─────────────────────────────────────────────────────────
+  Everything is up to date. Nothing to do.
+─────────────────────────────────────────────────────────
+```
+
+---
+
+### Phase 3: Execute User's Choice
+
+#### Action 1 — Update quantum-toolbox
+
+```
+git -C .quantum-toolbox pull origin main
+→ On success: run /update again automatically (full Phase 1-2-3 cycle with new version)
+→ The re-run will show the updated version and any new views now available
+→ This is the only action that triggers an automatic re-run
+```
+
+#### Action 2 — Generate missing analysis views
+
+```
+→ Trigger: "Update analysis views" (analysis-tracking skill workflow, step 3b)
+→ Agent reads existing analysis docs to reconstruct model
+→ Generates only missing views from existing model (no re-cloning of repos)
+→ Updates specs/analysis-manifest.json views[] and toolboxVersion
+→ Creates update log in docs/update-logs/
+```
+
+#### Action 3 — Re-run analysis on stale repos
+
+```
+→ For each stale repo listed:
+   1. git -C code/{repo} pull (update the clone)
+   2. Run arch-analysis (or security-analysis) incremental update on that repo
+   3. Update specs/analysis-manifest.json with new commit SHA
+→ Creates update log in docs/update-logs/
+```
+
+#### Action A — All in sequence
+
+```
+Run: 1 → re-run /update → 2 → 3 (in that order)
+After Qt update, re-run ensures Action 2 uses the right view list.
+```
+
+---
+
+### Notes for Agents
+
+- Never run any action without explicit user confirmation — `/update` is always report-first
+- Action 1 (qt update) is the only action that auto-reruns `/update` — this gives a fresh status with the new version loaded
+- If code/ directory doesn't exist (repos not cloned), skip check 1.3 silently — note it in the report as `-  Code not cloned locally`
+- If analysis-manifest.json doesn't exist, checks 1.2 and 1.3 both show `✗ not set up` — offer "Set up analysis tracking" as a precursor action
+- Toolkit aliases (`qt`, `q-t`, `toolbox`, `the toolbox`) all trigger this workflow

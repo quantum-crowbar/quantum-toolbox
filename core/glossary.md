@@ -110,3 +110,19 @@ Standard terminology and definitions for AI agents working with enterprise archi
 | **squash** | Combine multiple commits into one |
 | **PR** | Pull Request (GitHub) |
 | **MR** | Merge Request (GitLab equivalent of PR) |
+
+---
+
+## Toolkit Naming
+
+The toolkit accepts the following names and aliases. When a user refers to the toolkit by any of these, treat it as a reference to quantum-toolbox:
+
+| Alias | Notes |
+|-------|-------|
+| `quantum-toolbox` | Canonical name — use this in outputs, commit messages, docs |
+| `the toolbox` | Natural language form — common in conversation |
+| `toolbox` | Short form — common in conversation |
+| `qt` | Abbreviation |
+| `q-t` | Hyphenated abbreviation |
+
+When writing outputs or documentation, always use the canonical name `quantum-toolbox`. Aliases are for input recognition only.

@@ -8,6 +8,8 @@
 
 Triggers: `/start` | `"Bootstrap this repo"` | `"Get started"` | `"Introduce yourself"` | `"Set up the toolkit"` | first message where no context is established
 
+Also triggers when user refers to the toolkit by any alias: `"toolbox"`, `"the toolbox"`, `"qt"`, `"q-t"` — see Toolkit Naming in `core/glossary.md`.
+
 ### Mode Detection (run first — before anything else)
 
 ```

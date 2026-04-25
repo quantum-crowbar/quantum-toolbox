@@ -32,9 +32,12 @@ skills:
       - "/start"
       - "/help"
       - "/skills"
+      - "/update"
       - "Bootstrap this repo"
       - "Get started"
       - "Introduce yourself"
+      - "Check for updates"
+      - "What needs updating?"
     status: complete
 
   # ── Analysis Skills ──────────────────────────────────────────────────
