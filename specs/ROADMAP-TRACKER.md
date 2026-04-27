@@ -132,6 +132,10 @@ Master tracking document for all skill development roadmaps.
 | (established project, session start only). The 8-step guided setup (Phase 4B) is Mode B only | | | |
 | and adds ~1,000 tokens to Mode A sessions. Extract Phase 4B into a separate | | | |
 | `skills/core/bootstrap/first-time-setup.md` loaded only in Mode B. | | | |
+| | | | |
+| **--- BOOTSTRAP IMPROVEMENTS ---** | | | |
+| /start: inline skills + commands snapshot (enabled/available marking) | - | 🟢 Complete | High |
+| /upgrade command: pull latest, diff new skills/views/templates, re-run affected analysis | - | 🟢 Complete | High |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 

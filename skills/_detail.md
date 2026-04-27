@@ -48,6 +48,7 @@ Some skills can be explicitly invoked during a session:
 | `bootstrap` | `/help` | Context-aware help — enabled skills, commands, analysis status, one screen |
 | `bootstrap` | `/skills` | Interactive skill explorer — full list, pick to learn, offer to run |
 | `bootstrap` | `/update` | Check all update dimensions (qt version, views, code, docs) — report + act |
+| `bootstrap` | `/upgrade` | Pull latest toolkit, diff what changed, re-run affected analysis |
 | `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
 | `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
 | `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |

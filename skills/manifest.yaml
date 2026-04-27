@@ -33,11 +33,15 @@ skills:
       - "/help"
       - "/skills"
       - "/update"
+      - "/upgrade"
       - "Bootstrap this repo"
       - "Get started"
       - "Introduce yourself"
       - "Check for updates"
       - "What needs updating?"
+      - "Upgrade the toolkit"
+      - "Update to latest version"
+      - "What's new in the toolkit?"
     status: complete
 
   # ── Analysis Skills ──────────────────────────────────────────────────
