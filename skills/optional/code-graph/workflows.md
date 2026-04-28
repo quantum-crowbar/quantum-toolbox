@@ -39,7 +39,336 @@ flowchart LR
 
 ## Phase 0: Setup
 
-**Goal**: Detect available tooling, run pre-flight size estimate, confirm backend with user.
+**Goal**: Establish extraction scope and user intent, detect available tooling, run pre-flight size estimate, confirm backend with user.
+
+---
+
+### 0.0 Scope Dialogue
+
+**Runs before all other Phase 0 steps.**
+**Never assume scope or output targets. Always confirm with the user.**
+
+---
+
+#### 0.0.1 Detect trigger context
+
+Before presenting any choices, determine how this skill was invoked:
+
+```
+Triggered by /upgrade?
+  → Present as optional step:
+      "View 09 (Code Graph) is available as a new view.
+       Run extraction now? This is optional — you can run it
+       later by asking for the code-graph skill.
+       [Y / skip]"
+  → If skipped: set meta.code_graph_status = "skipped"
+                do NOT proceed to 0.0.2 or any Phase 1+
+
+Triggered by arch-analysis?
+  → Pause arch-analysis flow. Present scope dialogue below.
+  → After scope is confirmed, continue arch-analysis.
+
+Direct user request?
+  → Proceed directly to 0.0.2
+```
+
+---
+
+#### 0.0.2 Present extraction type choice
+
+```
+─────────────────────────────────────────────────────────────
+  Code Graph — Extraction Scope
+─────────────────────────────────────────────────────────────
+
+  What kind of extraction do you want to run?
+
+  A  Targeted   Pick 1–3 repos to analyse. Fast and focused.
+                Recommended for: first run, answering a
+                specific question, or when time is limited.
+
+  B  Full scan  All cloned TypeScript repos extracted as one
+                unified graph. Richer cross-repo edges.
+                Requires SQLite. See full complexity breakdown
+                before confirming.
+
+  C  AI-only    No static extraction. AI reads source files
+                and produces indicative markdown analysis.
+                No SQLite file, no reports/ directory.
+                Runs immediately, no tooling required.
+
+  Default: A
+─────────────────────────────────────────────────────────────
+```
+
+Capture choice. If **C** → skip all remaining Phase 0 steps
+and proceed directly to AI-extraction output (View 09 markdown
+only). If **A** or **B** → continue to 0.0.3.
+
+---
+
+#### 0.0.3 If B (Full scan) — present value, complexity, and incremental update model
+
+Present ALL of the following sections before asking for confirmation.
+Do not collapse or abbreviate them.
+
+```
+─────────────────────────────────────────────────────────────
+  Full scan — what you get, what it costs, how it stays fresh
+─────────────────────────────────────────────────────────────
+
+  WHAT WILL BE SCANNED
+  ┌────────────────────────────────┬──────────────┬─────────┐
+  │ Category (TypeScript)          │ Est. .ts     │ Tool    │
+  ├────────────────────────────────┼──────────────┼─────────┤
+  │ Backend services (~10–20 repos)│ ~3,500 files │ ts-morph│
+  │ Frontend apps                  │ ~4,000 files │ ts-morph│
+  │ Shared libs (@org/*)           │ ~2,000 files │ ts-morph│
+  ├────────────────────────────────┼──────────────┼─────────┤
+  │ iOS (Swift)                    │ ~2,000 .swift│  n/a*  │
+  │ Android (Kotlin)               │ ~1,500 .kt   │  n/a*  │
+  │ Scripts (Python)               │    ~50 .py   │ pyan3* │
+  └────────────────────────────────┴──────────────┴─────────┘
+  * ts-morph does not cover Swift, Kotlin, or Python.
+    These require a separate pass and produce a separate
+    graph file — they cannot be merged into the TypeScript
+    graph.
+
+  Estimated TypeScript graph: 15,000–40,000 nodes
+  → Backend: SQLite REQUIRED at this scale
+
+  ─────────────────────────────────────────────────────────
+  WHY THIS IS VALUABLE
+
+  Having the full graph in SQLite means future queries run
+  against exhaustive real data — not AI memory of what was
+  last read. Examples of what becomes possible:
+
+  "Which functions are called by more than 10 consumers?"
+  → SQL on view_hot_nodes. Instant, exhaustive, exact.
+
+  "If I change CacheService.setEdgeTags(),
+   what breaks?"
+  → Reverse traversal from that node → full blast radius
+    across ALL services simultaneously. Not possible from
+    AI source reading alone.
+
+  "Show me every path from an HTTP entry point to a Redis
+   write, across all backend services."
+  → Entry point traces filtered by data_store = 'redis'.
+
+  "Which code has no callers AND is called from 3+ entry
+   points — i.e. which deletions are safe vs risky?"
+  → JOIN nodes + edges + fan_in counts.
+
+  "Find all functions over complexity 10 that are not
+   covered by any test."
+  → JOIN complexity_hotspots + external test coverage data.
+
+  The SQLite file is queryable by you directly —
+  not just by the AI agent:
+    sqlite3 code_graph.sqlite
+    DB Browser for SQLite
+    DBeaver
+
+  ─────────────────────────────────────────────────────────
+  INCREMENTAL UPDATES — staying fresh after code changes
+
+  The graph does NOT need a full re-extraction after every
+  change. Incremental update works as follows:
+
+    1. Detect changed files:
+         git diff HEAD~1 --name-only | grep '\.ts$'
+    2. Delete existing nodes + edges for those files only
+         DELETE FROM nodes WHERE file IN (changed_files)
+         DELETE FROM edges WHERE from_file IN (changed_files)
+    3. Re-extract nodes and edges for changed files only
+    4. Recompute affected pre-computed views
+         (hot_nodes, dead_code, cycles — only where
+          changed nodes appear)
+
+  How to trigger incremental updates:
+    Manual  — "update code graph" when you want it
+    On pull — after each git pull / repo re-clone
+    CI      — post-merge webhook into metarepo (future)
+
+  Limitation: if a shared lib changes (@org/core,
+  @org/connector etc.), ALL repos that import it need
+  their edge tables refreshed — not just the lib itself.
+  This is handled automatically by step 2 above (deleting
+  edges by from_file catches all affected call sites).
+
+  Staleness is tracked in specs/analysis-manifest.json
+  (the same mechanism as arch-analysis). The existing
+  check-analysis-status.py script can be extended to flag
+  stale graph files per repo when commit SHAs diverge.
+
+  ─────────────────────────────────────────────────────────
+  DOWNSIDES AND RISKS
+
+  ✖  ts-morph requires all repos present locally AND
+     tsconfig.json path aliases (@org/*, @shared/*) must
+     be manually resolved — mismatched paths cause silent
+     edge gaps
+
+  ✖  Compiled package boundaries: if @org/core is
+     only present as a compiled npm package (not source),
+     edges into it cannot be resolved — those calls appear
+     as external leaf nodes only
+
+  ✖  Extraction time: approximately 10–30 minutes for
+     full TypeScript scan across all repos
+
+  ✖  SQLite file size: approximately 50–200 MB
+
+  ✖  iOS and Android cannot be merged into the TypeScript
+     graph — they need separate passes with separate tools
+     and produce separate .sqlite files
+
+  ✖  Not all repos may have complete shallow clones —
+     missing repos create gaps in cross-repo edges
+
+  ─────────────────────────────────────────────────────────
+
+  Do you want to proceed with full TypeScript scan?
+
+    1  Yes — TypeScript only (ts-morph + SQLite)
+    2  Yes — TypeScript + Python scripts (ts-morph + pyan3)
+    3  No  — go back and choose Targeted (A) instead
+─────────────────────────────────────────────────────────────
+```
+
+If user chooses 3 → return to 0.0.2 with default A.
+
+---
+
+#### 0.0.4 Repo selection (for A Targeted or after B confirmation)
+
+```
+  Which repos should be included?
+
+  Suggested groupings (based on this codebase):
+
+    [1]  Core backend services
+           api-service
+           worker-service
+           core-lib
+           connector-service
+
+    [2]  Extended backend services
+         (all of [1]) plus:
+           content-service
+           recommendation-service
+           styling-service
+           reviews-service
+
+    [3]  Frontend apps
+           storefront, catalog, navigation, landing-app, cms-components
+
+    [4]  All TypeScript repos (full scan)
+
+    [5]  Custom — type repo names
+
+  Choose one or more groupings, or type repo names directly:
+```
+
+Validate that each named repo exists in `code/`. If a repo
+is missing, warn:
+```
+  ⚠ content-service not found in code/ — it will
+    be skipped. Cross-repo edges that target it will appear
+    as unresolved leaf nodes.
+    Continue anyway? [Y / remove from list]
+```
+
+---
+
+#### 0.0.5 Output structure for cross-repo calls
+
+```
+  How should calls that cross repo boundaries be shown?
+
+  A  Unified graph
+     All repos merged into one SQLite file. Cross-repo
+     edges are normal edges with a repo_name label.
+     Best for: global hot path analysis, blast radius.
+
+  B  Per-repo graphs
+     One SQLite/YAML file per repo. Cross-repo calls are
+     marked as external edges (node type = external).
+     Best for: per-team ownership, targeted deep dives.
+
+  C  Library + consumer split
+     Shared libs (@org/*, @shared/*) are extracted once.
+     Consumer repos reference them as external nodes with
+     their public method signatures resolved.
+     Best for: blast radius analysis on shared libs.
+
+  Default: A
+```
+
+---
+
+#### 0.0.6 Output files
+
+```
+  Which outputs should be generated?
+
+  Always generated:
+    ✅  analysis/09-code-graph.md       (View 09)
+
+  Select additional outputs:
+    [ ]  reports/entry-point-map.md     All entry points
+                                        traced to leaf nodes
+    [ ]  reports/dead-code.md           Dead code inventory
+                                        with removal risk
+    [ ]  reports/sre-hot-paths.md       Critical call chains
+                                        annotated with
+                                        reliability signals
+                                        (requires View 08)
+    [ ]  reports/findings-summary.md    Cross-cutting summary
+                                        of all active views
+    [ ]  code_graph.sqlite              Raw queryable graph
+    [ ]  code_graph.yaml                YAML model section
+                                        (small codebases only)
+
+  Default: all selected.
+
+  Note: reports/sre-hot-paths.md will be skipped if
+  analysis/08-sre-reliability.md does not exist.
+```
+
+---
+
+#### 0.0.7 Confirm and proceed
+
+Present a summary of all choices and ask for final confirmation
+before touching any files or running any tooling:
+
+```
+─────────────────────────────────────────────────────────────
+  Code Graph — extraction plan
+
+  Repos:      {list confirmed repos}
+  Tool:       ts-morph (TypeScript static analysis)
+  Backend:    {YAML | SQLite}
+  Structure:  {Unified | Per-repo | Library+consumer}
+  Outputs:    {list selected outputs}
+
+  Est. nodes: ~{node_estimate}
+  Est. time:  ~{time_estimate}
+─────────────────────────────────────────────────────────────
+
+  Proceed?
+    Y        Start extraction (continues to Phase 0.1)
+    change   Adjust scope
+    cancel   Exit without changes
+```
+
+Only after **Y** → continue to Phase 0.1 (detect tooling),
+0.2 (preflight size estimate), 0.3 (backend threshold check).
+
+---
 
 ### 0.1 Detect Static Analysis Tooling
 
