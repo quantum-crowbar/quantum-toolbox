@@ -845,3 +845,31 @@ The staleness check script (`scripts/check-analysis-status.sh`) compares current
 2. Determine whether stale repos affect security surface, auth, or data flows
 3. Re-run only the relevant security analysis phases (not necessarily all 7)
 4. Create a new update log for the incremental pass
+
+---
+
+## Final Step: Sync context files
+
+**This step is non-skippable — the skill workflow is not complete until it is done.**
+Does not apply if the skill produced no committed artefacts.
+
+→ Run the Post-Work Hook defined in the repo's AGENTS.md.
+
+Specifically update:
+
+1. **CONTEXT.md**
+   - Key paths: add any new security doc files or directories committed
+   - Update log: append or overwrite today's row — `| <date> | security-analysis complete — <N> findings, repos: <list> |`
+   - Current state → Implemented: add security analysis as a delivered capability
+
+2. **AGENTS.md**
+   - Security section (if present): update to reflect new findings or changed risk posture
+   - Staleness line: update analysis date(s) at the bottom of the file
+
+3. **README.md** — only if a new `docs/architecture-docs/` security file was committed that is missing from the README
+
+4. **Commit:**
+   ```bash
+   git add CONTEXT.md AGENTS.md README.md
+   git commit -m "docs: sync context files after security-analysis run"
+   ```

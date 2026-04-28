@@ -963,3 +963,33 @@ The `updateLog` field links the manifest history entry directly to the human-rea
 After committing, the staleness check script (`scripts/check-analysis-status.sh`) uses `lastAnalysis.date` and per-repo commit SHAs from the manifest. **The update log is the human-readable companion to that machine-readable state** — it answers *why* the manifest changed, not just *what* changed.
 
 If staleness is detected in future runs, reference the most recent update log to understand the current analysis state before deciding which files need regeneration.
+
+---
+
+## Final Step: Sync context files
+
+**This step is non-skippable — the skill workflow is not complete until it is done.**
+Does not apply if the skill produced no committed artefacts.
+
+→ Run the Post-Work Hook defined in the repo's AGENTS.md.
+
+Specifically update:
+
+1. **CONTEXT.md**
+   - Key paths: add any new view files or docs directories committed
+   - Update log: append or overwrite today's row — `| <date> | arch-analysis complete — <N> views, repos: <list> |`
+   - Current state → Implemented: add any newly delivered architectural views or capabilities
+
+2. **AGENTS.md**
+   - Step 2 view list: update to reflect the exact set of view files now present
+   - Staleness line: update analysis date(s) at the bottom of the file
+
+3. **README.md** — only if:
+   - A new `docs/architecture-docs/` file was committed that is missing from the README
+   - A "Available Without Cloning" checklist item has stale stats
+
+4. **Commit:**
+   ```bash
+   git add CONTEXT.md AGENTS.md README.md
+   git commit -m "docs: sync context files after arch-analysis run"
+   ```

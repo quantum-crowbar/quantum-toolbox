@@ -71,6 +71,53 @@ These files are always loaded from the `.quantum-toolbox` submodule:
 - [Commit Message Format](.quantum-toolbox/templates/COMMIT.md)
 - [Pull Request Template](.quantum-toolbox/templates/PULL_REQUEST.md)
 
+## Post-Work Hook (mandatory after any skill that commits artefacts)
+
+After any skill run that commits output files, update the following before considering the task done.
+**Does not apply to AI-only runs that produce no committed files.**
+
+### CONTEXT.md
+
+| Field | What to write |
+|-------|--------------|
+| Key paths table | Add any new files or directories committed as part of this operation |
+| Update log | Append or overwrite today's row: `\| <date> \| <one-line summary with stats> \|` |
+| Current state → Implemented | If a new capability was delivered, add it |
+
+**Idempotency rule:** If a row for today's date already exists in the update log — overwrite it in place.
+If no row exists for today — append a new row. Never create duplicate rows for the same date.
+
+### AGENTS.md
+
+Update only the fields that changed:
+
+| Trigger | Fields to update |
+|---------|-----------------|
+| `arch-analysis` completed | Step 2 view list; staleness line |
+| `code-graph` completed | Step 2b stats + snapshot date; staleness line |
+| `security-analysis` completed | Security section (if present); staleness line |
+| `coding-profile` completed | Step 3 profile list; staleness line |
+| `/upgrade` completed | Skills list + toolbox version; staleness line |
+
+### README.md
+
+Update only if one of the following is true:
+- A "Available Without Cloning" checklist item is missing or has stale stats
+- A new `docs/architecture-docs/reports/` file was committed that is absent from the README
+- Code graph stats in an existing SQLite bullet are outdated
+- A new script was added to `scripts/` that users should know about
+
+Do not rewrite the README for any other reason. Touch only the specific stale field.
+
+### Commit
+
+```bash
+git add CONTEXT.md AGENTS.md README.md
+git commit -m "docs: sync context files after <skill-name> run"
+```
+
+---
+
 ## When to Update This File
 
 - When project-specific guidelines change

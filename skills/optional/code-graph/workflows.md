@@ -845,6 +845,36 @@ Then push to the current branch.
 
 ---
 
+## Final Step: Sync context files
+
+**This step is non-skippable — the skill workflow is not complete until it is done.**
+Does not apply if option C (AI-only) was chosen in Phase 0.0.2 — no committed artefacts.
+
+→ Run the Post-Work Hook defined in the repo's AGENTS.md.
+
+Specifically update:
+
+1. **CONTEXT.md**
+   - Key paths: add `code_graph/*.sqlite`, `docs/architecture-docs/analysis/09-code-graph.md`, `docs/architecture-docs/reports/`
+   - Update log: append or overwrite today's row — `| <date> | code-graph extracted — <totalNodes> nodes, <resolvedEdges> edges, <crossRepoCalls> cross-repo calls |`
+   - Current state → Implemented: add code graph as a delivered capability
+
+2. **AGENTS.md**
+   - Step 2b code graph block: update node/edge/cross-repo stats inline and the snapshot date
+   - Staleness line: update analysis date(s) at the bottom of the file
+
+3. **README.md** — only if:
+   - Code graph stats in an existing SQLite bullet are outdated (update node/edge counts + snapshot date)
+   - A new `docs/architecture-docs/reports/` file was committed that is absent from the README
+
+4. **Commit:**
+   ```bash
+   git add CONTEXT.md AGENTS.md README.md
+   git commit -m "docs: sync context files after code-graph run"
+   ```
+
+---
+
 ## Traversal Primitives
 
 ### YAML Backend

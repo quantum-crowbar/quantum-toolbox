@@ -510,6 +510,7 @@ After completion, prompt user to review and enable new skills (step 1).
 - Action 4 (code graph) uses Phase 0.0 scope dialogue — do not skip it
 - Always create an update log entry (update-logs skill) after any action that modifies outputs
 - Toolkit aliases (`qt`, `q-t`, `toolbox`, `the toolbox`) all trigger this workflow
+- After any `/upgrade` action that commits artefacts: run the Post-Work Hook defined in the repo's AGENTS.md (update CONTEXT.md update log + AGENTS.md skills list + staleness line)
 
 ---
 

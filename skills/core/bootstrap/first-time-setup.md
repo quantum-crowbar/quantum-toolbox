@@ -26,6 +26,16 @@ STEP 3 — Create AGENTS.md
   Ask user: "What is this project's domain? (e.g. Checkout Platform, Auth Services)"
   Insert domain name into AGENTS.md Domain Overview section
 
+  AGENTS.md must include these sections (all present in the template):
+    - Quick Start reading order
+    - Project-Specific Guidelines (code style, architecture, testing)
+    - Enabled Skills list (checkboxes for optional skills)
+    - Post-Work Hook (mandatory after any skill that commits artefacts)
+      → placed between the AI Skills / Enabled Skills section and the staleness section
+      → must specify: which fields to update in CONTEXT.md, AGENTS.md, and README.md
+         per operation type; the update log idempotency rule; and the commit command
+    - When to Update This File
+
 STEP 4 — Create CONTEXT.md
   Copy .quantum-toolbox/templates/CONTEXT.template.md → ./CONTEXT.md
   Pre-fill: domain name, date, version 0.1.0
