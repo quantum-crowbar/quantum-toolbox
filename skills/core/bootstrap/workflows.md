@@ -192,6 +192,142 @@ If user chooses A (or names a skill directly):
 
 ---
 
+## Update
+
+**Check analysis staleness across all dimensions — no pulling, no file modifications.**
+
+### Triggers
+
+- `/update`
+- `"Check for updates"`
+- `"Is my analysis stale?"`
+- `"What's changed since last analysis?"`
+
+### Overview
+
+`/update` is check-only mode. It reads the current manifest state, compares against live repo HEAD SHAs, checks toolkit version, checks code graph freshness, and surfaces all staleness dimensions in one report. It never pulls, modifies files, or triggers re-analysis.
+
+---
+
+### Phase C1: Read Manifest
+
+```
+Read specs/analysis-manifest.json
+If not found:
+  Report: "No analysis manifest found — run arch-analysis or Set up analysis
+           tracking to create one."
+  Stop here.
+
+Extract:
+  - lastAnalysis.date
+  - lastAnalysis.repositories  (repo → commit SHA map)
+  - toolboxVersion
+  - artifacts.code-graph (if present)
+```
+
+---
+
+### Phase C2: Check Staleness Dimensions
+
+#### C2.1 — Source repo SHAs
+
+For each repo in `lastAnalysis.repositories`:
+```
+1. Check if code/{repo} exists
+2. If yes: git -C code/{repo} rev-parse --short HEAD
+3. Compare with recorded commit SHA
+4. Count commits ahead: git -C code/{repo} rev-list {old}..HEAD --count
+```
+
+Output per repo:
+```
+  api-service        ✓ Up-to-date  (a1b2c3d)
+  worker-service     ⚠ Stale       (5 commits ahead: a1b2c3d → x7y8z9w)
+  frontend           ⚠ Not cloned  (analyzed: j1k2l3m)
+```
+
+#### C2.2 — Toolkit version
+
+```
+Read .quantum-toolbox/skills/manifest.yaml → current version
+Compare with toolboxVersion in manifest
+
+If different:
+  "⚠ Toolkit updated: {manifest version} → {current version}
+   New views or skills may be available. Run /upgrade to see what changed."
+```
+
+#### C2.3 — Code graph staleness
+
+```
+If artifacts.code-graph is absent from manifest:
+  → Note: "Code graph not yet extracted — run the code-graph skill to generate."
+  → Skip remaining C2.3 checks.
+
+Read:
+  artifacts.code-graph.generatedDate
+  artifacts.code-graph.sourceRepos
+
+For each repo in sourceRepos:
+  - Check lastAnalysis.repositories[repo].commit (the SHA at last analysis run)
+  - Get current HEAD SHA from code/{repo}
+  - If any repo's HEAD postdates generatedDate → that repo is a staleness source
+
+If any stale repos found:
+  Surface:
+  "⚠ Code graph stale — generated {generatedDate}, repos updated since:
+       - {repo}  ({branch}, {N} commits ahead)
+   Re-run extraction? (Y / skip)"
+
+  If Y: invoke code-graph skill Phase 0.0 → full extraction + Phase 4C + 4D
+  If skip: note as acknowledged-stale in the report, continue
+
+If no stale repos:
+  "✓ Code graph current  (generated {generatedDate})"
+```
+
+---
+
+### Phase C3: Present Staleness Report
+
+```
+─────────────────────────────────────────────────────────────
+  Staleness Report  —  {today's date}
+─────────────────────────────────────────────────────────────
+
+  Last analysis:  {lastAnalysis.date}
+  Toolkit:        {manifest toolboxVersion} {same / → new version}
+
+  Source repos
+    {repo}   ✓ / ⚠ ...
+    ...
+
+  Code graph
+    ✓ / ⚠ ...
+
+─────────────────────────────────────────────────────────────
+  {If all current:}
+  Everything is up-to-date. No action needed.
+
+  {If stale:}
+  To update:
+    Stale source analysis  → run arch-analysis (or coding-profile) on changed repos
+    Code graph stale       → run code-graph skill
+    Toolkit upgraded       → run /upgrade
+─────────────────────────────────────────────────────────────
+```
+
+---
+
+### Notes for Agents
+
+- `/update` never modifies files — it is always read-only
+- If user asks to fix what's stale: hand off to the appropriate skill or `/upgrade`
+- Missing `code/` repos: note them but do not clone without user confirmation
+- If manifest is unreadable: note "manifest unreadable — run `Set up analysis tracking` to reset"
+
+---
+
 ## Upgrade
 
 **Pull latest toolkit, diff what changed, re-run only the analysis that is affected.**
@@ -276,15 +412,22 @@ Present a structured diff — what changed, what needs action:
     ...
     (none) ← if no template changes
 
+  Code graph
+    ✓ Current  (generated {generatedDate})
+    — OR —
+    ⚠ Stale — generated {generatedDate}, repos updated since:
+         - {repo}  ({branch}, {N} commits ahead)
+
 ─────────────────────────────────────────────────────────
   Actions:
     1  Enable new skills in AGENTS.md
     2  Generate new views (no re-scan needed — uses existing model)
     3  Regenerate updated-template outputs (re-scan required if templates changed analysis phases)
+    4  Re-run code graph extraction
     A  Do all of the above in sequence
     Q  Nothing to do right now
 
-What would you like to do? (1 / 2 / 3 / A / Q)
+What would you like to do? (1 / 2 / 3 / 4 / A / Q)
 ─────────────────────────────────────────────────────────
 ```
 
@@ -294,6 +437,7 @@ If nothing changed:
   quantum-toolbox upgrade  —  {old version} → {new version}
 ─────────────────────────────────────────────────────────
   No new skills, views, or template changes affect your workspace.
+  Code graph is current.
   Your analysis outputs are current for this version.
 ─────────────────────────────────────────────────────────
 ```
@@ -335,11 +479,23 @@ Offer: "Here are the new skills. Add [ x ] to any you want enabled, then re-run 
 → Create update log entry
 ```
 
+#### Action 4 — Re-run code graph extraction
+
+```
+→ If code graph is stale (identified in Phase U3):
+   Invoke code-graph skill Phase 0.0 with repos pre-populated from
+   artifacts.code-graph.sourceRepos — user can confirm or adjust scope.
+   On completion: Phase 4C updates manifest, Phase 4D commits.
+→ If code graph was never run:
+   Offer: "Run code-graph extraction now? This is optional."
+   If yes: invoke code-graph skill Phase 0.0 from scratch.
+```
+
 #### Action A — All in sequence
 
 ```
-Run: 2 → 3 → show 1 (skill enabling is always manual)
-Action 2 first (no re-scan, fast), then 3 (may require re-scan per artifact).
+Run: 2 → 3 → 4 → show 1 (skill enabling is always manual)
+Action 2 first (no re-scan, fast), then 3 (re-scan per artifact), then 4 (code graph).
 After completion, prompt user to review and enable new skills (step 1).
 ```
 
@@ -351,6 +507,7 @@ After completion, prompt user to review and enable new skills (step 1).
 - If the user just wants to see what changed without pulling: they should use `/update` instead (check-only mode)
 - Action 2 (new views) never requires re-cloning repos — it reconstructs context from existing docs
 - Action 3 (template regeneration) may require re-cloning if the analysis model is stale
+- Action 4 (code graph) uses Phase 0.0 scope dialogue — do not skip it
 - Always create an update log entry (update-logs skill) after any action that modifies outputs
 - Toolkit aliases (`qt`, `q-t`, `toolbox`, `the toolbox`) all trigger this workflow
 

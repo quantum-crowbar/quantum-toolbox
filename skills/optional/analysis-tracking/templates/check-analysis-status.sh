@@ -235,9 +235,84 @@ main() {
 
   print_summary "$up_to_date" "$total" "$analysis_date" "$toolkit_stale"
 
+  check_regenerable_artefacts
+
   if [ "$up_to_date" -ne "$total" ] || [ "$toolkit_stale" = "true" ]; then
     exit 1
   fi
+}
+
+# =============================================================================
+# Regenerable artefact check (SQLite, YAML graphs, etc.)
+# Compares artifacts.*.generatedDate against newest commit date in sourceRepos
+# =============================================================================
+check_regenerable_artefacts() {
+  local artefacts
+  artefacts=$(jq -r '.artifacts | keys[]' "$MANIFEST" 2>/dev/null)
+  if [ -z "$artefacts" ]; then
+    return 0
+  fi
+
+  echo ""
+  echo "  Regenerable artefacts:"
+  echo ""
+
+  local any_stale=false
+
+  for artefact in $artefacts; do
+    local generated_date
+    generated_date=$(jq -r ".artifacts[\"$artefact\"].generatedDate // empty" "$MANIFEST")
+
+    if [ -z "$generated_date" ]; then
+      continue  # not a regenerable artefact — no generatedDate field
+    fi
+
+    local source_repos
+    source_repos=$(jq -r ".artifacts[\"$artefact\"].sourceRepos[]?" "$MANIFEST" 2>/dev/null)
+
+    if [ -z "$source_repos" ]; then
+      printf "    %-14s — generated %s (no sourceRepos listed)\n" "$artefact" "$generated_date"
+      continue
+    fi
+
+    local regenerate_cmd
+    regenerate_cmd=$(jq -r ".artifacts[\"$artefact\"].regenerate // empty" "$MANIFEST")
+
+    local stale_repos=()
+    for repo in $source_repos; do
+      local repo_path="$CODE_DIR/$repo"
+      if [ ! -d "$repo_path/.git" ]; then
+        continue
+      fi
+      local head_date
+      head_date=$(cd "$repo_path" && git log -1 --format="%ci" HEAD 2>/dev/null | cut -d' ' -f1)
+      if [ -n "$head_date" ] && [[ "$head_date" > "$generated_date" ]]; then
+        local commits_since
+        commits_since=$(cd "$repo_path" && git log --oneline --after="$generated_date" HEAD 2>/dev/null | wc -l | tr -d ' ')
+        stale_repos+=("$repo ($commits_since commits since $generated_date)")
+      fi
+    done
+
+    if [ "${#stale_repos[@]}" -gt 0 ]; then
+      any_stale=true
+      printf "    ⚠ %-12s — generated %s, %d source repo(s) have newer commits\n" \
+        "$artefact" "$generated_date" "${#stale_repos[@]}"
+      for entry in "${stale_repos[@]}"; do
+        printf "        - %s\n" "$entry"
+      done
+      if [ -n "$regenerate_cmd" ]; then
+        printf "        regenerate: %s\n" "$regenerate_cmd"
+      fi
+    else
+      printf "    ✓ %-12s — current (generated %s)\n" "$artefact" "$generated_date"
+    fi
+  done
+
+  echo ""
+  if [ "$any_stale" = "true" ]; then
+    return 1
+  fi
+  return 0
 }
 
 main "$@"

@@ -78,7 +78,7 @@ Direct user request?
 
 ```
 ─────────────────────────────────────────────────────────────
-  Code Graph — Extraction Scope
+  Code Graph Analysis — Scope & Setup
 ─────────────────────────────────────────────────────────────
 
   What kind of extraction do you want to run?
@@ -272,14 +272,24 @@ If user chooses 3 → return to 0.0.2 with default A.
   Choose one or more groupings, or type repo names directly:
 ```
 
-Validate that each named repo exists in `code/`. If a repo
-is missing, warn:
+Validate that each named repo exists in `code/`. Collect ALL missing repos first,
+then present a single decision point before proceeding to Phase 0.0.5:
+
 ```
-  ⚠ content-service not found in code/ — it will
-    be skipped. Cross-repo edges that target it will appear
-    as unresolved leaf nodes.
-    Continue anyway? [Y / remove from list]
+  ⚠ The following repos are not cloned and will be excluded:
+       - content-service    (code/content-service not found)
+       - reviews-service    (code/reviews-service not found)
+
+    clone    git clone --depth=1 <url> for each missing repo, then re-validate
+    continue Without them — cross-repo edges to these repos appear as
+             unresolved leaf nodes; gaps are noted in the extraction plan
+    abort    Exit — no extraction started, no files touched
 ```
+
+If **abort** → exit Phase 0.0 immediately. No extraction, no files written.
+If **clone** → run the clone commands, then re-run the validation check.
+If **continue** → proceed to Phase 0.0.5 with the reduced repo set. Note the
+excluded repos in the Phase 0.0.7 confirmation summary.
 
 ---
 
@@ -347,7 +357,7 @@ before touching any files or running any tooling:
 
 ```
 ─────────────────────────────────────────────────────────────
-  Code Graph — extraction plan
+  Code Graph Analysis — extraction plan
 
   Repos:      {list confirmed repos}
   Tool:       ts-morph (TypeScript static analysis)
@@ -770,6 +780,68 @@ CREATE TABLE view_cycles (
   nodes TEXT NOT NULL           -- JSON array of node ids
 );
 ```
+
+---
+
+## Phase 4C: Update Manifest
+
+**Goal**: Record the extraction in `specs/analysis-manifest.json` so staleness checks and the `/update` command can detect when the code graph becomes outdated.
+
+If `specs/analysis-manifest.json` does not exist, create it using the minimal structure from the `analysis-tracking` skill template, then write the entry below.
+
+If the file already exists, **overwrite `artifacts.code-graph` only** — preserve all other artifact entries.
+
+Write or overwrite `artifacts.code-graph` with:
+
+```json
+{
+  "generatedDate": "<ISO date — today>",
+  "method": "ts-morph vX static AST extraction + node:sqlite",
+  "regenerate": "node scripts/cg-extract.js && node scripts/cg-reports.js",
+  "sourceRepos": ["<repos confirmed in Phase 0.0.4>"],
+  "files": ["libs.sqlite", "consumers.sqlite"],
+  "reports": [
+    "docs/architecture-docs/analysis/09-code-graph.md",
+    "docs/architecture-docs/reports/entry-point-map.md",
+    "docs/architecture-docs/reports/dead-code.md",
+    "docs/architecture-docs/reports/sre-hot-paths.md",
+    "docs/architecture-docs/reports/findings-summary.md"
+  ],
+  "stats": {
+    "totalNodes": "<N from Phase 2>",
+    "resolvedEdges": "<N from Phase 2>",
+    "crossRepoCalls": "<N — edges where from_repo ≠ to_repo>",
+    "entryPoints": "<N from Phase 1.3>",
+    "deadCodeNodes": "<N from Phase 2.3>",
+    "deadCodeRate": "<N%>"
+  }
+}
+```
+
+Exclude from `reports` any outputs that were not selected in Phase 0.0.6.
+
+---
+
+## Phase 4D: Commit and Push
+
+**Goal**: Commit all extraction outputs and the updated manifest as a single coherent change.
+
+Stage:
+
+```bash
+git add code_graph/*.sqlite
+git add docs/architecture-docs/reports/
+git add docs/architecture-docs/analysis/09-code-graph.md
+git add specs/analysis-manifest.json
+```
+
+Commit using the stats collected across prior phases:
+
+```
+feat(code-graph): {date} extraction — {totalNodes} nodes, {resolvedEdges} edges, {crossRepoCalls} cross-repo calls
+```
+
+Then push to the current branch.
 
 ---
 

@@ -245,6 +245,67 @@ git push
 
 ---
 
+## Regenerable Artefacts
+
+Not all tracked artefacts are markdown documents. Binary and regenerable artefacts (SQLite graphs, YAML call graphs, pre-computed view files) use a different staleness check pattern from document-based artefacts.
+
+### Manifest fields for regenerable artefacts
+
+```json
+{
+  "artifacts": {
+    "code-graph": {
+      "generatedDate": "2026-04-28",
+      "method": "ts-morph v21 static AST extraction + node:sqlite",
+      "regenerate": "node scripts/cg-extract.js && node scripts/cg-reports.js",
+      "sourceRepos": ["api-service", "worker-service", "core-lib"],
+      "files": ["libs.sqlite", "consumers.sqlite"],
+      "stats": { "totalNodes": 4200, "resolvedEdges": 18000, "crossRepoCalls": 340 }
+    }
+  }
+}
+```
+
+| Field | Purpose |
+|-------|---------|
+| `generatedDate` | ISO date when the artefact was last produced |
+| `regenerate` | Exact command to reproduce the artefact from scratch |
+| `sourceRepos` | Repos whose source files were consumed during generation |
+| `files` | Output files produced by the regeneration |
+
+### Staleness check for regenerable artefacts
+
+**Check:** compare `generatedDate` against the newest commit date of any repo in `sourceRepos`.
+
+```
+For each repo in sourceRepos:
+  Get current HEAD commit date: git -C code/{repo} log -1 --format=%ci HEAD
+  If HEAD commit date > generatedDate → artefact is stale
+```
+
+This is distinct from commit-SHA staleness (which tracks individual analysis runs). For regenerable artefacts the question is: "has anything in the source repos been committed since this artefact was built?"
+
+### Output format in check script
+
+```
+Regenerable artefacts:
+  ⚠ code-graph  — generated 2026-04-28, 2 source repos have newer commits
+      - api-service    (2 commits since 2026-04-28)
+      - worker-service (7 commits since 2026-04-28)
+      regenerate: node scripts/cg-extract.js && node scripts/cg-reports.js
+
+  ✓ code-graph  — current (generated 2026-04-28, all source repos up-to-date)
+```
+
+### When this section is absent (artefact not yet generated)
+
+If `artifacts.code-graph` is absent from the manifest, the check script notes:
+```
+  — code-graph  — not yet generated
+```
+
+---
+
 ## Templates Provided
 
 ### 1. `analysis-manifest.json`
