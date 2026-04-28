@@ -384,6 +384,15 @@ Step 3 — Template changes (best-effort)
   since the version recorded in analysis-manifest.json toolboxVersion
   → Note any templates used for existing artifacts that have changed
   → These are "outputs that may benefit from regeneration"
+
+Step 4 — AGENTS.md structural gaps
+  Read the repo's AGENTS.md
+  Check for the presence of a section titled:
+    "Post-Work Hook (mandatory after any skill that commits artefacts)"
+  If absent:
+    → Flag as: "AGENTS.md missing Post-Work Hook section (added in this toolkit version)"
+  If present:
+    → No action needed
 ```
 
 ---
@@ -411,7 +420,11 @@ Present a structured diff — what changed, what needs action:
     {artifact}  last generated with {old version}  ← re-run recommended
     ...
     (none) ← if no template changes
-
+  AGENTS.md
+    ✔ Post-Work Hook section present
+    — OR —
+    ⚠ Post-Work Hook section missing — added in this toolkit version
+      Action 1 will insert it.
   Code graph
     ✓ Current  (generated {generatedDate})
     — OR —
@@ -437,6 +450,7 @@ If nothing changed:
   quantum-toolbox upgrade  —  {old version} → {new version}
 ─────────────────────────────────────────────────────────
   No new skills, views, or template changes affect your workspace.
+  AGENTS.md Post-Work Hook section is present.
   Code graph is current.
   Your analysis outputs are current for this version.
 ─────────────────────────────────────────────────────────
@@ -446,12 +460,31 @@ If nothing changed:
 
 ### Phase U4: Execute User's Choice
 
-#### Action 1 — Enable new skills
+#### Action 1 — Enable new skills + insert missing AGENTS.md sections
 
 ```
-Open AGENTS.md in editor and show the user which new skill lines to check [ x ]
-Do NOT auto-edit AGENTS.md — this is a user decision
-Offer: "Here are the new skills. Add [ x ] to any you want enabled, then re-run /start."
+Part A — New skills
+  Show the user which new skill lines to check [ x ] in AGENTS.md
+  Do NOT auto-edit the Enabled Skills checkboxes — this is a user decision
+  Offer: "Here are the new skills. Add [ x ] to any you want enabled,
+          then re-run /start."
+
+Part B — Post-Work Hook section (if missing from U2 Step 4)
+  Read AGENTS.md
+  If "Post-Work Hook (mandatory after any skill that commits artefacts)"
+  section is absent:
+    Ask: "Your AGENTS.md is missing the Post-Work Hook section introduced
+          in this toolkit version. Insert it now? [Y / skip]"
+    If Y:
+      Insert the full Post-Work Hook block from
+      .quantum-toolbox/templates/AGENTS.template.md into AGENTS.md,
+      placed immediately before the '## When to Update This File' section
+      (or before the Staleness section if that heading is what's present).
+      git add AGENTS.md
+      git commit -m "chore: add Post-Work Hook section to AGENTS.md (qt upgrade)"
+    If skip:
+      Note as acknowledged-missing; agent will still reference it by name
+      if a skill tries to invoke it
 ```
 
 #### Action 2 — Generate new views
