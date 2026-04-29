@@ -675,6 +675,9 @@ views:
 
 **Goal**: Write the complete `code_graph` section into the analysis model.
 
+> **Commit rule:** The output YAML (written into the analysis model file) must be committed to the repo
+> as part of Phase 4D unless the user explicitly opts out. Do not leave it as an uncommitted local file.
+
 ```yaml
 analysis_model:
   code_graph:
@@ -826,12 +829,27 @@ Exclude from `reports` any outputs that were not selected in Phase 0.0.6.
 
 **Goal**: Commit all extraction outputs and the updated manifest as a single coherent change.
 
-Stage:
+> **All artefacts must be committed to the repo** — YAML model files, SQLite databases, view markdown,
+> and reports — unless the user explicitly says otherwise before this phase begins. Do not skip or
+> defer this step. Uncommitted artefacts are invisible to the staleness-check system and to other agents.
+
+Stage **all** output files selected in Phase 0.0.6:
 
 ```bash
-git add code_graph/*.sqlite
-git add docs/architecture-docs/reports/
-git add docs/architecture-docs/analysis/09-code-graph.md
+# YAML backend
+git add docs/architecture-docs/analysis/09-code-graph.md  # always
+git add code_graph.yaml                                    # if YAML backend selected
+
+# SQLite backend
+git add code_graph/*.sqlite                               # if SQLite backend selected
+
+# Reports (stage each report that was generated)
+git add docs/architecture-docs/reports/entry-point-map.md
+git add docs/architecture-docs/reports/dead-code.md
+git add docs/architecture-docs/reports/sre-hot-paths.md
+git add docs/architecture-docs/reports/findings-summary.md
+
+# Manifest
 git add specs/analysis-manifest.json
 ```
 
