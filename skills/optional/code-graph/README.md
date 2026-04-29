@@ -118,6 +118,7 @@ See [workflows.md](workflows.md) for the full pre-flight check procedure.
 | Dead Code | `reports/dead-code.md` | Full inventory with removal risk assessment |
 | SRE Hot Paths | `reports/sre-hot-paths.md` | Critical call chains (requires SRE view 08 active) |
 | Findings Summary | `reports/findings-summary.md` | Cross-cutting aggregation of all active views |
+| SQLite Cookbook | `reports/sqlite-cookbook.md` | Schema reference + query examples for direct SQLite access (SQLite backend only) |
 
 ---
 

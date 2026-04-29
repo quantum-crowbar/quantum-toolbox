@@ -25,7 +25,7 @@ flowchart LR
 
     subgraph Output
         V09[View 09\n09-code-graph.md]
-        R[Reports\nentry-point-map\ndead-code\nsre-hot-paths\nfindings-summary]
+        R[Reports\nentry-point-map\ndead-code\nsre-hot-paths\nfindings-summary\nsqlite-cookbook]
     end
 
     P0 --> P1 --> P2 --> P3
@@ -341,11 +341,17 @@ excluded repos in the Phase 0.0.7 confirmation summary.
     [ ]  code_graph.sqlite              Raw queryable graph
     [ ]  code_graph.yaml                YAML model section
                                         (small codebases only)
+    [ ]  reports/sqlite-cookbook.md     Schema reference +
+                                        query examples for
+                                        direct SQLite access
+                                        (SQLite backend only)
 
   Default: all selected.
 
   Note: reports/sre-hot-paths.md will be skipped if
   analysis/08-sre-reliability.md does not exist.
+  Note: reports/sqlite-cookbook.md will be skipped if
+  YAML backend is selected.
 ```
 
 ---
@@ -786,6 +792,32 @@ CREATE TABLE view_cycles (
 
 ---
 
+## Phase 4B.5: SQLite Cookbook (SQLite backend only)
+
+**Goal**: Generate a user-facing query reference alongside the SQLite file.
+
+**Trigger condition:** Run only when the SQLite backend was selected in Phase 0.3 and `reports/sqlite-cookbook.md` was not deselected in Phase 0.0.6. Do not generate when using the YAML backend.
+
+Steps:
+
+1. Load the template from `.quantum-toolbox/skills/optional/code-graph/sqlite-cookbook.template.md`
+2. Substitute all template variables with values from extraction stats:
+
+   | Placeholder | Value |
+   |-------------|-------|
+   | `{sqlite_path}` | Relative path to the `.sqlite` file from repo root |
+   | `{node_count}` | Total nodes from Phase 2 |
+   | `{edge_count}` | Total edges from Phase 2 |
+   | `{repo_count}` | Number of repos scanned |
+   | `{entry_count}` | Entry point count from Phase 1.3 |
+   | `{dead_count}` | Dead code node count from Phase 2.3 |
+   | `{dead_pct}` | Dead code percentage |
+   | `{extraction_date}` | ISO date of today's extraction |
+
+3. Write to `{docs-directory}/architecture-docs/reports/sqlite-cookbook.md`
+
+---
+
 ## Phase 4C: Update Manifest
 
 **Goal**: Record the extraction in `specs/analysis-manifest.json` so staleness checks and the `/update` command can detect when the code graph becomes outdated.
@@ -808,7 +840,8 @@ Write or overwrite `artifacts.code-graph` with:
     "docs/architecture-docs/reports/entry-point-map.md",
     "docs/architecture-docs/reports/dead-code.md",
     "docs/architecture-docs/reports/sre-hot-paths.md",
-    "docs/architecture-docs/reports/findings-summary.md"
+    "docs/architecture-docs/reports/findings-summary.md",
+    "docs/architecture-docs/reports/sqlite-cookbook.md"
   ],
   "stats": {
     "totalNodes": "<N from Phase 2>",
@@ -848,6 +881,7 @@ git add docs/architecture-docs/reports/entry-point-map.md
 git add docs/architecture-docs/reports/dead-code.md
 git add docs/architecture-docs/reports/sre-hot-paths.md
 git add docs/architecture-docs/reports/findings-summary.md
+git add docs/architecture-docs/reports/sqlite-cookbook.md  # SQLite backend only
 
 # Manifest
 git add specs/analysis-manifest.json

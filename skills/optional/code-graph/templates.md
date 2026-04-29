@@ -309,6 +309,9 @@ graph TD
 **Project**: {meta.project_name}
 **Generated**: {meta.analysis_date}
 **Active Views**: {list of completed analysis views}
+{if sqlite_backend}
+**SQLite Cookbook:** [reports/sqlite-cookbook.md](reports/sqlite-cookbook.md)
+{/if}
 
 ---
 
