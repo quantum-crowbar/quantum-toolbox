@@ -393,6 +393,17 @@ Step 4 — AGENTS.md structural gaps
     → Flag as: "AGENTS.md missing Post-Work Hook section (added in this toolkit version)"
   If present:
     → No action needed
+
+Step 5 — New code-graph reports
+  Check specs/analysis-manifest.json for artifacts.code-graph (code graph was run before)
+  If present:
+    Check whether docs/architecture-docs/reports/sqlite-cookbook.md exists
+    If absent:
+      → Flag as: "sqlite-cookbook.md not yet generated (added in this toolkit version)"
+    If present:
+      → No action needed
+  If artifacts.code-graph is absent:
+    → Skip (code graph has not been run in this repo)
 ```
 
 ---
@@ -434,7 +445,7 @@ Present a structured diff — what changed, what needs action:
 ─────────────────────────────────────────────────────────
   Actions:
     1  Enable new skills in AGENTS.md
-    2  Generate new views (no re-scan needed — uses existing model)
+    2  Generate new views + missing reports (no re-scan needed — uses existing model/SQLite)
     3  Regenerate updated-template outputs (re-scan required if templates changed analysis phases)
     4  Re-run code graph extraction
     A  Do all of the above in sequence
@@ -451,6 +462,7 @@ If nothing changed:
 ─────────────────────────────────────────────────────────
   No new skills, views, or template changes affect your workspace.
   AGENTS.md Post-Work Hook section is present.
+  sqlite-cookbook.md is present.
   Code graph is current.
   Your analysis outputs are current for this version.
 ─────────────────────────────────────────────────────────
@@ -487,9 +499,10 @@ Part B — Post-Work Hook section (if missing from U2 Step 4)
       if a skill tries to invoke it
 ```
 
-#### Action 2 — Generate new views
+#### Action 2 — Generate new views + missing reports
 
 ```
+Part A — New analysis views
 → Trigger: "Update analysis views" (analysis-tracking skill, step 3b)
 → For each new view in the diff:
    1. Read existing analysis model / architecture docs to reconstruct context
@@ -499,6 +512,24 @@ Part B — Post-Work Hook section (if missing from U2 Step 4)
    - Add new view to views[] array for architecture-docs artifact
    - Update toolboxVersion to new version
 → Create update log entry in docs/update-logs/ (update-logs skill)
+
+Part B — sqlite-cookbook.md (if flagged missing in U2 Step 5)
+  Precondition: artifacts.code-graph exists in manifest AND SQLite backend was used
+    (check artifacts.code-graph.files for a .sqlite entry)
+  If both are true:
+    Ask: "sqlite-cookbook.md was added in this version. Generate it now
+          from your existing SQLite file? No re-extraction needed. [Y / skip]"
+    If Y:
+      1. Read artifacts.code-graph stats from specs/analysis-manifest.json
+         (generatedDate, stats.totalNodes, stats.resolvedEdges, sourceRepos, files)
+      2. Derive {repo_count} from len(sourceRepos), {sqlite_path} from files[0]
+      3. Load .quantum-toolbox/skills/optional/code-graph/sqlite-cookbook.template.md
+      4. Substitute all template variables
+      5. Write to docs/architecture-docs/reports/sqlite-cookbook.md
+      6. git add docs/architecture-docs/reports/sqlite-cookbook.md
+      7. git commit -m "docs(code-graph): add sqlite-cookbook.md (qt upgrade)"
+    If skip:
+      Note as acknowledged-missing, continue
 ```
 
 #### Action 3 — Regenerate updated-template outputs

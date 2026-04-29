@@ -120,6 +120,10 @@ See [workflows.md](workflows.md) for the full pre-flight check procedure.
 | Findings Summary | `reports/findings-summary.md` | Cross-cutting aggregation of all active views |
 | SQLite Cookbook | `reports/sqlite-cookbook.md` | Schema reference + query examples for direct SQLite access (SQLite backend only) |
 
+> **Retroactive generation:** If you already have a code graph but no `sqlite-cookbook.md`
+> (e.g. the graph was extracted before this toolkit version), run `/upgrade` — Action 2 will
+> generate the cookbook from your existing SQLite stats without re-running extraction.
+
 ---
 
 ## Traversal Primitives (YAML backend)
