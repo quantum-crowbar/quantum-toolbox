@@ -212,7 +212,7 @@ Recommended colors for architecture diagrams:
 {
   "type": "excalidraw",
   "version": 2,
-  "source": "architecture-analysis",
+  "source": "https://excalidraw.com",
   "elements": [
     {
       "id": "user",
@@ -312,6 +312,9 @@ Left-to-right flow:
 5. **Add arrows** with start/end bindings
 6. **Write JSON** to `.excalidraw` file
 7. **Reference in markdown** as image
+8. **Import to excalidraw.com** — drag-and-drop the `.excalidraw` file onto the canvas,
+   or use **File → Open** in the excalidraw.com UI. The file is the native import format;
+   no conversion needed.
 
 ---
 
