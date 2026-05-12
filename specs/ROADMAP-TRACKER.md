@@ -49,7 +49,7 @@ Master tracking document for all skill development roadmaps.
 | View 12: Scalability & Capacity | - | ⚪ Planned | Medium |
 | View 13: Developer Experience (DX) | - | ⚪ Planned | Medium |
 | View 14: API Contract & Versioning | - | ⚪ Planned | Medium |
-| View 15: Cost Architecture | - | ⚪ Planned | Low |
+| View 15: Cost Impact Report | - | ⚪ Planned | Medium |
 | Architecture-Docs Reports Section | - | 🟡 In Progress | High |
 | | | | |
 | **--- CODE-GRAPH SKILL ---** | | | |
@@ -1318,6 +1318,52 @@ Address quick fixes first, then tackle structural changes:
 
 ---
 
+## View 15: Cost Impact Report
+
+> **Status:** ⚪ Planned · **Priority:** Medium · **Target:** v3.1
+
+### Problem
+
+Engineering leads cannot easily quantify the cost implications of architecture findings. Dead code, high-complexity hotspots, bloated dependency trees, and sprawling infrastructure surfaces all carry real costs — maintenance, incident response, over-provisioning, forced migrations — but nothing in the current toolkit translates them into categories that finance and leadership can reason about.
+
+### Approach
+
+Synthesis report (`reports/cost-impact.md`) generated from outputs already produced by existing skills. No new data collection pipeline needed.
+
+| Cost Category | Primary Source | Signal Mapped |
+|---|---|---|
+| Maintenance burden | code-graph | `dead_pct`, `dead_count`, dead-but-complex nodes |
+| Refactor investment | code-graph | `complexity_hotspots` (cyclomatic > 10), high fan-in nodes |
+| Infrastructure surface | arch-analysis | DB / cache / queue / external API count |
+| Dependency risk | arch-analysis Phase 6 | outdated, vulnerable, deprecated package counts |
+| Incident blast radius | code-graph | nodes with fan_in > threshold (high-blast nodes) |
+| Performance waste | nonfunctional-analysis | N+1 patterns, sync-in-async, missing connection pooling |
+| Security remediation | security-analysis | CVE count by severity, forced-upgrade count |
+
+Each category gets a **signal → cost narrative** (e.g. "X dead code nodes = Y% of codebase maintained for no return") and an **optional day-rate estimate** if the user supplies a team cost figure.
+
+### Output
+
+- `architecture-docs/reports/cost-impact.md` — cost category table + narrative per category + optional estimate block
+- Link added to `findings-summary.md` conditional on report being generated
+- No new architecture model section needed; reads from existing `code_graph`, `dependencies`, and `analysis.{phase}` sections
+
+### Prerequisites
+
+- `arch-analysis` complete (minimum)
+- Richer with `code-graph` (SQLite backend strongly recommended for dead_pct and fan_in queries)
+- Optional: `nonfunctional-analysis`, `security-analysis`
+
+### Tasks
+
+- [ ] Template: add `cost-impact.md` template to `skills/optional/analysis-outputs/architecture-docs/templates.md` (7 cost category sections)
+- [ ] Workflow step: add `cost-impact.md` generation step to architecture-docs generation workflow
+- [ ] Findings-summary template: add conditional `Cost Impact` link row
+- [ ] README: add row to reports table
+- [ ] Update ROADMAP-TRACKER status to 🟢 Complete when done
+
+---
+
 ## Progress Log
 
 | Date | Change | Commit |
@@ -1351,6 +1397,7 @@ Address quick fixes first, then tackle structural changes:
 | 2026-02-05 | Excalidraw Diagram Support complete (4th output format option) | - |
 | 2026-02-06 | TOGAF Preliminary Phase complete (principles, governance, capability assessment) | - |
 | 2026-02-08 | Added token optimization & structural cleanup roadmap (12 items) | - |
+| 2026-05-12 | View 15 renamed to Cost Impact Report, spec added, priority raised to Medium | - |
 
 ---
 
