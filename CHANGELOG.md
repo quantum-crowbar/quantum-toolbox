@@ -16,6 +16,87 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-05-12
+
+### Bootstrap Core Skill (new)
+
+**`bootstrap`** — New core skill providing a standardised session entry point and upgrade lifecycle. Replaces the ad-hoc "run these commands at the start" pattern.
+
+- **`/start`** — Detects Mode A (session start on an established project) vs Mode B (first-time setup). In Mode A it prints a live snapshot of enabled skills and available commands. In Mode B it runs the guided 8-step first-time setup.
+- **`/help`** — Prints the full command reference.
+- **`/skills`** — Lists all skills registered in `manifest.yaml` with their enabled/disabled status for the current project.
+- **`/update`** — Check-only staleness pass: compares source repo SHAs against last-recorded analysis commit, checks toolkit submodule version, and reports code-graph freshness. No writes.
+- **`/upgrade`** — Full upgrade action: pulls latest toolkit, diffs new skills/views/templates against the project's enabled set, detects missing Post-Work Hook and inserts it, detects missing `sqlite-cookbook.md` and generates it from manifest stats (no re-extraction needed), and prints a per-category change report.
+
+`first-time-setup.md` extracted from the main bootstrap workflows file — Mode A sessions no longer load the 8-step setup content (~1,000 tokens saved per established-project session).
+
+### Auto-Sync Hook (Post-Work Hook)
+
+Every analysis skill now ends with a non-skippable **Final Step: Sync context files**, backed by a **Post-Work Hook** block in `AGENTS.md`.
+
+After every completed analysis the agent automatically:
+- Updates `CONTEXT.md` stale fields (last run date, view status, toolkit version)
+- Updates the per-trigger `last_run` and `outputs[]` fields in `AGENTS.md`
+- Updates `README.md` if the analysis changes a badge or status section
+- Commits the updated context files
+
+The hook is defined once in `templates/AGENTS.md` and injected into new projects via `first-time-setup.md` Step 3. Existing projects without the hook receive it automatically when `/upgrade` is run (U4 Action 1 Part B).
+
+Skills updated: `arch-analysis`, `security-analysis`, `coding-profile`.
+
+### Code-Graph Improvements
+
+- **Phase 0.0 scope & setup dialogue** — Before extraction begins the agent confirms scope (single repo vs multi-repo), validates all listed repos are accessible, and offers clone/continue/abort for any missing repo. Phase 0.0 display heading added: `Code Graph Analysis — Scope & Setup`.
+- **Artefact commit requirement** — Phase 4A and Phase 4D now explicitly require committing all YAML and SQLite output files. A bold warning block prevents accidental omission.
+- **Missing-repo validation** — Pre-flight check added; extraction cannot proceed until all repos in scope are verified present.
+- **Analysis-tracking integration** — Regenerable artefact pattern documented: `generatedDate`, `regenerate`, and `sourceRepos` fields added to the code-graph manifest block. `check-analysis-status.sh` gains a `check_regenerable_artefacts()` function that compares `generatedDate` against HEAD commit dates per source repo and reports stale artefacts with counts and the regenerate command.
+
+### SQLite Cookbook
+
+New per-project query reference document (`reports/sqlite-cookbook.md`) generated automatically in Phase 4B.5 when the SQLite backend is active.
+
+The cookbook is populated from live extraction stats (9 substitution variables) and covers: opening the database, full schema reference (nodes, edges, unresolved_calls tables + materialized views with column tables), essential queries, call graph traversal (blast radius forward/reverse, shortest path), hotspot analysis, entry point analysis, dead code, async call patterns, repo stats, unresolved calls, and regeneration commands.
+
+`/upgrade` Action 2 Part B retroactively generates the cookbook for projects that ran code-graph before this version — reads stats from the manifest, no re-extraction required.
+
+### Excalidraw Bidirectional Support
+
+The existing Excalidraw output skill was one-way only. v3.0 completes the round-trip:
+
+- **Output skill** (updated) — Fixed `source` field in the system context template (`"architecture-analysis"` → `"https://excalidraw.com"`). Added Step 8: drag-and-drop import instructions to excalidraw.com.
+- **Import skill** (new) — 5-phase pipeline for parsing `.excalidraw` JSON files and feeding them into the architecture model:
+  - Phase 1: Parse `elements[]`, resolve labels via `containerId`, identify frame boundaries
+  - Phase 2: Map `backgroundColor` → component role using the toolkit's standard color palette (`#a5d8ff` service, `#ffc9c9` external, `#b2f2bb` datastore, `#ffd8a8` actor, `#e9ecef` boundary, `#ffec99` process); shape-type fallback for unlabelled elements
+  - Phase 3: Disambiguation dialogue — presents mapping table, flags unknowns, user confirms or corrects
+  - Phase 4: Auto-selects diagram type (`flowchart LR`, `C4Context`, or `C4Container`), writes `diagrams/{source}-mermaid.md` with full component inventory
+  - Phase 5 (optional): Pre-populates `architecture_model` and feeds directly into `arch-analysis` Phase 2
+
+Both skills registered in `analysis-outputs/_index.md` with trigger phrases. Triggers: `"Analyse this excalidraw file"`, `"Convert excalidraw to Mermaid"`, `"Use this excalidraw as architecture input"`.
+
+### Token Optimisation (45% session-start reduction)
+
+Six optimisations reducing session-start overhead from ~9,600 tokens (v2.4) to ~2,500 tokens (v3.0):
+
+| Optimisation | Saving |
+|---|---|
+| OPT-1: Split `_index.md` → `_index.md` + `_detail.md` | ~2,000 t/session |
+| OPT-2: Domain-split glossary (TOGAF + Security terms deferred to skill invocation) | ~650 t/session |
+| OPT-3: Remove bootstrap command duplication from `core/workflows.md` | ~2,500 t when bootstrap active |
+| OPT-4: Phased loading annotations in large skill READMEs | 7–14 K t/large skill |
+| OPT-5: `scripts/measure-tokens.sh` token baseline script | tooling |
+| OPT-6: Extract first-time-setup from bootstrap (Mode A overhead) | ~1,000 t/Mode A session |
+
+### Analysis Tracking
+
+- Toolkit version tracking: `CONTEXT.md` now records the toolkit submodule SHA; `/update` compares it against the current HEAD to detect drift.
+- Incremental view update commands added — re-run only the views whose source data changed, rather than regenerating the full analysis.
+
+### Bug Fixes
+
+- `excalidraw-output.md`: corrected `source` field in system context JSON template
+- Bootstrap `/start`: fixed mode detection (session start vs first-time setup)
+- Stale skill descriptions in `AGENTS.md` template and `arch-analysis/README.md` updated to match current phase count
+
 ## [2.6.0] - 2026-03-04
 
 ### New Skills (3)
