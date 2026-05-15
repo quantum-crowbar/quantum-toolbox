@@ -48,6 +48,36 @@ Ask your agent:
 
 This re-reads the toolkit and presents all capabilities with invokable commands. Useful after toolkit updates or when you want a reminder of what's available.
 
+### Commands
+
+All commands are invoked by typing them directly to your agent:
+
+| Command | What it does | Modifies files? |
+|---------|-------------|-----------------|
+| `/start` | Orient the agent: presents project state, enabled skills, and available commands. Detects first-time setup vs. established project. | No |
+| `/help` | Full command reference with descriptions and examples. | No |
+| `/skills` | Lists all registered skills with enabled/disabled status for your project. | No |
+| `/update` | **Read-only staleness check.** Compares source repo SHAs, toolkit version, and code graph freshness against the analysis manifest. Reports what's out of date — no pulls, no regeneration. | No |
+| `/upgrade` | **Full upgrade.** Pulls the latest toolkit, diffs what changed (new skills, new views, changed templates), compares against your existing outputs, inserts any missing configuration, then offers to regenerate only what is stale or missing. Always report-first, act second. | Yes (on confirm) |
+
+> **`/update` vs `/upgrade`** — `/update` tells you *what* is stale. `/upgrade` actually *fixes* it. Run `/update` for a quick check; run `/upgrade` when you want to act on a new toolkit version or stale outputs.
+
+### Upgrading to a New Version
+
+When a new version of the toolkit ships, your existing analysis outputs and configuration stay intact. `/upgrade` handles the transition:
+
+1. **Pulls** the latest toolkit into `.quantum-toolbox`
+2. **Diffs** what changed — new skills, new analysis views, updated templates
+3. **Reports** what your project has vs. what's now available
+4. **Acts selectively** — you choose what to regenerate:
+   - *New views* are generated from your existing analysis model — no re-scan of source code needed
+   - *Missing configuration* (e.g. Post-Work Hook) is inserted into `AGENTS.md` on confirm
+   - *Missing reports* (e.g. `sqlite-cookbook.md`) are generated from existing data — no re-extraction needed
+   - *Stale outputs* (templates changed) require a full re-run of the affected skill
+5. **Updates** `specs/analysis-manifest.json` to record the new version and any new views
+
+This means upgrading is incremental by default — you only re-run what actually changed.
+
 ### Recommended Models
 
 | Model | Best For | When to Use |
