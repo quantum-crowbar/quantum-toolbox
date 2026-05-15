@@ -6,7 +6,7 @@
 
 <p align="center"><em>AI Agent toolbox for software architecture</em></p>
 
-<p align="center"><a href="CHANGELOG.md#260---2026-03-04">What's new in v2.6.0</a></p>
+<p align="center"><a href="CHANGELOG.md#300---2026-05-12">What's new in v3.0.0</a></p>
 
 > **Audience:** Humans (GitHub landing page)
 

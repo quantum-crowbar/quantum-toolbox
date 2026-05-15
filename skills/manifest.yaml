@@ -2,7 +2,7 @@
 # Canonical source for skill metadata. Markdown tables in _index.md are derived from this file.
 # Schema: name, tier, path, description, dependencies, invocations, status
 
-version: "3.0.0-dev"   # bump on every release; read by analysis-manifest toolboxVersion check
+version: "3.0.0"   # bump on every release; read by analysis-manifest toolboxVersion check
 
 skills:
   # ── Core Skills (Always Active) ──────────────────────────────────────
