@@ -58,6 +58,9 @@ Master tracking document for all skill development roadmaps.
 | Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
 | Phase 2: SQLite export path | - | ⚪ Planned | Medium |
 | | | | |
+| **--- EXPLORATIONS ---** | | | |
+| EXPL-01: Analysis SQLite — early DB for arch findings | - | 🔬 Exploration | Medium |
+| | | | |
 | **--- UPDATE-LOGS SKILL ---** | | | |
 | Skill files (README, workflows, templates, examples) | - | 🟢 Complete | High |
 | Registered in manifest.yaml + _index.md | - | 🟢 Complete | High |
@@ -1364,6 +1367,107 @@ Each category gets a **signal → cost narrative** (e.g. "X dead code nodes = Y%
 
 ---
 
+## EXPL-01: Analysis SQLite — Early DB for Architecture Findings
+
+> **Status:** 🔬 Exploration · **Priority:** Medium · **Target:** v3.1 investigation
+
+### Idea
+
+Instead of the architecture model living exclusively as YAML in-context, the agent creates `analysis/analysis.sqlite` in Phase 0 of arch-analysis and INSERTs findings as each phase completes. YAML stays as the human-readable in-session scratchpad; SQLite becomes the persistent findings store and the query target for report generation.
+
+### Motivation
+
+- **Token pressure** — the YAML model grows with every phase; by Phase 6 it can be large enough to crowd out context for the actual analysis work. SQL queries return only result rows.
+- **Cross-skill synthesis** — today joining dependency data (arch-analysis) with dead-code data (code-graph) requires the agent to hold both files in context. With a shared DB it is a single `JOIN`.
+- **Report generation** — findings-summary and cost-impact today re-read the entire YAML model. SQL aggregations (`GROUP BY severity`, `COUNT(*)`) replace full-file reads.
+- **Incremental re-run** — re-running a phase is `DELETE … WHERE phase = 'phase_5'` + re-INSERT, not a full model rebuild.
+
+### Proposed Schema
+
+```sql
+-- Phase 1
+CREATE TABLE technologies (
+  id TEXT PRIMARY KEY,
+  category TEXT,          -- language|framework|library|infra|build_tool
+  name TEXT, version TEXT, purpose TEXT,
+  evidence_file TEXT, evidence_line INTEGER,
+  documented INTEGER, accuracy TEXT   -- accurate|outdated|missing
+);
+
+CREATE TABLE dependencies (
+  id INTEGER PRIMARY KEY,
+  name TEXT, version TEXT, manager TEXT,  -- npm|pip|maven|gradle
+  category TEXT,
+  is_outdated INTEGER, is_vulnerable INTEGER,
+  cve_ids TEXT,    -- JSON array
+  license TEXT
+);
+
+CREATE TABLE infrastructure (
+  id INTEGER PRIMARY KEY,
+  name TEXT, type TEXT,   -- database|cache|queue|api|external
+  purpose TEXT, connection_method TEXT, evidence_file TEXT
+);
+
+-- Phase 2
+CREATE TABLE interfaces (
+  id INTEGER PRIMARY KEY,
+  path TEXT, method TEXT, type TEXT,   -- rest|graphql|event|cli|grpc
+  auth_required INTEGER, auth_type TEXT,
+  description TEXT, evidence_file TEXT
+);
+
+-- Phases 3-8 (and security-analysis, nonfunctional-analysis)
+CREATE TABLE findings (
+  id INTEGER PRIMARY KEY,
+  skill TEXT,        -- arch-analysis|security-analysis|nonfunctional
+  phase TEXT,        -- e.g. phase_5_injection
+  category TEXT,     -- dependency|security|performance|reliability|data
+  severity TEXT,     -- critical|high|medium|low|info
+  title TEXT, detail TEXT,
+  evidence_file TEXT, evidence_line INTEGER,
+  recommended_action TEXT,
+  created_at TEXT
+);
+```
+
+### Cross-Skill Queries That Become Possible
+
+```sql
+-- Cost-impact: findings by severity across all skills
+SELECT skill, severity, COUNT(*) FROM findings GROUP BY skill, severity;
+
+-- Dead dependencies that are also complex (impossible today without two files in context)
+ATTACH 'code_graph.sqlite' AS cg;
+SELECT d.name, n.cyclomatic_complexity, n.location
+FROM dependencies d
+JOIN cg.nodes n ON n.repo = d.manager
+WHERE d.is_outdated = 1 AND n.is_dead_code = 1;
+
+-- All critical/high findings across every skill in one table
+SELECT skill, phase, title, evidence_file
+FROM findings WHERE severity IN ('critical','high')
+ORDER BY skill, phase;
+```
+
+### Questions to Resolve Before Building
+
+1. **Extraction mechanism** — agent writes INSERT statements directly, or generates a `.sql` seed file and runs it? The latter is auditable and re-runnable.
+2. **YAML model fate** — kept as human-readable summary (generated from DB) or dropped entirely? Recommendation: keep YAML as a generated read-only export, not the authoritative source.
+3. **Shared vs separate DB** — `analysis.sqlite` + `code_graph.sqlite` as separate files with `ATTACH`, or merged into one? Separate is safer (code-graph can be regenerated independently).
+4. **Skill coupling** — security-analysis and nonfunctional-analysis would need to know the DB path to write `findings` rows. This introduces a soft dependency on arch-analysis having run first.
+5. **Migration path** — projects with existing YAML models need an import script or a bulk-insert phase.
+
+### Exploration Tasks
+
+- [ ] Prototype schema in a scratch SQLite file against a real arch-analysis output (manual INSERT from existing YAML)
+- [ ] Verify cross-attach query works between `analysis.sqlite` and existing `code_graph.sqlite`
+- [ ] Measure token delta: re-read YAML for findings-summary vs run 3 SQL queries
+- [ ] Decide YAML fate and skill coupling model
+- [ ] If viable: write spec for Phase 0 DB creation step in arch-analysis workflows
+
+---
+
 ## Progress Log
 
 | Date | Change | Commit |
@@ -1398,6 +1502,7 @@ Each category gets a **signal → cost narrative** (e.g. "X dead code nodes = Y%
 | 2026-02-06 | TOGAF Preliminary Phase complete (principles, governance, capability assessment) | - |
 | 2026-02-08 | Added token optimization & structural cleanup roadmap (12 items) | - |
 | 2026-05-12 | View 15 renamed to Cost Impact Report, spec added, priority raised to Medium | - |
+| 2026-05-15 | EXPL-01: Analysis SQLite exploration item added to roadmap | - |
 
 ---
 
