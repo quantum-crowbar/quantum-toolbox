@@ -57,26 +57,32 @@ All commands are invoked by typing them directly to your agent:
 | `/start` | Orient the agent: presents project state, enabled skills, and available commands. Detects first-time setup vs. established project. | No |
 | `/help` | Full command reference with descriptions and examples. | No |
 | `/skills` | Lists all registered skills with enabled/disabled status for your project. | No |
-| `/update` | **Read-only staleness check.** Compares source repo SHAs, toolkit version, and code graph freshness against the analysis manifest. Reports what's out of date — no pulls, no regeneration. | No |
-| `/upgrade` | **Full upgrade.** Pulls the latest toolkit, diffs what changed (new skills, new views, changed templates), compares against your existing outputs, inserts any missing configuration, then offers to regenerate only what is stale or missing. Always report-first, act second. | Yes (on confirm) |
+| `/update` | **Refresh the KB.** Re-runs enabled analysis skills on source repos that have changed since the last run, regenerates affected views and documentation, then writes updated SHAs and view lists back to the manifest and context files. Also checks toolkit version — flags if `/upgrade` should follow. | Yes |
+| `/upgrade` | **Apply a new toolkit version.** Pulls the latest toolkit, diffs old→new (new skills, views, reports, config requirements), checks source staleness, then generates new views/reports and re-runs analysis where needed. By the end, project is fully current with the new toolkit version. | Yes (on confirm) |
 
-> **`/update` vs `/upgrade`** — `/update` tells you *what* is stale. `/upgrade` actually *fixes* it. Run `/update` for a quick check; run `/upgrade` when you want to act on a new toolkit version or stale outputs.
+> **`/update` vs `/upgrade`** — `/update` keeps your KB current with *code changes* (source repos moved ahead). `/upgrade` keeps your KB current with *toolkit changes* (new skills, views, hooks shipped in a new version). Run both after updating the submodule.
 
-### Upgrading to a New Version
+### Keeping Your KB Current
 
-When a new version of the toolkit ships, your existing analysis outputs and configuration stay intact. `/upgrade` handles the transition:
+There are two commands for keeping your knowledge base in sync — one for source changes, one for toolkit changes.
 
-1. **Pulls** the latest toolkit into `.quantum-toolbox`
-2. **Diffs** what changed — new skills, new analysis views, updated templates
-3. **Reports** what your project has vs. what's now available
-4. **Acts selectively** — you choose what to regenerate:
-   - *New views* are generated from your existing analysis model — no re-scan of source code needed
-   - *Missing configuration* (e.g. Post-Work Hook) is inserted into `AGENTS.md` on confirm
-   - *Missing reports* (e.g. `sqlite-cookbook.md`) are generated from existing data — no re-extraction needed
-   - *Stale outputs* (templates changed) require a full re-run of the affected skill
-5. **Updates** `specs/analysis-manifest.json` to record the new version and any new views
+**When your source repos have changed** (code commits since the last analysis run):
 
-This means upgrading is incremental by default — you only re-run what actually changed.
+```
+/update
+```
+
+Re-runs enabled analysis skills on the repos that moved, regenerates the affected architecture-docs views, and writes updated SHAs + view lists back to the manifest and context files. Both source and documentation are refreshed together.
+
+**When the toolkit has a new version** (you've pulled a new `.quantum-toolbox`):
+
+```
+/upgrade
+```
+
+Pulls the latest toolkit, diffs v_old → v_new for new skills, views, reports, and config requirements, then generates new views/reports and re-runs analysis where the new views need fresh source data. By the end, your project is fully current with the new toolkit version — new views generated, missing config inserted, source re-analysed where needed.
+
+> Run `/update` routinely as code evolves. Run `/upgrade` after pulling a new toolkit version — and `/update` first if your sources are also stale.
 
 ### Recommended Models
 

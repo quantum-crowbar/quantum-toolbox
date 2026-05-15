@@ -194,18 +194,17 @@ If user chooses A (or names a skill directly):
 
 ## Update
 
-**Check analysis staleness across all dimensions — no pulling, no file modifications.**
+**Refresh the KB: re-analyse changed source repos, regenerate stale docs and views, update the manifest and context files.**
+
+`/update` looks at both your source code and your documentation together. When repos have changed since the last analysis run it re-runs enabled skills on those repos, regenerates the affected architecture-docs views, and writes everything back to the manifest and context files. It also checks the toolkit version — if the toolkit has been upgraded it flags that `/upgrade` should be run in addition.
 
 ### Triggers
 
 - `/update`
-- `"Check for updates"`
-- `"Is my analysis stale?"`
+- `"Update my analysis"`
+- `"Refresh my docs"`
+- `"Re-run analysis"`
 - `"What's changed since last analysis?"`
-
-### Overview
-
-`/update` is check-only mode. It reads the current manifest state, compares against live repo HEAD SHAs, checks toolkit version, checks code graph freshness, and surfaces all staleness dimensions in one report. It never pulls, modifies files, or triggers re-analysis.
 
 ---
 
@@ -214,123 +213,167 @@ If user chooses A (or names a skill directly):
 ```
 Read specs/analysis-manifest.json
 If not found:
-  Report: "No analysis manifest found — run arch-analysis or Set up analysis
-           tracking to create one."
-  Stop here.
+  Report: "No analysis manifest found. Run arch-analysis first to create one."
+  Stop.
 
 Extract:
   - lastAnalysis.date
   - lastAnalysis.repositories  (repo → commit SHA map)
+  - artifacts                  (which skills have been run, which views exist)
   - toolboxVersion
   - artifacts.code-graph (if present)
 ```
 
 ---
 
-### Phase C2: Check Staleness Dimensions
+### Phase C2: Detect Staleness
 
 #### C2.1 — Source repo SHAs
 
 For each repo in `lastAnalysis.repositories`:
 ```
-1. Check if code/{repo} exists
+1. Check if code/{repo} exists locally
 2. If yes: git -C code/{repo} rev-parse --short HEAD
-3. Compare with recorded commit SHA
-4. Count commits ahead: git -C code/{repo} rev-list {old}..HEAD --count
+3. Compare with recorded SHA
+4. Count: git -C code/{repo} rev-list {old}..HEAD --count
+5. Identify enabled skills that last ran against this repo
+   (check artifacts.{skill}.sourceRepos / lastAnalyzedCommit)
 ```
 
 Output per repo:
 ```
-  api-service        ✓ Up-to-date  (a1b2c3d)
-  worker-service     ⚠ Stale       (5 commits ahead: a1b2c3d → x7y8z9w)
-  frontend           ⚠ Not cloned  (analyzed: j1k2l3m)
+  api-service     ✓ Up-to-date  (a1b2c3d)
+  worker-service  ⚠ Stale       (5 commits ahead: a1b2c3d → x7y8z9w)
+                    Skills to re-run: arch-analysis, coding-profile
+  frontend        ⚠ Not cloned  (analyzed: j1k2l3m — clone to update)
 ```
 
-#### C2.2 — Toolkit version
+#### C2.2 — Documentation / view coverage gaps
 
 ```
-Read .quantum-toolbox/skills/manifest.yaml → current version
-Compare with toolboxVersion in manifest
-
-If different:
-  "⚠ Toolkit updated: {manifest version} → {current version}
-   New views or skills may be available. Run /upgrade to see what changed."
+Read artifacts.architecture-docs.views[] from manifest
+Compare against view list for the currently enabled skills
+→ List any views that should exist but are missing
+   (e.g. a skill was enabled after last analysis)
 ```
 
 #### C2.3 — Code graph staleness
 
 ```
-If artifacts.code-graph is absent from manifest:
-  → Note: "Code graph not yet extracted — run the code-graph skill to generate."
-  → Skip remaining C2.3 checks.
+If artifacts.code-graph absent: skip.
 
-Read:
-  artifacts.code-graph.generatedDate
-  artifacts.code-graph.sourceRepos
+Read artifacts.code-graph.generatedDate + sourceRepos
+For each sourceRepo: compare generatedDate vs current HEAD date
+If any repo has commits newer than generatedDate:
+  → Flag: code graph stale, list affected repos + commit count
+```
 
-For each repo in sourceRepos:
-  - Check lastAnalysis.repositories[repo].commit (the SHA at last analysis run)
-  - Get current HEAD SHA from code/{repo}
-  - If any repo's HEAD postdates generatedDate → that repo is a staleness source
+#### C2.4 — Toolkit version check
 
-If any stale repos found:
-  Surface:
-  "⚠ Code graph stale — generated {generatedDate}, repos updated since:
-       - {repo}  ({branch}, {N} commits ahead)
-   Re-run extraction? (Y / skip)"
+```
+Read .quantum-toolbox/skills/manifest.yaml → current toolkit version
+Compare with toolboxVersion in manifest
 
-  If Y: invoke code-graph skill Phase 0.0 → full extraction + Phase 4C + 4D
-  If skip: note as acknowledged-stale in the report, continue
-
-If no stale repos:
-  "✓ Code graph current  (generated {generatedDate})"
+If different:
+  → Flag: "⚠ Toolkit upgraded: {old} → {new}. Run /upgrade after /update
+     to apply new skills, views, and config changes."
+  (Do not stop — /update still proceeds with source + doc refresh)
 ```
 
 ---
 
-### Phase C3: Present Staleness Report
+### Phase C3: Present Staleness Report + Confirm
 
 ```
 ─────────────────────────────────────────────────────────────
-  Staleness Report  —  {today's date}
+  Update Report  —  {today's date}
 ─────────────────────────────────────────────────────────────
-
   Last analysis:  {lastAnalysis.date}
-  Toolkit:        {manifest toolboxVersion} {same / → new version}
+  Toolkit:        {toolboxVersion}  {✓ same / ⚠ upgraded → run /upgrade too}
 
   Source repos
-    {repo}   ✓ / ⚠ ...
+    {repo}   ✓ Up-to-date / ⚠ Stale ({N} commits)  Skills: {list}
     ...
 
+  Documentation
+    Views present:  {N of M}
+    Missing views:  {list or "(none)"}
+
   Code graph
-    ✓ / ⚠ ...
+    ✓ Current / ⚠ Stale ({repos})
 
 ─────────────────────────────────────────────────────────────
   {If all current:}
   Everything is up-to-date. No action needed.
 
   {If stale:}
-  To update:
-    Stale source analysis  → run arch-analysis (or coding-profile) on changed repos
-    Code graph stale       → run code-graph skill
-    Toolkit upgraded       → run /upgrade
+  Ready to re-run: {skill list} on {repo list}
+  Missing views will be generated from the updated analysis.
+
+  Proceed? (Y / select repos / N)
 ─────────────────────────────────────────────────────────────
+```
+
+---
+
+### Phase C4: Re-Run Analysis on Stale Repos
+
+For each stale repo the user confirmed:
+```
+1. Re-run each enabled skill that previously covered this repo:
+     arch-analysis     → re-run full analysis against code/{repo}
+     security-analysis → re-run against code/{repo}
+     coding-profile    → re-run against code/{repo}
+   (Use existing clones in code/ — do not re-clone unless missing)
+
+2. For any missing views identified in C2.2:
+     Generate missing view using relevant skill workflow
+     Save to docs/architecture-docs/analysis/{view-id}-{name}.md
+
+3. If code graph is stale and user confirms:
+     Invoke code-graph skill Phase 0.0 (scope pre-filled from manifest)
+     On completion: Phase 4C + 4D (manifest update + commit)
+```
+
+---
+
+### Phase C5: Update Manifest + Context
+
+```
+Update specs/analysis-manifest.json:
+  - lastAnalysis.date → today
+  - lastAnalysis.repositories.{repo}.commit → new HEAD SHA  (per updated repo)
+  - artifacts.architecture-docs.views[] → add any newly generated views
+  - artifacts.{skill}.lastAnalyzedCommit → new SHA  (per skill per repo)
+  (toolboxVersion is NOT updated here — that is /upgrade's responsibility)
+
+Create update log entry: docs/update-logs/YYYY-MM-DD-update.md
+  (update-logs skill)
+
+Run Post-Work Hook:
+  - Update CONTEXT.md update log row (today's date + one-line summary)
+  - Update AGENTS.md staleness line
+  - git add CONTEXT.md AGENTS.md specs/analysis-manifest.json docs/
+  - git commit -m "docs: sync KB after /update — {repo list}"
 ```
 
 ---
 
 ### Notes for Agents
 
-- `/update` never modifies files — it is always read-only
-- If user asks to fix what's stale: hand off to the appropriate skill or `/upgrade`
-- Missing `code/` repos: note them but do not clone without user confirmation
-- If manifest is unreadable: note "manifest unreadable — run `Set up analysis tracking` to reset"
+- Re-use existing clones in `code/` — do not clone unless the repo is missing
+- If a repo is not cloned: note it, offer to clone, but do not proceed without confirmation
+- If manifest is unreadable: "manifest unreadable — run `Set up analysis tracking` to reset"
+- If toolkit is upgraded: run `/update` first to refresh sources, then `/upgrade` to apply new toolkit features
+- Always create an update log entry after any successful re-analysis
 
 ---
 
 ## Upgrade
 
-**Pull latest toolkit, diff what changed, re-run only the analysis that is affected.**
+**Apply a new toolkit version: pull latest, diff what changed, generate new views and reports, insert missing config, re-run analysis where new skills require it.**
+
+`/upgrade` is triggered by a toolkit version change. It looks at both the toolkit delta (new skills, views, hooks, templates) and your current source + documentation state. By the end, your project is fully current with the new toolkit version — new views generated, new config inserted, and any source-stale analysis re-run.
 
 ### Triggers
 
@@ -338,243 +381,222 @@ If no stale repos:
 - `"Upgrade the toolkit"`
 - `"Update to latest version"`
 - `"What's new in the toolkit?"`
-
-### Overview
-
-`/upgrade` is the full post-update flow. It pulls the latest toolkit, computes the diff of what changed (new skills, new views, changed templates), compares that against the user's existing analysis outputs, and re-runs only what is stale or missing as a result. Always report-first, act second.
+- `"Apply new toolkit version"`
 
 ---
 
-### Phase U1: Pull Latest
+### Phase U1: Pull Latest Toolkit
 
 ```
 git -C .quantum-toolbox pull origin main
 
 On success:
   - Re-read .quantum-toolbox/skills/manifest.yaml → new version
-  - Note: old version (from analysis-manifest.json toolboxVersion field, or Phase 1 read)
+  - Note old version from specs/analysis-manifest.json toolboxVersion field
 
 On failure:
   - Report: "Could not pull latest toolkit — check network or submodule config"
-  - Stop here, do not proceed
+  - Stop.
 ```
 
 ---
 
-### Phase U2: Diff What Changed
+### Phase U2: Diff Toolkit Delta
 
-Compute the upgrade delta — what did this version add that the user doesn't have yet?
+What did the new version add that this project doesn't have yet?
 
 ```
-Step 1 — Skills added
-  Compare skills in new manifest.yaml vs old version (use git diff if available,
-  or compare manifest skill list vs what was present in user's last analysis run)
-  → List: new skills available (name + description)
-  → Note: skills the user has [ x ] enabled vs newly available ones
+Step 1 — New skills
+  Compare skill list in new manifest.yaml vs old version
+  → New skills: name + description
+  → Note: which the user has enabled [ x ] vs not
 
-Step 2 — Analysis views added
+Step 2 — New analysis views
   Read .quantum-toolbox/skills/optional/analysis-outputs/architecture-docs/README.md
-  → Extract full view list supported by new toolkit version
+  → Full view list supported by new toolkit version
   Read specs/analysis-manifest.json → views[] already generated
-  → Diff: which views are in toolkit but not in user's manifest?
-  → These are "new views available for re-generation"
+  → Diff: views in toolkit but not in manifest → "new views to generate"
+  → For each new view: identify which skill produces it + what source data it needs
 
-Step 3 — Template changes (best-effort)
-  Check git log in .quantum-toolbox for changes to skills/optional/*/templates.md
-  since the version recorded in analysis-manifest.json toolboxVersion
-  → Note any templates used for existing artifacts that have changed
-  → These are "outputs that may benefit from regeneration"
+Step 3 — New report types
+  Check for new report files new to this version
+  (e.g. sqlite-cookbook.md, cost-impact.md)
+  Cross-check docs/architecture-docs/reports/ for presence
+  → Missing reports: flag + note whether source data already exists to generate them
 
-Step 4 — AGENTS.md structural gaps
-  Read the repo's AGENTS.md
-  Check for the presence of a section titled:
-    "Post-Work Hook (mandatory after any skill that commits artefacts)"
-  If absent:
-    → Flag as: "AGENTS.md missing Post-Work Hook section (added in this toolkit version)"
-  If present:
-    → No action needed
+Step 4 — Changed templates (best-effort)
+  git -C .quantum-toolbox log --oneline {old version}..HEAD -- skills/optional/*/templates.md
+  → List artifacts generated from changed templates → "may benefit from regeneration"
 
-Step 5 — New code-graph reports
-  Check specs/analysis-manifest.json for artifacts.code-graph (code graph was run before)
-  If present:
-    Check whether docs/architecture-docs/reports/sqlite-cookbook.md exists
-    If absent:
-      → Flag as: "sqlite-cookbook.md not yet generated (added in this toolkit version)"
-    If present:
-      → No action needed
-  If artifacts.code-graph is absent:
-    → Skip (code graph has not been run in this repo)
+Step 5 — Config gaps
+  Read AGENTS.md → check for Post-Work Hook section
+  → Missing: flag for insertion
+  Read AGENTS.md enabled skills list → compare against new skills available
+  → New skills not listed: flag for user to review
+
+Step 6 — Source staleness (same as /update Phase C2.1–C2.3)
+  Run full source repo + code graph staleness check
+  → Identifies repos stale since last analysis
+  → Especially relevant: new views may require a fresh analysis run if the model is old
 ```
 
 ---
 
-### Phase U3: Build Upgrade Report
-
-Present a structured diff — what changed, what needs action:
+### Phase U3: Build Upgrade Report + Confirm
 
 ```
 ─────────────────────────────────────────────────────────
   quantum-toolbox upgrade  —  {old version} → {new version}
 ─────────────────────────────────────────────────────────
 
-  New skills available
-    {skill}   {one-liner}   (you have it enabled / not enabled)
-    ...
-    (none) ← if no new skills
+  New skills
+    {skill}   {description}   [enabled / not enabled]
+    (none)
 
-  New analysis views
-    {view-id}  {view name}  ← can be generated from existing analysis model
-    ...
-    (none) ← if no new views
+  New views to generate
+    {view-id}  {name}   source: existing model / needs re-analysis
+    (none)
 
-  Templates updated (outputs may benefit from regeneration)
-    {artifact}  last generated with {old version}  ← re-run recommended
+  New reports to generate
+    {report}   source: {existing SQLite / needs re-analysis / n/a}
+    (none)
+
+  Templates updated (re-generation recommended)
+    {artifact}  generated with {old version}
+    (none)
+
+  Config gaps
+    ⚠ Post-Work Hook missing in AGENTS.md   → will insert on confirm
+    ✔ Post-Work Hook present
+    ⚠ New skills not listed in AGENTS.md    → review after upgrade
+
+  Source repos
+    {repo}  ✓ Up-to-date / ⚠ Stale ({N} commits)
     ...
-    (none) ← if no template changes
-  AGENTS.md
-    ✔ Post-Work Hook section present
-    — OR —
-    ⚠ Post-Work Hook section missing — added in this toolkit version
-      Action 1 will insert it.
+
   Code graph
-    ✓ Current  (generated {generatedDate})
-    — OR —
-    ⚠ Stale — generated {generatedDate}, repos updated since:
-         - {repo}  ({branch}, {N} commits ahead)
+    ✓ Current / ⚠ Stale
 
 ─────────────────────────────────────────────────────────
   Actions:
-    1  Enable new skills in AGENTS.md
-    2  Generate new views + missing reports (no re-scan needed — uses existing model/SQLite)
-    3  Regenerate updated-template outputs (re-scan required if templates changed analysis phases)
-    4  Re-run code graph extraction
+    1  Insert missing config (Post-Work Hook, AGENTS.md sections)
+    2  Generate new views from existing model (no re-scan)
+    3  Generate new reports from existing data (no re-scan)
+    4  Re-run analysis on stale repos (re-scan required)
+    5  Re-run code graph extraction
     A  Do all of the above in sequence
-    Q  Nothing to do right now
+    Q  Nothing right now
 
-What would you like to do? (1 / 2 / 3 / 4 / A / Q)
+What would you like to do? (1 / 2 / 3 / 4 / 5 / A / Q)
 ─────────────────────────────────────────────────────────
 ```
 
-If nothing changed:
+If nothing to do:
 ```
-─────────────────────────────────────────────────────────
-  quantum-toolbox upgrade  —  {old version} → {new version}
-─────────────────────────────────────────────────────────
-  No new skills, views, or template changes affect your workspace.
-  AGENTS.md Post-Work Hook section is present.
-  sqlite-cookbook.md is present.
-  Code graph is current.
-  Your analysis outputs are current for this version.
-─────────────────────────────────────────────────────────
+  No new skills, views, reports, or config changes.
+  All source repos are current.
+  Your project is fully up-to-date with toolkit {version}.
 ```
 
 ---
 
-### Phase U4: Execute User's Choice
+### Phase U4: Execute
 
-#### Action 1 — Enable new skills + insert missing AGENTS.md sections
-
-```
-Part A — New skills
-  Show the user which new skill lines to check [ x ] in AGENTS.md
-  Do NOT auto-edit the Enabled Skills checkboxes — this is a user decision
-  Offer: "Here are the new skills. Add [ x ] to any you want enabled,
-          then re-run /start."
-
-Part B — Post-Work Hook section (if missing from U2 Step 4)
-  Read AGENTS.md
-  If "Post-Work Hook (mandatory after any skill that commits artefacts)"
-  section is absent:
-    Ask: "Your AGENTS.md is missing the Post-Work Hook section introduced
-          in this toolkit version. Insert it now? [Y / skip]"
-    If Y:
-      Insert the full Post-Work Hook block from
-      .quantum-toolbox/templates/AGENTS.template.md into AGENTS.md,
-      placed immediately before the '## When to Update This File' section
-      (or before the Staleness section if that heading is what's present).
-      git add AGENTS.md
-      git commit -m "chore: add Post-Work Hook section to AGENTS.md (qt upgrade)"
-    If skip:
-      Note as acknowledged-missing; agent will still reference it by name
-      if a skill tries to invoke it
-```
-
-#### Action 2 — Generate new views + missing reports
+#### Action 1 — Insert missing config
 
 ```
-Part A — New analysis views
-→ Trigger: "Update analysis views" (analysis-tracking skill, step 3b)
-→ For each new view in the diff:
-   1. Read existing analysis model / architecture docs to reconstruct context
-   2. Generate the new view using the appropriate skill workflow
-   3. Save to docs/architecture-docs/analysis/{view-id}-{name}.md
-→ Update specs/analysis-manifest.json:
-   - Add new view to views[] array for architecture-docs artifact
-   - Update toolboxVersion to new version
-→ Create update log entry in docs/update-logs/ (update-logs skill)
+Post-Work Hook (if missing):
+  Ask: "Your AGENTS.md is missing the Post-Work Hook section. Insert now? [Y / skip]"
+  If Y:
+    Insert full Post-Work Hook block from
+    .quantum-toolbox/templates/AGENTS.template.md into AGENTS.md
+    (before '## When to Update This File' or equivalent heading)
+    git add AGENTS.md
+    git commit -m "chore: add Post-Work Hook section to AGENTS.md (qt upgrade)"
 
-Part B — sqlite-cookbook.md (if flagged missing in U2 Step 5)
-  Precondition: artifacts.code-graph exists in manifest AND SQLite backend was used
-    (check artifacts.code-graph.files for a .sqlite entry)
-  If both are true:
-    Ask: "sqlite-cookbook.md was added in this version. Generate it now
-          from your existing SQLite file? No re-extraction needed. [Y / skip]"
-    If Y:
-      1. Read artifacts.code-graph stats from specs/analysis-manifest.json
-         (generatedDate, stats.totalNodes, stats.resolvedEdges, sourceRepos, files)
-      2. Derive {repo_count} from len(sourceRepos), {sqlite_path} from files[0]
-      3. Load .quantum-toolbox/skills/optional/code-graph/sqlite-cookbook.template.md
-      4. Substitute all template variables
-      5. Write to docs/architecture-docs/reports/sqlite-cookbook.md
-      6. git add docs/architecture-docs/reports/sqlite-cookbook.md
-      7. git commit -m "docs(code-graph): add sqlite-cookbook.md (qt upgrade)"
-    If skip:
-      Note as acknowledged-missing, continue
+New skills (always manual):
+  List new skill lines the user can add [ x ] to their AGENTS.md
+  Do NOT auto-edit Enabled Skills — this is a user decision
+  Prompt: "Add [ x ] to any you want enabled, then re-run /start."
 ```
 
-#### Action 3 — Regenerate updated-template outputs
+#### Action 2 — Generate new views from existing model
 
 ```
-→ For each affected artifact:
-   1. Confirm with user: "Re-generate {artifact}? This re-runs the full analysis."
-   2. On confirm: run the appropriate skill (arch-analysis, coding-profile, etc.)
-      with the existing repos already cloned in code/
-   3. Update specs/analysis-manifest.json sourceCommits + toolboxVersion
-→ Create update log entry
+For each new view identified in U2 Step 2 (source: existing model):
+  1. Load existing analysis model / architecture docs to reconstruct context
+  2. Run the view generation step from the relevant skill workflow
+  3. Write to docs/architecture-docs/analysis/{view-id}-{name}.md
+  4. Update specs/analysis-manifest.json → add view to views[] array
+  5. Create update log entry
 ```
 
-#### Action 4 — Re-run code graph extraction
+#### Action 3 — Generate new reports from existing data
 
 ```
-→ If code graph is stale (identified in Phase U3):
-   Invoke code-graph skill Phase 0.0 with repos pre-populated from
-   artifacts.code-graph.sourceRepos — user can confirm or adjust scope.
-   On completion: Phase 4C updates manifest, Phase 4D commits.
-→ If code graph was never run:
-   Offer: "Run code-graph extraction now? This is optional."
-   If yes: invoke code-graph skill Phase 0.0 from scratch.
+For each new report where data already exists (e.g. sqlite-cookbook from SQLite file):
+  1. Read required stats from manifest / existing files
+  2. Load and fill the report template
+  3. Write to docs/architecture-docs/reports/{report-name}.md
+  4. git add + git commit -m "docs: add {report-name} (qt upgrade)"
+```
+
+#### Action 4 — Re-run analysis on stale repos
+
+```
+Same as /update Phase C4 — re-run enabled skills on stale repos,
+generate any missing views (including new ones that need fresh source data).
+Update manifest sourceCommits per skill per repo.
+```
+
+#### Action 5 — Re-run code graph extraction
+
+```
+If stale: invoke code-graph skill Phase 0.0
+  (scope pre-filled from artifacts.code-graph.sourceRepos)
+  On completion: Phase 4C + 4D (manifest + commit)
+If never run: offer to run from scratch.
 ```
 
 #### Action A — All in sequence
 
 ```
-Run: 2 → 3 → 4 → show 1 (skill enabling is always manual)
-Action 2 first (no re-scan, fast), then 3 (re-scan per artifact), then 4 (code graph).
-After completion, prompt user to review and enable new skills (step 1).
+Run: 1 → 2 → 3 → 4 → 5
+(Config first, then no-rescan generation, then rescan, then code graph)
+After completion: prompt user to review and enable new skills from Action 1.
+```
+
+---
+
+### Phase U5: Update Manifest + Context
+
+```
+Update specs/analysis-manifest.json:
+  - toolboxVersion → new version
+  - artifacts.architecture-docs.views[] → add newly generated views
+  - artifacts.{skill}.lastAnalyzedCommit → updated SHAs (if re-analysis ran)
+  - lastAnalysis.date → today (if any analysis ran)
+
+Create update log entry: docs/update-logs/YYYY-MM-DD-upgrade.md
+
+Run Post-Work Hook:
+  - Update CONTEXT.md update log row
+  - Update AGENTS.md staleness line + skills list if changed
+  - git add CONTEXT.md AGENTS.md specs/analysis-manifest.json docs/
+  - git commit -m "docs: sync KB after /upgrade {old} → {new}"
 ```
 
 ---
 
 ### Notes for Agents
 
-- `/upgrade` always pulls first (Phase U1) — it is not a dry-run command
-- If the user just wants to see what changed without pulling: they should use `/update` instead (check-only mode)
-- Action 2 (new views) never requires re-cloning repos — it reconstructs context from existing docs
-- Action 3 (template regeneration) may require re-cloning if the analysis model is stale
-- Action 4 (code graph) uses Phase 0.0 scope dialogue — do not skip it
-- Always create an update log entry (update-logs skill) after any action that modifies outputs
-- Toolkit aliases (`qt`, `q-t`, `toolbox`, `the toolbox`) all trigger this workflow
-- After any `/upgrade` action that commits artefacts: run the Post-Work Hook defined in the repo's AGENTS.md (update CONTEXT.md update log + AGENTS.md skills list + staleness line)
+- `/upgrade` always pulls first — it is not a dry-run. Use `/update` if you only want to refresh sources without changing toolkit version.
+- New views that require fresh source data (Action 4) always run the full skill workflow against existing clones — no re-cloning unless a repo is missing.
+- Action 2 (model-based views) never re-scans source code — it reads existing architecture docs to reconstruct context.
+- Action 3 (report generation) reads from manifest stats and existing SQLite/YAML — no source scan.
+- Always create an update log entry after any action that modifies outputs.
+- Toolkit aliases (`qt`, `q-t`, `toolbox`, `the toolbox`) all trigger this workflow.
+- After completing upgrade: run the Post-Work Hook (Phase U5) — do not skip it.
 
 ---
 
