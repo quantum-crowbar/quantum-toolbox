@@ -65,6 +65,9 @@ skills:
     dependencies: []
     invocations:
       - "Analyze the architecture"
+      - "Analyze this codebase"
+      - "Run analysis"
+      - "Analyze this repo"
     version: "1.0"
     status: complete
 

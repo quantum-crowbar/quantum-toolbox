@@ -162,8 +162,9 @@ When skills generate output files, they use these defaults (confirm with user be
 ## Agent Notes
 
 ### Analysis Workflow
-- Use `codebase-analysis` as the base engine
-- Select output adapters based on user needs
+- Use `arch-analysis` as the default analysis entry point (subsumes codebase-analysis)
+- Enable `code-graph` alongside `arch-analysis` for SQLite-first call graph analysis
+- Select additional output adapters as needed (coding-context, structurizr, etc.)
 - Run analysis once, output multiple formats
 
 ### TOGAF Integration
