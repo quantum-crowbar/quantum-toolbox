@@ -16,173 +16,112 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.1.0] - 2026-05-18
+## [3.0.0] - 2026-05-18
 
-### Analysis System
+This is a major version. Four new skills, a full SQLite-first analysis architecture, a structured command lifecycle for AI agent sessions, and a 74% reduction in session-start token overhead compared to v2.6.
 
-#### SQLite-first architecture (full implementation)
+### New Skills
 
-All code analysis that can be answered from `code_graph.sqlite` **must** use SQL. Reading source files or traversing YAML for listed operations is not permitted when the SQLite file is current. This rule is enforced via the new Phase 4B.6 SQL Dispatch table in `arch-analysis`.
+**`bootstrap`** (core) — Standardised session entry point and upgrade lifecycle. Replaces the informal "run these files at startup" pattern with slash commands that work consistently across every project.
 
-**arch-analysis/workflows.md**
-- **Phase 0.5 — Code-Graph Pre-Check**: when `code-graph` skill is enabled, the agent presents a Y/S/D dialogue before Phase 1 begins. Includes a detailed PRECISION / SPEED / TOKEN USAGE explanation (90–98% token reduction on medium+ codebases; 60–70% on small). Fast-path skips the dialogue when a current `code_graph.sqlite` already exists.
-- **Phase 0.5 — AI-only upgrade path**: detects when the previous run used `code_graph_mode = "ai-only"` and SQLite is now available. Prompts user to regenerate View 09 and reports/ from the existing SQLite file without re-running analysis.
-- **Phase 4B.6 — SQL Dispatch table**: 13-rule routing table. Full View 09 section → SQL query mapping (8 view sections sourced from SQL instead of YAML on SQLite path).
+- **`/start`** — Detects Mode A (established project session) vs Mode B (first-time setup). Mode A prints a live snapshot of enabled skills, code-graph status, dependency warnings, and manifest schema violations. Mode B runs the guided 8-step first-time setup. `first-time-setup.md` is a separate file so Mode A sessions never load setup content (~1,000 tokens saved per session).
+- **`/help`** — Full command reference.
+- **`/skills`** — Lists all skills in `manifest.yaml` with enabled/disabled status for the current project.
+- **`/update`** — KB refresh: detects source repos ahead of the last analysis SHA, re-runs affected skills, regenerates stale architecture-docs views, writes updated SHAs and view lists to the manifest and context files, and auto-regenerates `reports/sqlite-cookbook.md` if the code graph was refreshed.
+- **`/upgrade`** — Toolkit-version upgrade: pulls the latest toolkit, diffs the old→new version for new skills, views, reports, config requirements, and template changes, then generates new outputs and re-runs analysis where required. Ends with `toolboxVersion` updated in the manifest and all artifacts flagged with a `generatedWithSkillVersion` bump.
 
-**code-graph/workflows.md**
-- **Phase 2.5 — Incremental Update** (new full workflow): Refresh only changed portions of an existing SQLite graph without full re-extraction. 5 steps: detect changed files via `git diff`, SQL delete of stale nodes/edges, re-extract changed files only, recompute fan-in/fan-out/dead-code, rebuild all 8 materialized view tables. Includes shared library cascade handling, partial DFS recompute for path-based views (`view_entry_traces`, `view_cycles`, `view_db_entry_paths`). Triggered by `/update` when graph is stale.
-- **Phase 3 — SQLite backend note**: Steps 3.1/3.2/3.5 write to materialized view tables; DFS traversal (3.3/3.4) still runs and populates `view_entry_traces`/`view_cycles`/`view_db_entry_paths`.
-- **Phase 4A — YAML stub reduction**: When SQLite is selected, YAML `code_graph` section contains stats and `sqlite_path` pointer only — no full node/edge arrays.
-- **Phase 4B DDL**: `nodes` table gains `has_db_call`, `has_external_call`, `repo_path` columns; `edges` gains denormalized `from_repo`/`to_repo`; new indexes on repo columns. Three new materialized view tables: `view_refactor_priority` (fan_in × cyclomatic_complexity ranking), `view_cross_repo_edges`, `view_db_entry_paths`. SQL population block derives all new columns immediately after node/edge inserts.
+**`code-graph`** (optional) — Extracts a full call-graph from source code into a SQLite database (`code_graph.sqlite`) enabling SQL-speed queries at near-zero token cost. Core phases:
 
-**nonfunctional-analysis/workflows.md**
-- **Phase 3 — SQLite delegation pre-check**: delegates dead-code, complexity, async-in-sync, and unresolved call checks to SQL when `code_graph.sqlite` is current. Falls back to full source scan when absent or stale.
+- **Phase 0.0** — Scope & setup dialogue: confirms single vs multi-repo, validates all repos are accessible, offers clone/continue/abort per missing repo.
+- **Phase 2.5** — Incremental update: detect changed files via `git diff`, SQL-delete stale nodes/edges (with shared-library cascade), re-extract only changed files, recompute fan-in/fan-out/dead-code, rebuild all 8 materialized view tables. DFS recompute is partial — only paths that include changed nodes are rewalked.
+- **Phase 3** — DFS traversal writing `view_entry_traces`, `view_cycles`, and `view_db_entry_paths`.
+- **Phase 4A** — YAML output: when SQLite backend is active the YAML `code_graph` section contains stats and `sqlite_path` pointer only (no full node/edge arrays).
+- **Phase 4B DDL** — Schema: `nodes` gains `has_db_call`, `has_external_call`, `repo_path`; `edges` gains denormalized `from_repo`/`to_repo`; 4 new indexes; three new materialized view tables: `view_refactor_priority` (fan_in × cyclomatic_complexity ranking), `view_cross_repo_edges`, `view_db_entry_paths`.
+- **Phase 4B.5** — Generates `reports/sqlite-cookbook.md` populated from live extraction stats (9 variables). Covers schema reference, essential queries, call-graph traversal, hotspot analysis, entry points, dead code, async patterns, cross-repo edges, refactor priority, and DB entry paths.
+- Artefact commit enforced in Phase 4A and 4D — bold warning block prevents omission.
 
-**sqlite-cookbook.template.md**
-- Fixed naming inconsistency: all `vw_X` → `view_X` (5 view names corrected throughout)
-- Schema table updated: 3 new `nodes` columns documented; all 8 view table names in schema overview
-- New section: **Refactor Priority Analysis** (3 query variants against `view_refactor_priority`)
-- New section: **DB Entry Paths** (2 query variants against `view_db_entry_paths`)
-- Added cross-repo pair query
+**`excalidraw-import`** (optional) — Parses `.excalidraw` JSON files and feeds them into the architecture model. 5-phase pipeline: parse `elements[]` → map `backgroundColor` to component role using the toolkit's standard colour palette → disambiguation dialogue → write `diagrams/{source}-mermaid.md` → optionally pre-populate `architecture_model` and hand off to `arch-analysis`. Completes the Excalidraw round-trip (output was already supported).
 
-### Bootstrap & Onboarding
+**`update-logs`** (optional) — Structured log generation for project update communications.
 
-**New: SQLite-first awareness propagated across all onboarding surfaces**
-- `AGENTS.template.md`: `arch-analysis` + `code-graph` added to Enabled Skills checklist; inline comment explains Phase 0.5 offer and token reduction figures
-- `CONTEXT.template.md`: new **Analysis Preferences** section tracks SQLite-first status, last extraction date, extraction scope
-- `first-time-setup.md` Step 3: prompt to enable code-graph at setup time with Phase 0.5 explanation
-- `first-time-setup.md` Step 8: Option A notes Phase 0.5 SQLite offer
+### Bootstrap Commands — Hardening
 
-**Bootstrap Phase 1.2 — Skill dependency validation**
-After reading enabled skills from AGENTS.md, each skill's `dependencies[]` is validated against the enabled list. Any missing dependency is collected with three suggested fix options (A: enable the dep, B: standalone mode, C: ignore). Warnings surface in the Phase 2 status block without blocking the session.
+**Phase 1.2 — Skill dependency validation**: each enabled skill's `dependencies[]` is checked against the enabled list. Warnings collected with three fix options (A: enable the dep, B: standalone mode, C: ignore) and surfaced in the Phase 2 status block without blocking the session.
 
-**Bootstrap Phase 1.3 — Manifest schema validation**
-On every `/start`, `specs/analysis-manifest.json` is validated against `specs/analysis-manifest-schema.json`. Specific violations are reported in the Phase 2 status block; session continues.
+**Phase 1.3 — Manifest schema validation**: on every `/start`, `specs/analysis-manifest.json` is validated against `specs/analysis-manifest-schema.json`. Specific violations shown in Phase 2; session continues.
 
-**Bootstrap Phase 2 — Status block extensions**
-- Added `Code graph:` status line (`✓ current`, `⚠ stale`, `not run`, `not enabled`)
-- Added `⚡` note when code-graph is enabled but extraction has not yet run
-- Added dependency warning block output
+**Phase 2 status block**: extended with a `Code graph:` line (`✓ current` / `⚠ stale` / `not run` / `not enabled`), a `⚡` prompt when code-graph is enabled but has never run, and the dependency warning block.
 
-**Bootstrap `/update` Phase C4**
-- After code-graph incremental update: if `reports/sqlite-cookbook.md` exists, Phase 4B.5 (cookbook regeneration) runs automatically with updated stats.
+**`/upgrade` Phase U2 Step 4 — Skill version tracking**: compares `artifacts.{skill}.generatedWithSkillVersion` against current skill versions in `manifest.yaml`. Flags outdated artifacts for regeneration. New **Action 2b**: prompts user to regenerate, then writes updated `generatedWithSkillVersion` values.
 
-**Bootstrap `/upgrade` Phase U2 Step 4 — Skill version upgrade tracking**
-- Reads `artifacts.{skill}.generatedWithSkillVersion` from manifest; compares against current skill version in `manifest.yaml`
-- Flags artifacts generated with a now-outdated skill version for regeneration
-- New **Action 2b**: prompts user to regenerate those artifacts; updates `generatedWithSkillVersion` on completion
+### SQLite-First Analysis Architecture
 
-### Quality & Correctness
+All code analysis that can be answered from `code_graph.sqlite` **must** use SQL. Traversing YAML or reading source files for questions the graph can answer is prohibited when the SQLite file is current.
 
-**`specs/analysis-manifest-schema.json`** — New JSON Schema 2020-12 document defining the full manifest contract.
-- Required top-level fields: `toolboxVersion`, `lastAnalysis`, `artifacts`
-- `$defs`: `artifactEntry` (base), `codeGraphArtifact` (extended with `code_graph_mode`, `stats`, `files`), `historyEntry`
-- New field: `generatedWithSkillVersion` in every artifact entry — records which skill version produced the artifact
+**`arch-analysis/workflows.md`**
+- **Phase 0.5** — Code-graph pre-check: Y/S/D dialogue before Phase 1 with detailed PRECISION / SPEED / TOKEN USAGE table (90–98% token reduction on medium+ codebases; 60–70% on small). Fast-path skips the dialogue when a current `code_graph.sqlite` already exists. AI-only upgrade sub-path: detects `code_graph_mode = "ai-only"` + SQLite now available → offers to regenerate View 09 and reports/ from SQLite without re-running analysis.
+- **Phase 4B.6** — SQL Dispatch table: 13-rule routing table + full View 09 section → SQL query mapping (8 view sections sourced from SQL on the SQLite path).
 
-**`templates/AGENTS.template.md` — Post-Work Hook extension**
-- New "analysis-manifest.json integrity" rule: every artifact entry must include `generatedWithSkillVersion`; cites the schema file; validation steps listed
+**`nonfunctional-analysis/workflows.md`** — Phase 3 SQLite delegation pre-check: dead-code, complexity, async-in-sync, and unresolved-call checks delegated to SQL when the graph is current. Falls back to full source scan when absent or stale.
 
-**`skills/manifest.yaml` — Skill version field**
-- `version: "1.0"` added to all 22 skill entries (core and optional)
-- Enables `generatedWithSkillVersion` tracking in manifests
-
-### Deprecations & Consolidation
-
-**`codebase-analysis` deprecated** — `arch-analysis` is now the single recommended entry point for all analysis work. `codebase-analysis` retains its files for reference compatibility but carries a deprecation notice and will be removed in a future version.
-
-- `manifest.yaml`: `codebase-analysis` status → `deprecated`
-- `arch-analysis` description updated to "Default analysis skill"; invocations expanded to also catch `"Analyze this codebase"`, `"Run analysis"`, `"Analyze this repo"`
-- `code-graph` dependency updated from `codebase-analysis` → `arch-analysis`
-- `skills/_index.md`: `arch-analysis` listed first as **Default analysis skill**; `codebase-analysis` struck through with migration note; Agent Notes updated
-- `arch-analysis/README.md`: rewritten as primary skill; "wrapper" framing removed
-- `codebase-analysis/README.md`: marked deprecated with migration instructions
-
-### Infrastructure
-
-**`docs/site/` removed from version control** — all 9 symlinked files deleted. Site is built from source with `mkdocs build` (not committed). `mkdocs.yml` updated to use `docs_dir: docs`. Prevents documentation drift between source and served site.
-
-**`.gitignore`**: `_site/` already present; duplicate entry cleaned up.
-
-
-
-### Bootstrap Core Skill (new)
-
-**`bootstrap`** — New core skill providing a standardised session entry point and upgrade lifecycle. Replaces the ad-hoc "run these commands at the start" pattern.
-
-- **`/start`** — Detects Mode A (session start on an established project) vs Mode B (first-time setup). In Mode A it prints a live snapshot of enabled skills and available commands. In Mode B it runs the guided 8-step first-time setup.
-- **`/help`** — Prints the full command reference.
-- **`/skills`** — Lists all skills registered in `manifest.yaml` with their enabled/disabled status for the current project.
-- **`/update`** — KB refresh: detects source repos that have moved ahead since the last analysis run, re-runs all enabled skills on those repos, regenerates affected architecture-docs views, and writes updated SHAs and view lists back to the manifest and context files. Also flags if the toolkit version has changed (signalling that `/upgrade` should follow). Both source and documentation are refreshed in a single pass.
-- **`/upgrade`** — Toolkit-version upgrade: pulls the latest toolkit, diffs old→new version for new skills, views, reports, config requirements, and template changes, checks source staleness, then generates new views/reports and re-runs analysis where new views need fresh source data. By the end the project is fully current with the new toolkit version — new views generated, missing config inserted, source re-analysed where needed, `toolboxVersion` updated in the manifest.
-
-`first-time-setup.md` extracted from the main bootstrap workflows file — Mode A sessions no longer load the 8-step setup content (~1,000 tokens saved per established-project session).
+**`sqlite-cookbook.template.md`** — Naming bug fixed: all `vw_X` → `view_X` (5 view names). Schema table updated with 3 new `nodes` columns and all 8 view table names. New sections: **Refactor Priority Analysis** (3 query variants) and **DB Entry Paths** (2 query variants). Cross-repo pair query added.
 
 ### Auto-Sync Hook (Post-Work Hook)
 
-Every analysis skill now ends with a non-skippable **Final Step: Sync context files**, backed by a **Post-Work Hook** block in `AGENTS.md`.
+Every analysis skill ends with a non-skippable **Final Step: Sync context files**, backed by a **Post-Work Hook** block in `AGENTS.md`. After analysis the agent automatically updates `CONTEXT.md` stale fields, the per-trigger `last_run` and `outputs[]` in `AGENTS.md`, any badge in `README.md`, and commits the lot. Skills updated: `arch-analysis`, `security-analysis`, `coding-profile`. The hook is injected at first-time setup and retroactively added by `/upgrade`.
 
-After every completed analysis the agent automatically:
-- Updates `CONTEXT.md` stale fields (last run date, view status, toolkit version)
-- Updates the per-trigger `last_run` and `outputs[]` fields in `AGENTS.md`
-- Updates `README.md` if the analysis changes a badge or status section
-- Commits the updated context files
+### Analysis Views
 
-The hook is defined once in `templates/AGENTS.md` and injected into new projects via `first-time-setup.md` Step 3. Existing projects without the hook receive it automatically when `/upgrade` is run (U4 Action 1 Part B).
+- **View 08 — SRE & Reliability** added to `arch-analysis` and `architecture-docs`
+- **View 09 — Code-Graph Summary** (new): surfaces call-graph metrics from SQLite — entry points, dead code ratio, cyclomatic complexity distribution, cross-repo coupling
 
-Skills updated: `arch-analysis`, `security-analysis`, `coding-profile`.
+### Quality & Correctness
 
-### Code-Graph Improvements
+**`specs/analysis-manifest-schema.json`** — New JSON Schema 2020-12 contract for `specs/analysis-manifest.json`. Required top-level fields: `toolboxVersion`, `lastAnalysis`, `artifacts`. `$defs` covers `artifactEntry` (base, includes `generatedWithSkillVersion`), `codeGraphArtifact` (extended with `code_graph_mode`, `stats`, `files`), `historyEntry`.
 
-- **Phase 0.0 scope & setup dialogue** — Before extraction begins the agent confirms scope (single repo vs multi-repo), validates all listed repos are accessible, and offers clone/continue/abort for any missing repo. Phase 0.0 display heading added: `Code Graph Analysis — Scope & Setup`.
-- **Artefact commit requirement** — Phase 4A and Phase 4D now explicitly require committing all YAML and SQLite output files. A bold warning block prevents accidental omission.
-- **Missing-repo validation** — Pre-flight check added; extraction cannot proceed until all repos in scope are verified present.
-- **Analysis-tracking integration** — Regenerable artefact pattern documented: `generatedDate`, `regenerate`, and `sourceRepos` fields added to the code-graph manifest block. `check-analysis-status.sh` gains a `check_regenerable_artefacts()` function that compares `generatedDate` against HEAD commit dates per source repo and reports stale artefacts with counts and the regenerate command.
+**`templates/AGENTS.template.md`** — Post-Work Hook extended with an "analysis-manifest.json integrity" rule: every artifact entry must carry `generatedWithSkillVersion`; cites the schema file.
 
-### SQLite Cookbook
+**`skills/manifest.yaml`** — `version: "1.0"` added to all 22 skill entries, enabling `generatedWithSkillVersion` tracking across projects.
 
-New per-project query reference document (`reports/sqlite-cookbook.md`) generated automatically in Phase 4B.5 when the SQLite backend is active.
+**`CONTEXT.template.md`** — New **Analysis Preferences** section tracks SQLite-first status, last extraction date, and extraction scope. `arch-analysis` + `code-graph` added to the Enabled Skills checklist with Phase 0.5 inline comment.
 
-The cookbook is populated from live extraction stats (9 substitution variables) and covers: opening the database, full schema reference (nodes, edges, unresolved_calls tables + materialized views with column tables), essential queries, call graph traversal (blast radius forward/reverse, shortest path), hotspot analysis, entry point analysis, dead code, async call patterns, repo stats, unresolved calls, and regeneration commands.
+**`first-time-setup.md`** — Step 3: prompt to enable code-graph at setup; Step 8 Option A: notes the Phase 0.5 SQLite offer.
 
-`/upgrade` Action 2 Part B retroactively generates the cookbook for projects that ran code-graph before this version — reads stats from the manifest, no re-extraction required.
+### Session-Start Token Optimisation (74% reduction)
 
-### Excalidraw Bidirectional Support
-
-The existing Excalidraw output skill was one-way only. v3.0 completes the round-trip:
-
-- **Output skill** (updated) — Fixed `source` field in the system context template (`"architecture-analysis"` → `"https://excalidraw.com"`). Added Step 8: drag-and-drop import instructions to excalidraw.com.
-- **Import skill** (new) — 5-phase pipeline for parsing `.excalidraw` JSON files and feeding them into the architecture model:
-  - Phase 1: Parse `elements[]`, resolve labels via `containerId`, identify frame boundaries
-  - Phase 2: Map `backgroundColor` → component role using the toolkit's standard color palette (`#a5d8ff` service, `#ffc9c9` external, `#b2f2bb` datastore, `#ffd8a8` actor, `#e9ecef` boundary, `#ffec99` process); shape-type fallback for unlabelled elements
-  - Phase 3: Disambiguation dialogue — presents mapping table, flags unknowns, user confirms or corrects
-  - Phase 4: Auto-selects diagram type (`flowchart LR`, `C4Context`, or `C4Container`), writes `diagrams/{source}-mermaid.md` with full component inventory
-  - Phase 5 (optional): Pre-populates `architecture_model` and feeds directly into `arch-analysis` Phase 2
-
-Both skills registered in `analysis-outputs/_index.md` with trigger phrases. Triggers: `"Analyse this excalidraw file"`, `"Convert excalidraw to Mermaid"`, `"Use this excalidraw as architecture input"`.
-
-### Token Optimisation (45% session-start reduction)
-
-Six optimisations reducing session-start overhead from ~9,600 tokens (v2.4) to ~2,500 tokens (v3.0):
+Session-start overhead reduced from ~9,600 tokens (v2.4) to ~2,500 tokens (v3.0):
 
 | Optimisation | Saving |
 |---|---|
 | OPT-1: Split `_index.md` → `_index.md` + `_detail.md` | ~2,000 t/session |
-| OPT-2: Domain-split glossary (TOGAF + Security terms deferred to skill invocation) | ~650 t/session |
+| OPT-2: Domain-split glossary (TOGAF + Security terms deferred) | ~650 t/session |
 | OPT-3: Remove bootstrap command duplication from `core/workflows.md` | ~2,500 t when bootstrap active |
 | OPT-4: Phased loading annotations in large skill READMEs | 7–14 K t/large skill |
 | OPT-5: `scripts/measure-tokens.sh` token baseline script | tooling |
 | OPT-6: Extract first-time-setup from bootstrap (Mode A overhead) | ~1,000 t/Mode A session |
 
-### Analysis Tracking
+### Deprecations & Consolidation
 
-- Toolkit version tracking: `CONTEXT.md` now records the toolkit submodule SHA; `/update` checks it against the current toolkit version and flags when `/upgrade` should be run.
-- Incremental view update commands added — re-run only the views whose source data changed, rather than regenerating the full analysis.
+**`codebase-analysis` deprecated** — `arch-analysis` is now the single recommended entry point for all analysis work. `codebase-analysis` retains its files for migration compatibility and will be removed in v4.
+
+- `manifest.yaml`: `codebase-analysis` status → `deprecated`
+- `arch-analysis` description → "Default analysis skill"; invocations expanded to catch `"Analyze this codebase"`, `"Run analysis"`, `"Analyze this repo"` in addition to `"Analyze the architecture"`
+- `code-graph` dependency updated from `codebase-analysis` → `arch-analysis`
+- `skills/_index.md`: `arch-analysis` listed first as **Default**; `codebase-analysis` struck through with migration note; Agent Notes updated
+- Both READMEs updated
+
+### Infrastructure
+
+- **`docs/site/` removed from version control** — 9 symlinked files deleted; site built from source with `mkdocs build` only. `mkdocs.yml`: `docs_dir: docs`.
+- **`.gitignore`**: `_site/` deduplicated.
+- **OSS compliance pass**: `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` all verified correct before push.
 
 ### Bug Fixes
 
-- `excalidraw-output.md`: corrected `source` field in system context JSON template
+- `excalidraw-output.md`: corrected `source` field in system context JSON template (`"architecture-analysis"` → `"https://excalidraw.com"`)
 - Bootstrap `/start`: fixed mode detection (session start vs first-time setup)
-- Stale skill descriptions in `AGENTS.md` template and `arch-analysis/README.md` updated to match current phase count
+- `sqlite-cookbook.template.md`: fixed `vw_X` → `view_X` naming (queries would have failed at runtime)
+- Stale skill descriptions in `AGENTS.md` template and `arch-analysis/README.md` corrected
 
 ## [2.6.0] - 2026-03-04
 
@@ -322,7 +261,9 @@ Added `> **Audience:**` tags to all files that were missing them (`AI_TOOLKIT_CO
 
 ---
 
-[Unreleased]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.6.0...v3.0.0
+[2.6.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/quantum-crowbar/quantum-toolbox/compare/v2.2.0...v2.3.0
