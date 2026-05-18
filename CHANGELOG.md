@@ -25,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`/start`** — Detects Mode A (session start on an established project) vs Mode B (first-time setup). In Mode A it prints a live snapshot of enabled skills and available commands. In Mode B it runs the guided 8-step first-time setup.
 - **`/help`** — Prints the full command reference.
 - **`/skills`** — Lists all skills registered in `manifest.yaml` with their enabled/disabled status for the current project.
-- **`/update`** — Check-only staleness pass: compares source repo SHAs against last-recorded analysis commit, checks toolkit submodule version, and reports code-graph freshness. No writes.
-- **`/upgrade`** — Full upgrade action: pulls latest toolkit, diffs new skills/views/templates against the project's enabled set, detects missing Post-Work Hook and inserts it, detects missing `sqlite-cookbook.md` and generates it from manifest stats (no re-extraction needed), and prints a per-category change report.
+- **`/update`** — KB refresh: detects source repos that have moved ahead since the last analysis run, re-runs all enabled skills on those repos, regenerates affected architecture-docs views, and writes updated SHAs and view lists back to the manifest and context files. Also flags if the toolkit version has changed (signalling that `/upgrade` should follow). Both source and documentation are refreshed in a single pass.
+- **`/upgrade`** — Toolkit-version upgrade: pulls the latest toolkit, diffs old→new version for new skills, views, reports, config requirements, and template changes, checks source staleness, then generates new views/reports and re-runs analysis where new views need fresh source data. By the end the project is fully current with the new toolkit version — new views generated, missing config inserted, source re-analysed where needed, `toolboxVersion` updated in the manifest.
 
 `first-time-setup.md` extracted from the main bootstrap workflows file — Mode A sessions no longer load the 8-step setup content (~1,000 tokens saved per established-project session).
 
@@ -88,7 +88,7 @@ Six optimisations reducing session-start overhead from ~9,600 tokens (v2.4) to ~
 
 ### Analysis Tracking
 
-- Toolkit version tracking: `CONTEXT.md` now records the toolkit submodule SHA; `/update` compares it against the current HEAD to detect drift.
+- Toolkit version tracking: `CONTEXT.md` now records the toolkit submodule SHA; `/update` checks it against the current toolkit version and flags when `/upgrade` should be run.
 - Incremental view update commands added — re-run only the views whose source data changed, rather than regenerating the full analysis.
 
 ### Bug Fixes
