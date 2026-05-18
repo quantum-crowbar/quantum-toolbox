@@ -312,6 +312,30 @@ environment_comparison:
 
 **Goal**: Identify code patterns that may cause performance issues.
 
+### Pre-check: SQLite delegation
+
+Before running any Phase 3 steps, check for an active code graph:
+
+```
+If specs/analysis-manifest.json → artifacts.code-graph present AND generatedDate is current:
+  Read code_graph.sqlite at the path listed in artifacts.code-graph.files[0].
+
+  Delegate the following four checks to SQL (skip corresponding Phase 3 sections for these):
+
+  | Check | SQL query |
+  |---|---|
+  | Dead / unused functions | SELECT id, repo, location FROM view_dead_code |
+  | Complex functions | SELECT id, repo, cyclomatic_complexity, location FROM view_complexity_hotspots LIMIT 20 |
+  | Async-in-sync calls | SELECT n.id, n.repo FROM nodes n JOIN edges e ON e.from_node = n.id WHERE e.is_async = 1 AND n.tags NOT LIKE '%"async"%' |
+  | Unhandled async chains | SELECT from_node, target, call_site FROM unresolved_calls WHERE reason = 'dynamic' |
+
+  Note in output: "Code health metrics sourced from code_graph.sqlite (SQLite-first)."
+  Then proceed to 3.3 (Database Query Analysis) and 3.4 (Resource Management) — those still run from source.
+
+Else (SQLite absent or stale):
+  Proceed with all Phase 3 steps below in full.
+```
+
 ### 3.1 Complexity Analysis
 
 Calculate complexity metrics:

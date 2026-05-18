@@ -928,6 +928,51 @@ Identify gaps in error handling:
 
 ---
 
+## Phase 4B.6: SQL Dispatch (SQLite backend only)
+
+**Applies when:** `meta.code_graph_available = true` AND `meta.code_graph_backend = sqlite`
+
+> **SQLite-first rule**: When a SQLite file is present and current, the agent MUST route
+> code-graph questions through SQL. Reading source files or traversing YAML for any operation
+> listed in the table below is not permitted.
+
+When the user asks a question during analysis that can be answered from the DB, route to SQL first:
+
+| User asks about… | SQL to run |
+|---|---|
+| "most called functions" | `SELECT id, repo, fan_in, fan_out, location FROM view_hot_nodes LIMIT 20` |
+| "dead code" | `SELECT id, repo, location FROM view_dead_code` |
+| "complex functions" | `SELECT id, repo, cyclomatic_complexity, location FROM view_complexity_hotspots LIMIT 10` |
+| "blast radius of X" | Recursive CTE forward from X (see `sqlite-cookbook.md`) |
+| "what calls X" | `SELECT * FROM edges WHERE to_node LIKE '%X%'` |
+| "what does X call" | `SELECT * FROM edges WHERE from_node LIKE '%X%'` |
+| "cross-repo calls" | `SELECT * FROM view_cross_repo_edges LIMIT 20` |
+| "async calls" | `SELECT from_node, to_node, call_site FROM edges WHERE is_async = 1` |
+| "unresolved calls" | `SELECT from_node, target, reason FROM unresolved_calls` |
+| "refactor candidates" | `SELECT id, repo, fan_in, cyclomatic_complexity, refactor_score FROM view_refactor_priority LIMIT 10` |
+| "entry points that hit DB" | `SELECT entry_node, entry_type, db_nodes FROM view_db_entry_paths` |
+| "dead code by repo" | `SELECT repo, COUNT(*) AS dead FROM view_dead_code GROUP BY repo ORDER BY dead DESC` |
+| "cycles" | `SELECT nodes FROM view_cycles` |
+
+**Fallback:** If the SQLite file is absent or the query returns no rows, fall back to YAML or source reading and note: `"SQLite not available — falling back to in-context analysis"`.
+
+### View 09 generation (SQLite path)
+
+When generating `09-code-graph.md` and SQLite is active, source each section from SQL rather than YAML:
+
+| View 09 section | SQL replacement |
+|---|---|
+| Extraction summary | `SELECT COUNT(*) FROM nodes` / `SELECT COUNT(*) FROM edges` + manifest meta |
+| Hot nodes table | `SELECT id, repo, fan_in, fan_out, location FROM view_hot_nodes LIMIT 20` |
+| Dead code table | `SELECT id, repo, location FROM view_dead_code` |
+| Complexity hotspots | `SELECT id, repo, cyclomatic_complexity, location FROM view_complexity_hotspots LIMIT 10` |
+| Entry point traces | `SELECT entry_node, entry_type, path FROM view_entry_traces` |
+| Cycle list | `SELECT nodes FROM view_cycles` |
+| Cross-repo calls | `SELECT from_repo, to_repo, COUNT(*) AS calls FROM view_cross_repo_edges GROUP BY from_repo, to_repo ORDER BY calls DESC LIMIT 20` |
+| Refactor priority | `SELECT id, repo, fan_in, cyclomatic_complexity, refactor_score FROM view_refactor_priority LIMIT 10` |
+
+---
+
 ## Output Compilation
 
 ### Final Directory Structure

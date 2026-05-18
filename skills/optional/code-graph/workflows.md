@@ -573,6 +573,17 @@ For each node:
 
 **Goal**: Calculate common query results upfront. Stored views eliminate the need for live traversal during documentation generation.
 
+> **SQLite backend**: When SQLite is selected, steps 3.1–3.2 and 3.5 are trivially computable via SQL
+> and their results are written to the materialized view tables in Phase 4B (not as YAML arrays).
+> Steps 3.3 (entry traces) and 3.4 (cycles) still require DFS traversal in this phase because they
+> are path-based; results are stored as JSON rows in `view_entry_traces` and `view_cycles`.
+>
+> During subsequent **arch-analysis** runs, agents query these tables with SQL rather than repeating
+> the traversal in-context. See [arch-analysis Phase 4B.6 SQL Dispatch](../arch-analysis/workflows.md)
+> for the routing rules.
+>
+> **YAML backend**: Proceed with all steps below exactly as described.
+
 ### 3.1 Hot Nodes
 
 ```
@@ -641,6 +652,10 @@ views:
         - "src/db/connection.ts:query"
 ```
 
+> **SQLite backend only**: After building all traces, insert one row per entry point into
+> `view_db_entry_paths`: collect all node ids in the path where `has_db_call = 1` and
+> store as a JSON array in the `db_nodes` column.
+
 ### 3.4 Cycles
 
 Detect circular call chains using DFS with back-edge detection:
@@ -684,6 +699,13 @@ views:
 > **Commit rule:** The output YAML (written into the analysis model file) must be committed to the repo
 > as part of Phase 4D unless the user explicitly opts out. Do not leave it as an uncommitted local file.
 
+> **SQLite backend — stub mode**: When Phase 4B (SQLite) is selected, the YAML `code_graph` section
+> should contain **stats only** — not the full node and edge arrays. The SQLite file is the
+> authoritative data source; duplicating arrays into YAML wastes storage and creates a drift risk.
+> Write only `meta` + `stats` + a pointer to the SQLite path (see stub template below).
+
+### Full YAML (YAML backend)
+
 ```yaml
 analysis_model:
   code_graph:
@@ -708,6 +730,27 @@ analysis_model:
       complexity_hotspots: [...]
 ```
 
+### Stats-only stub (SQLite backend)
+
+When Phase 4B (SQLite) is active, write this stub instead of the full arrays:
+
+```yaml
+analysis_model:
+  code_graph:
+    meta:
+      node_count: 847
+      edge_count: 3241
+      extraction_method: static
+      tool_used: "ts-morph 21.0"
+      backend: sqlite
+      generated: "2026-04-17"
+      sqlite_path: "code/{repo}/code_graph.sqlite"
+    # Full data in sqlite_path — query via sqlite3 or Phase 4B.6 SQL dispatch.
+    # Views: view_hot_nodes, view_dead_code, view_complexity_hotspots,
+    #        view_entry_traces, view_cycles, view_refactor_priority,
+    #        view_cross_repo_edges, view_db_entry_paths
+```
+
 ---
 
 ## Phase 4B: SQLite Serialization
@@ -724,19 +767,25 @@ CREATE TABLE nodes (
   qualified_name TEXT,
   signature TEXT,
   location TEXT,
+  repo TEXT,
   fan_in INTEGER DEFAULT 0,
   fan_out INTEGER DEFAULT 0,
   cyclomatic_complexity INTEGER DEFAULT 0,
   is_entry_point INTEGER DEFAULT 0,
   is_dead_code INTEGER DEFAULT 0,
   extraction_method TEXT DEFAULT 'static',
-  tags TEXT DEFAULT '[]'        -- JSON array
+  tags TEXT DEFAULT '[]',       -- JSON array
+  has_db_call INTEGER DEFAULT 0,        -- 1 if tags contains "db"
+  has_external_call INTEGER DEFAULT 0,  -- 1 if tags contains "external"
+  repo_path TEXT                        -- location substring before ':' (for GROUP BY)
 );
 
 CREATE TABLE edges (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   from_node TEXT NOT NULL REFERENCES nodes(id),
   to_node TEXT NOT NULL REFERENCES nodes(id),
+  from_repo TEXT,               -- denormalized for fast cross-repo queries
+  to_repo TEXT,
   type TEXT DEFAULT 'call',
   call_site TEXT,
   is_dynamic INTEGER DEFAULT 0,
@@ -745,11 +794,14 @@ CREATE TABLE edges (
 );
 
 -- Performance indexes
-CREATE INDEX idx_edges_from    ON edges(from_node);
-CREATE INDEX idx_edges_to      ON edges(to_node);
-CREATE INDEX idx_nodes_fan_in  ON nodes(fan_in DESC);
-CREATE INDEX idx_nodes_dead    ON nodes(is_dead_code);
-CREATE INDEX idx_nodes_entry   ON nodes(is_entry_point);
+CREATE INDEX idx_edges_from      ON edges(from_node);
+CREATE INDEX idx_edges_to        ON edges(to_node);
+CREATE INDEX idx_edges_from_repo ON edges(from_repo);
+CREATE INDEX idx_edges_to_repo   ON edges(to_repo);
+CREATE INDEX idx_nodes_fan_in    ON nodes(fan_in DESC);
+CREATE INDEX idx_nodes_dead      ON nodes(is_dead_code);
+CREATE INDEX idx_nodes_entry     ON nodes(is_entry_point);
+CREATE INDEX idx_nodes_repo      ON nodes(repo);
 ```
 
 ### Materialized View Tables
@@ -787,6 +839,47 @@ CREATE TABLE view_entry_traces (
 CREATE TABLE view_cycles (
   cycle_id INTEGER PRIMARY KEY AUTOINCREMENT,
   nodes TEXT NOT NULL           -- JSON array of node ids
+);
+```
+
+After inserting all nodes and edges, populate the derived columns and the three additional views:
+
+```sql
+-- Populate derived node columns from tags JSON
+UPDATE nodes SET has_db_call       = 1 WHERE tags LIKE '%"db"%';
+UPDATE nodes SET has_external_call = 1 WHERE tags LIKE '%"external"%';
+UPDATE nodes SET repo_path         = substr(location, 1, instr(location, ':') - 1)
+  WHERE location LIKE '%:%';
+
+-- Populate from_repo / to_repo on edges (join from node's repo column)
+UPDATE edges SET
+  from_repo = (SELECT repo FROM nodes WHERE nodes.id = edges.from_node),
+  to_repo   = (SELECT repo FROM nodes WHERE nodes.id = edges.to_node);
+
+-- Refactor candidates: high fan-in × high complexity (excludes dead code)
+CREATE TABLE view_refactor_priority AS
+  SELECT id, repo,
+         fan_in, cyclomatic_complexity,
+         fan_in * cyclomatic_complexity AS refactor_score,
+         location
+  FROM nodes
+  WHERE is_dead_code = 0
+  ORDER BY refactor_score DESC;
+
+-- All edges that cross a repo boundary
+CREATE TABLE view_cross_repo_edges AS
+  SELECT e.from_node, e.to_node,
+         e.from_repo, e.to_repo,
+         e.call_site, e.is_async, e.is_conditional
+  FROM edges e
+  WHERE e.from_repo != e.to_repo;
+
+-- Entry points that transitively reach a DB call
+-- (populated during Phase 3 entry trace computation)
+CREATE TABLE view_db_entry_paths (
+  entry_node TEXT NOT NULL,
+  entry_type TEXT,
+  db_nodes   TEXT NOT NULL   -- JSON array of node ids with has_db_call = 1 in path
 );
 ```
 

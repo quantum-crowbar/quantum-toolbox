@@ -34,11 +34,14 @@ GUI tools:
 .schema nodes
 .schema edges
 .schema unresolved_calls
-.schema vw_hot_nodes
-.schema vw_dead_code
-.schema vw_complexity
-.schema vw_entry_points
-.schema vw_cross_repo
+.schema view_hot_nodes
+.schema view_dead_code
+.schema view_complexity_hotspots
+.schema view_entry_traces
+.schema view_cycles
+.schema view_cross_repo_edges
+.schema view_refactor_priority
+.schema view_db_entry_paths
 ```
 
 ### `nodes` — all functions and methods
@@ -59,6 +62,9 @@ GUI tools:
 | `is_dead_code` | INTEGER | 1 = no callers and not an entry point |
 | `extraction_method` | TEXT | `static` \| `ai` |
 | `tags` | TEXT | JSON array: `["db","cache","external","auth","async","handler"]` |
+| `has_db_call` | INTEGER | 1 if tags contains `db` (indexed shortcut) |
+| `has_external_call` | INTEGER | 1 if tags contains `external` (indexed shortcut) |
+| `repo_path` | TEXT | File path portion of `location` (for `GROUP BY` without parsing) |
 
 ### `edges` — call relationships
 
@@ -214,7 +220,7 @@ LIMIT 5;
 
 ```sql
 SELECT id, repo, fan_in, fan_out, location
-FROM vw_hot_nodes
+FROM view_hot_nodes
 LIMIT 20;
 ```
 
@@ -233,7 +239,7 @@ LIMIT 20;
 
 ```sql
 SELECT id, repo, cyclomatic_complexity, location
-FROM vw_complexity
+FROM view_complexity_hotspots
 ORDER BY cyclomatic_complexity DESC
 LIMIT 20;
 ```
@@ -268,7 +274,7 @@ LIMIT 20;
 
 ```sql
 SELECT id, repo, fan_out, location
-FROM vw_entry_points
+FROM view_entry_traces
 ORDER BY fan_out DESC;
 ```
 
@@ -306,7 +312,7 @@ WHERE is_entry_point = 1 AND fan_out = 0;
 
 ```sql
 SELECT id, repo, cyclomatic_complexity, location
-FROM vw_dead_code
+FROM view_dead_code
 ORDER BY repo, cyclomatic_complexity DESC;
 ```
 
@@ -392,9 +398,75 @@ ORDER BY total_edges DESC;
 
 ```sql
 SELECT from_repo, to_repo, COUNT(*) AS calls
-FROM vw_cross_repo
+FROM view_cross_repo_edges
 GROUP BY from_repo, to_repo
 ORDER BY calls DESC;
+```
+
+### All edges between two specific repos
+
+```sql
+SELECT e.from_node, e.to_node, e.call_site, e.is_async
+FROM view_cross_repo_edges e
+WHERE e.from_repo = 'api-service' AND e.to_repo = 'core-lib'
+ORDER BY e.call_site;
+```
+
+---
+
+## Refactor Priority Analysis
+
+> `view_refactor_priority` = non-dead nodes ordered by `fan_in × cyclomatic_complexity`.
+> High score = widely called AND internally complex — the worst combination to change.
+
+### Top refactor candidates
+
+```sql
+SELECT id, repo, fan_in, cyclomatic_complexity, refactor_score, location
+FROM view_refactor_priority
+LIMIT 20;
+```
+
+### Refactor candidates in a specific repo
+
+```sql
+SELECT id, fan_in, cyclomatic_complexity, refactor_score, location
+FROM view_refactor_priority
+WHERE repo = 'api-service'
+LIMIT 10;
+```
+
+### Refactor candidates above a score threshold
+
+```sql
+SELECT id, repo, refactor_score, location
+FROM view_refactor_priority
+WHERE refactor_score > 50
+ORDER BY refactor_score DESC;
+```
+
+---
+
+## DB Entry Paths
+
+> `view_db_entry_paths` = entry points whose call trace reaches at least one DB-tagged node.
+
+### All entry points that reach the database
+
+```sql
+SELECT entry_node, entry_type, db_nodes
+FROM view_db_entry_paths
+ORDER BY entry_type, entry_node;
+```
+
+### Entry points with multiple DB nodes in path
+
+```sql
+SELECT entry_node, entry_type,
+       json_array_length(db_nodes) AS db_node_count
+FROM view_db_entry_paths
+WHERE json_array_length(db_nodes) > 1
+ORDER BY db_node_count DESC;
 ```
 
 ---
