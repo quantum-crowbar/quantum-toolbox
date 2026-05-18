@@ -98,6 +98,69 @@ Store the preference for use in Phase 4 (Architecture Synthesis) and Phase 7 (Da
 
 ---
 
+### Phase 0.5: Code-Graph Pre-Check
+
+**Goal**: Determine upfront whether code-graph extraction will run. This must happen before Phase 1 so that if extraction is confirmed, it completes before any view generation begins. Views 09 and the reports/ directory depend on the SQLite file — they cannot be backfilled from YAML with the same fidelity.
+
+```
+Is the `code-graph` skill enabled in AGENTS.md?
+  No  → Skip this step entirely. View 09 will not be generated.
+  Yes → Present the following:
+
+─────────────────────────────────────────────────────────────
+  Code Graph Extraction
+
+  View 09 (Code Graph) and the reports/ directory (entry-point-map,
+  dead-code, sre-hot-paths, sqlite-cookbook) require extraction to
+  run before architecture views are generated.
+
+  If you skip extraction now, these outputs will either be omitted
+  or generated from in-context AI reading only (lower fidelity,
+  no SQLite query capability).
+
+  Run code-graph extraction now, before analysis begins?
+
+  Y   Run extraction now (recommended)
+       → Invokes code-graph skill Phase 0.0 scope dialogue
+       → Extraction completes, SQLite written
+       → Then continue arch-analysis Phase 1 onwards
+
+  S   Skip for now — generate View 09 as AI-only (no SQLite)
+       → View 09 marked as "AI-only, no code-graph extraction"
+       → reports/ directory not generated
+
+  D   Defer — run arch-analysis now, run code-graph separately later
+       → View 09 omitted from this run
+       → Can be added incrementally via /update after extraction
+─────────────────────────────────────────────────────────────
+
+If Y:
+  → Pause arch-analysis here.
+  → Invoke code-graph skill starting at Phase 0.0.
+  → After code-graph completes (Phase 4B + 4B.5 + 4D committed):
+    Resume arch-analysis at Phase 1.
+  → The SQLite file path is now available for all view generation.
+  → Set: meta.code_graph_available = true, meta.code_graph_backend = sqlite | yaml
+
+If S:
+  → Set meta.code_graph_available = false, meta.code_graph_mode = "ai-only"
+  → Note in index.md: "View 09 generated without extraction — AI reading only"
+  → Continue to Phase 1.
+
+If D:
+  → Set meta.code_graph_available = false, meta.code_graph_mode = "deferred"
+  → Omit View 09 from this run
+  → Continue to Phase 1.
+
+Already extracted? (code_graph.sqlite exists and is current per manifest):
+  → Skip the dialogue.
+  → Set meta.code_graph_available = true immediately.
+  → Note: "Using existing code graph (generated {generatedDate})"
+  → Continue to Phase 1.
+```
+
+---
+
 ### Phase 1: Initial Reconnaissance
 
 **Goal**: Get high-level understanding and identify documentation

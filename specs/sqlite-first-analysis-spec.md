@@ -15,6 +15,31 @@ The YAML model stays as a human-readable snapshot committed to the repo. It is n
 
 ---
 
+## Integration Point: arch-analysis Phase 0.5
+
+Code-graph extraction must happen **before** any view generation begins. View 09 and the reports/ directory (`entry-point-map`, `dead-code`, `sre-hot-paths`, `sqlite-cookbook`) all depend on the SQLite file. Backfilling them after the fact produces lower-fidelity AI-only output.
+
+### Where the prompt lives
+
+arch-analysis **Phase 0.5** (after setup, before Phase 1 reconnaissance) presents the user with three options:
+
+| Choice | What happens |
+|---|---|
+| **Y — Run now** | Pauses arch-analysis, invokes code-graph Phase 0.0 scope dialogue, extraction runs to completion (SQLite written + committed), then arch-analysis resumes at Phase 1 with SQLite available for all views |
+| **S — AI-only** | Extraction skipped; View 09 generated from AI source reading only; reports/ omitted; note added to index.md |
+| **D — Defer** | View 09 omitted from this run entirely; user runs code-graph separately later and adds View 09 via `/update` |
+
+If a current `code_graph.sqlite` already exists (per manifest), the prompt is skipped and the existing file is used automatically.
+
+### Why Phase 0.5 not later
+
+Placing the prompt in Phase 0.5 means:
+- Extraction tooling detection happens before the agent spends tokens on analysis
+- The SQLite file is ready when Phase 4B.6 SQL dispatch is invoked during view generation 
+- No backtracking — views are generated once, from the right source
+
+---
+
 ## Current State vs Target
 
 | Analysis Operation | Current (SQLite active) | Target |
@@ -219,6 +244,8 @@ Workflow change: nonfunctional Phase 3 checks for presence of `code_graph.sqlite
 
 ## Acceptance Criteria
 
+- [ ] arch-analysis Phase 0.5 prompts user to run code-graph extraction before analysis if skill is enabled and no current SQLite exists
+- [ ] Phase 0.5 correctly handles Y (run now) / S (AI-only) / D (defer) and the "already extracted" fast-path
 - [ ] Phase 3 in-context traversal (3.1–3.5) is skipped entirely when SQLite backend is active
 - [ ] All five view types read from materialized tables, not YAML
 - [ ] `view_refactor_priority` and `view_cross_repo_edges` materialized tables created in Phase 4B
@@ -234,10 +261,11 @@ Workflow change: nonfunctional Phase 3 checks for presence of `code_graph.sqlite
 
 ## Implementation Order
 
-1. Phase 4B schema additions (`view_refactor_priority`, `view_cross_repo_edges`, `view_db_entry_paths`) + `repo_path` column
-2. Phase 3 SQLite path (skip in-context traversal, read from materialized tables)
-3. Phase 4B.6 SQL dispatch table in `workflows.md`
-4. View 09 generator SQL mapping
-5. nonfunctional Phase 3 integration
-6. YAML stub reduction
-7. Cookbook update (new view sections)
+1. **arch-analysis Phase 0.5** — code-graph pre-check dialogue (Y/S/D + already-extracted fast-path)
+2. Phase 4B schema additions (`view_refactor_priority`, `view_cross_repo_edges`, `view_db_entry_paths`) + `repo_path` column
+3. Phase 3 SQLite path (skip in-context traversal, read from materialized tables)
+4. Phase 4B.6 SQL dispatch table in `workflows.md`
+5. View 09 generator SQL mapping
+6. nonfunctional Phase 3 integration
+7. YAML stub reduction
+8. Cookbook update (new view sections)
