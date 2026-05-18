@@ -12,6 +12,7 @@ skills:
     description: Git best practices, branching strategies, commit hygiene
     dependencies: []
     invocations: []
+    version: "1.0"
     status: complete
 
   - name: todo-workflow
@@ -21,6 +22,7 @@ skills:
     dependencies: [git-workflow]
     invocations:
       - "Use todo workflow"
+    version: "1.0"
     status: complete
 
   - name: bootstrap
@@ -42,25 +44,28 @@ skills:
       - "Upgrade the toolkit"
       - "Update to latest version"
       - "What's new in the toolkit?"
+    version: "1.0"
     status: complete
 
   # ── Analysis Skills ──────────────────────────────────────────────────
   - name: codebase-analysis
     tier: optional
     path: optional/codebase-analysis/
-    description: Base analysis engine producing structured analysis model
+    description: "[DEPRECATED — use arch-analysis] Base analysis engine. arch-analysis now subsumes this skill and is the recommended entry point for all analysis work."
     dependencies: []
     invocations:
       - "Analyze this codebase"
-    status: complete
+    version: "1.0"
+    status: deprecated
 
   - name: arch-analysis
     tier: optional
     path: optional/arch-analysis/
-    description: Architecture documentation (codebase-analysis + architecture-docs)
+    description: Default analysis skill — full architecture documentation including technology stack, interfaces, diagrams, dependency health, data flows, and code graph (when code-graph is enabled). Use this for all architectural analysis work.
     dependencies: []
     invocations:
       - "Analyze the architecture"
+    version: "1.0"
     status: complete
 
   - name: security-analysis
@@ -70,6 +75,7 @@ skills:
     dependencies: []
     invocations:
       - "Analyze security"
+    version: "1.0"
     status: complete
 
   - name: nonfunctional-analysis
@@ -79,19 +85,21 @@ skills:
     dependencies: []
     invocations:
       - "Analyze code quality"
+    version: "1.0"
     status: complete
 
   - name: code-graph
     tier: optional
     path: optional/code-graph/
     description: Function-level call graph analysis with adaptive YAML/SQLite backend — hot paths, dead code, entry point tracing, cycle detection
-    dependencies: [codebase-analysis]
+    dependencies: [arch-analysis]
     invocations:
       - "Analyze code graph"
       - "Build call graph"
       - "Find dead code"
       - "Trace entry points"
       - "Show me hot paths"
+    version: "1.0"
     status: complete
 
   - name: architecture-synthesis
@@ -101,6 +109,7 @@ skills:
     dependencies: []
     invocations:
       - "Synthesize architecture from diagrams"
+    version: "1.0"
     status: complete
 
   - name: fitness-functions
@@ -111,6 +120,7 @@ skills:
     invocations:
       - "Define fitness functions"
       - "Analyze system fitness"
+    version: "1.0"
     status: complete
 
   - name: analysis-tracking
@@ -121,6 +131,7 @@ skills:
     invocations:
       - "Set up analysis tracking"
       - "Check analysis staleness"
+    version: "1.0"
     status: complete
 
   - name: update-logs
@@ -132,6 +143,7 @@ skills:
       - "Create update log"
       - "Write update log"
       - "Document this session"
+    version: "1.0"
     status: complete
 
   # ── Architecture & Modeling Skills ───────────────────────────────────
@@ -142,6 +154,7 @@ skills:
     dependencies: []
     invocations:
       - "Create C4 model"
+    version: "1.0"
     status: complete
 
   - name: togaf
@@ -152,6 +165,7 @@ skills:
     invocations:
       - "Apply TOGAF"
       - "Create architecture vision"
+    version: "1.0"
     status: complete
     phases:
       - name: preliminary
@@ -189,6 +203,7 @@ skills:
     description: Design principles, patterns, architectural decisions
     dependencies: []
     invocations: []
+    version: "1.0"
     status: complete
 
   - name: tech-stack-decisions
@@ -197,6 +212,7 @@ skills:
     description: Technology evaluation, decision frameworks, ADRs
     dependencies: [software-design]
     invocations: []
+    version: "1.0"
     status: complete
 
   - name: code-conventions
@@ -205,6 +221,7 @@ skills:
     description: Style guides, naming conventions, structure standards
     dependencies: []
     invocations: []
+    version: "1.0"
     status: complete
 
   - name: presentation
@@ -215,6 +232,7 @@ skills:
     invocations:
       - "Generate presentation"
       - "Create slides"
+    version: "1.0"
     status: complete
 
   # ── Roadmap Skills ──────────────────────────────────────────────────
@@ -228,6 +246,7 @@ skills:
       - "Generate roadmap from target architecture"
       - "Build roadmap with epics and tickets"
       - "Generate roadmap tracker"
+    version: "1.0"
     status: complete
 
   - name: roadmap-analysis
@@ -243,6 +262,7 @@ skills:
       - "Estimate effort for the roadmap"
       - "Plan team for roadmap"
       - "Export roadmap to PDF"
+    version: "1.0"
     status: complete
 
   # ── Coding Skills ────────────────────────────────────────────────────
@@ -256,6 +276,7 @@ skills:
       - "Profile this directory"
       - "Profile repos: ..."
       - "Refresh coding profile"
+    version: "1.0"
     status: complete
 
   # ── Output Adapters ─────────────────────────────────────────────────
@@ -265,6 +286,7 @@ skills:
     description: Output adapters for analysis results
     dependencies: [codebase-analysis]
     invocations: []
+    version: "1.0"
     status: complete
     adapters:
       - name: core-architecture

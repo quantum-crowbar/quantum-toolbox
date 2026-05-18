@@ -122,6 +122,14 @@ git add CONTEXT.md AGENTS.md README.md
 git commit -m "docs: sync context files after <skill-name> run"
 ```
 
+### analysis-manifest.json integrity
+
+After any skill that writes `specs/analysis-manifest.json`:
+- The manifest must conform to `.quantum-toolbox/specs/analysis-manifest-schema.json`.
+- Each artifact entry must include `generatedWithSkillVersion` (read from the skill's `version` field in `manifest.yaml`).
+- Validate by checking required top-level keys: `toolboxVersion`, `lastAnalysis`, `artifacts`.
+- If a required field is missing, write it before committing.
+
 ---
 
 ## When to Update This File

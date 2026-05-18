@@ -1,6 +1,10 @@
 # Architectural Analysis Skill
 
-Systematic methodology for analyzing and documenting unknown codebases.
+**Default analysis skill.** Use this for all architectural analysis and codebase documentation work.
+
+`arch-analysis` is the primary analysis entry point. It performs full codebase analysis and produces complete architecture documentation — technology stack, interfaces, diagrams, dependency health, data flow, error handling, and (when `code-graph` is enabled) a query-ready call graph with SQLite backend.
+
+The `codebase-analysis` skill is deprecated and no longer offered separately. Its analysis model is now an internal phase of `arch-analysis`.
 
 ---
 
@@ -14,16 +18,6 @@ Systematic methodology for analyzing and documenting unknown codebases.
 | Quick reference | During execution | `checklist.md` (~2,800 tokens) |
 
 Do **not** load all files upfront. Load templates and examples only when needed.
-
----
-
-## Architecture Note
-
-This skill is now a wrapper that combines:
-1. **[codebase-analysis](../codebase-analysis/)** - Base analysis engine
-2. **[architecture-docs](../analysis-outputs/architecture-docs/)** - Output adapter
-
-For alternative outputs (AGENTS.md, C4 models, etc.), see [analysis-outputs](../analysis-outputs/_index.md).
 
 ---
 

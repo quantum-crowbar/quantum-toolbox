@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/quantum-crowbar/quantum-toolbox/specs/analysis-manifest-schema.json",
+  "title": "analysis-manifest",
+  "description": "Schema for specs/analysis-manifest.json — the canonical state record for a quantum-toolbox metarepo.",
+  "type": "object",
+  "required": ["toolboxVersion", "lastAnalysis", "artifacts"],
+  "additionalProperties": false,
+
+  "properties": {
+
+    "toolboxVersion": {
+      "type": "string",
+      "description": "Toolkit version (semver) at the time of the last /upgrade run. Updated by /upgrade only.",
+      "examples": ["3.0.0"]
+    },
+
+    "lastAnalysis": {
+      "type": "object",
+      "description": "Metadata about the most recent analysis run across all skills.",
+      "required": ["date"],
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date (YYYY-MM-DD) of the last analysis run.",
+          "examples": ["2026-05-18"]
+        },
+        "repositories": {
+          "type": "object",
+          "description": "Map of repo-name → last-analyzed commit SHA.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["commit"],
+            "additionalProperties": false,
+            "properties": {
+              "commit": {
+                "type": "string",
+                "description": "Short commit SHA at the time of analysis.",
+                "examples": ["a1b2c3d"]
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "artifacts": {
+      "type": "object",
+      "description": "Per-skill artifact records. Keys are skill names (e.g. 'arch-analysis', 'code-graph').",
+      "additionalProperties": {
+        "$ref": "#/$defs/artifactEntry"
+      },
+      "properties": {
+        "arch-analysis": { "$ref": "#/$defs/artifactEntry" },
+        "security-analysis": { "$ref": "#/$defs/artifactEntry" },
+        "nonfunctional-analysis": { "$ref": "#/$defs/artifactEntry" },
+        "coding-profile": { "$ref": "#/$defs/artifactEntry" },
+        "code-graph": { "$ref": "#/$defs/codeGraphArtifact" }
+      }
+    },
+
+    "history": {
+      "type": "array",
+      "description": "Append-only log of analysis runs. Each entry records what was run and when.",
+      "items": { "$ref": "#/$defs/historyEntry" }
+    }
+
+  },
+
+  "$defs": {
+
+    "artifactEntry": {
+      "type": "object",
+      "description": "State record for a single skill's output.",
+      "required": ["lastAnalyzedDate"],
+      "additionalProperties": true,
+      "properties": {
+        "lastAnalyzedDate": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO date when this skill last completed successfully."
+        },
+        "lastAnalyzedCommit": {
+          "type": "string",
+          "description": "Short commit SHA of the primary source repo when skill last ran."
+        },
+        "sourceRepos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Repo names this skill covered in its last run."
+        },
+        "generatedWithSkillVersion": {
+          "type": "string",
+          "description": "Version of the skill (from manifest.yaml) used to generate this artifact.",
+          "examples": ["1.0"]
+        },
+        "views": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of generated view file paths relative to the metarepo root."
+        },
+        "reports": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of generated report file paths relative to the metarepo root."
+        }
+      }
+    },
+
+    "codeGraphArtifact": {
+      "allOf": [{ "$ref": "#/$defs/artifactEntry" }],
+      "description": "Extended artifact entry for the code-graph skill.",
+      "properties": {
+        "generatedDate": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO date when the SQLite/YAML extraction completed."
+        },
+        "method": {
+          "type": "string",
+          "description": "Extraction tool and method string.",
+          "examples": ["ts-morph v21 static AST extraction + node:sqlite"]
+        },
+        "regenerate": {
+          "type": "string",
+          "description": "Shell command to reproduce this extraction.",
+          "examples": ["node scripts/cg-extract.js && node scripts/cg-reports.js"]
+        },
+        "code_graph_mode": {
+          "type": "string",
+          "enum": ["sqlite", "yaml", "ai-only", "deferred"],
+          "description": "Backend/mode used for the most recent arch-analysis run."
+        },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paths to .sqlite or .yaml graph files."
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "totalNodes": { "type": ["integer", "string"] },
+            "resolvedEdges": { "type": ["integer", "string"] },
+            "crossRepoCalls": { "type": ["integer", "string"] },
+            "entryPoints": { "type": ["integer", "string"] },
+            "deadCodeNodes": { "type": ["integer", "string"] },
+            "deadCodeRate": { "type": "string", "examples": ["12%"] }
+          }
+        }
+      }
+    },
+
+    "historyEntry": {
+      "type": "object",
+      "required": ["date", "skill", "trigger"],
+      "additionalProperties": false,
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "skill": { "type": "string" },
+        "trigger": { "type": "string", "description": "What invoked this run (e.g. /update, /upgrade, manual)." },
+        "repos": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+
+  }
+}

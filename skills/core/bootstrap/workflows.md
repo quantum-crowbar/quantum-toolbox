@@ -51,6 +51,22 @@ Extract:
   - Domain name (from Domain Overview section)
   - Enabled skills (checked [ x ] items in Enabled Skills section)
 If AGENTS.md not found: domain = "not configured", enabled skills = defaults only
+
+Dependency validation:
+  For each enabled skill, read its dependencies[] from .quantum-toolbox/skills/manifest.yaml.
+  For each dependency listed:
+    If the dependency skill is NOT also in the enabled list:
+      Add to dependency_warnings[]:
+        {
+          skill: "<skill-name>",
+          missing_dep: "<dependency-name>",
+          fix_options: [
+            "A) Enable <dependency> in AGENTS.md (check its [ x ] box)",
+            "B) Run <skill> in standalone mode (may produce lower-fidelity output)",
+            "C) Ignore — understood, proceeding anyway"
+          ]
+        }
+  (Do not stop or block. Warnings surface in Phase 2 status block.)
 ```
 
 ### 1.3 — Analysis state
@@ -58,6 +74,19 @@ If AGENTS.md not found: domain = "not configured", enabled skills = defaults onl
 ```
 Check for specs/analysis-manifest.json
 If found:
+  Schema validation:
+    Read .quantum-toolbox/specs/analysis-manifest-schema.json
+    Validate manifest against the schema.
+    If validation fails (missing required fields, wrong types):
+      Set manifest_valid = false
+      Note specific violations (e.g. "missing toolboxVersion", "artifact entry lacks lastAnalyzedDate")
+      Surface in Phase 2 status block:
+        "⚠ analysis-manifest.json failed schema validation: {violations}
+         Risk: /update and /upgrade may behave unpredictably.
+         Fix: run arch-analysis to regenerate a valid manifest."
+      Continue — do not stop.
+    If validation passes: set manifest_valid = true
+
   - Read lastAnalysis.date
   - Read toolboxVersion from manifest
   - Compare against current toolkit version (from 1.1)
@@ -141,6 +170,17 @@ If code-graph skill is enabled in AGENTS.md but code-graph status is "not run":
   ⚡ code-graph enabled — SQLite extraction not yet run.
      Phase 0.5 will offer it when you next run arch-analysis.
      Until then, graph-dependent views (View 09) are unavailable.
+```
+
+If dependency_warnings[] is not empty (from Phase 1.2):
+```
+  ⚠ Skill dependency issues detected:
+    {for each warning}
+    {skill} requires {missing_dep} — not enabled in AGENTS.md
+      Fix options:
+        A) Enable {missing_dep} in AGENTS.md (check its [ x ] box)
+        B) Run {skill} in standalone mode (lower-fidelity output)
+        C) Ignore — proceeding anyway
 ```
 
 **Notes for agents on building this block:**
@@ -355,6 +395,12 @@ For each stale repo the user confirmed:
 3. If code graph is stale and user confirms:
      Invoke code-graph skill Phase 0.0 (scope pre-filled from manifest)
      On completion: Phase 4C + 4D (manifest update + commit)
+
+4. If code graph was updated (step 3) AND reports/sqlite-cookbook.md exists:
+     Re-run code-graph Phase 4B.5 (cookbook generation) to regenerate the cookbook
+     with updated stats from the refreshed SQLite file.
+     Write updated reports/sqlite-cookbook.md
+     Include in the same commit as step 3, or add to the manifest update commit.
 ```
 
 ---
@@ -446,9 +492,18 @@ Step 3 — New report types
   Cross-check docs/architecture-docs/reports/ for presence
   → Missing reports: flag + note whether source data already exists to generate them
 
-Step 4 — Changed templates (best-effort)
+Step 4 — Changed templates + skill version upgrades
   git -C .quantum-toolbox log --oneline {old version}..HEAD -- skills/optional/*/templates.md
   → List artifacts generated from changed templates → "may benefit from regeneration"
+
+  For each artifact entry in specs/analysis-manifest.json:
+    Read artifacts.{skill}.generatedWithSkillVersion
+    Compare against current skill version in new manifest.yaml:
+      If generatedWithSkillVersion is absent OR older than current skill version:
+        → Flag artifact for regeneration:
+          "  {skill} artifact generated with v{old} — current skill is v{new}
+             Regeneration recommended to pick up template and workflow changes."
+    If generatedWithSkillVersion matches current: skip (no change).
 
 Step 5 — Config gaps
   Read AGENTS.md → check for Post-Work Hook section
@@ -491,8 +546,8 @@ Step 6 — Source staleness (same as /update Phase C2.1–C2.3)
     {report}   source: {existing SQLite / needs re-analysis / n/a}
     (none)
 
-  Templates updated (re-generation recommended)
-    {artifact}  generated with {old version}
+  Templates updated / Skill version upgrades (re-generation recommended)
+    {skill}  artifact generated with v{old} — current skill v{new}
     (none)
 
   Config gaps
@@ -557,8 +612,22 @@ For each new view identified in U2 Step 2 (source: existing model):
   1. Load existing analysis model / architecture docs to reconstruct context
   2. Run the view generation step from the relevant skill workflow
   3. Write to docs/architecture-docs/analysis/{view-id}-{name}.md
-  4. Update specs/analysis-manifest.json → add view to views[] array
+  4. Update specs/analysis-manifest.json → add view to views[] array,
+     set generatedWithSkillVersion to current skill version from manifest.yaml
   5. Create update log entry
+```
+
+#### Action 2b — Regenerate artifacts where skill version changed (from U2 Step 4)
+
+```
+For each artifact flagged due to skill version upgrade:
+  Prompt: "Regenerate {skill} output with skill v{new}? (recommended — templates changed)
+           Y / skip"
+  If Y:
+    Re-run the skill's output generation phase (not full re-analysis, just template rendering)
+    Update artifacts.{skill}.generatedWithSkillVersion = "{new version}"
+    Write updated output files
+    git add + git commit -m "docs: regenerate {skill} output with skill v{new}"
 ```
 
 #### Action 3 — Generate new reports from existing data
@@ -568,7 +637,8 @@ For each new report where data already exists (e.g. sqlite-cookbook from SQLite 
   1. Read required stats from manifest / existing files
   2. Load and fill the report template
   3. Write to docs/architecture-docs/reports/{report-name}.md
-  4. git add + git commit -m "docs: add {report-name} (qt upgrade)"
+  4. Update artifacts.{skill}.generatedWithSkillVersion in manifest
+  5. git add + git commit -m "docs: add {report-name} (qt upgrade)"
 ```
 
 #### Action 4 — Re-run analysis on stale repos

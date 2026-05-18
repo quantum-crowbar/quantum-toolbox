@@ -33,9 +33,8 @@ Enable these by checking them in your project's `AGENTS.md`:
 
 | Skill | Description | Path |
 |-------|-------------|------|
-| **codebase-analysis** | Base analysis engine producing structured analysis model | [optional/codebase-analysis/](optional/codebase-analysis/) |
-| **analysis-outputs** | Output adapters (architecture-docs, coding-context, etc.) | [optional/analysis-outputs/](optional/analysis-outputs/) |
-| **arch-analysis** | Architecture documentation (codebase-analysis + architecture-docs) | [optional/arch-analysis/](optional/arch-analysis/) |
+| **arch-analysis** | **Default analysis skill** — full architecture documentation (tech stack, interfaces, diagrams, dependency health, data flows, code graph). Use this for all analysis work. | [optional/arch-analysis/](optional/arch-analysis/) |
+| ~~codebase-analysis~~ | ~~Base analysis engine~~ **(deprecated — arch-analysis subsumes this)** | [optional/codebase-analysis/](optional/codebase-analysis/) |
 | **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
 | **nonfunctional-analysis** | Testing coverage, configuration audit, performance, code health | [optional/nonfunctional-analysis/](optional/nonfunctional-analysis/) |
 | **architecture-synthesis** | Middle-out architecture from diagrams and specs | [optional/architecture-synthesis/](optional/architecture-synthesis/) |

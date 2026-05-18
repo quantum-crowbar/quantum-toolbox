@@ -186,6 +186,40 @@ Already extracted? (code_graph.sqlite exists and is current per manifest):
   → Set meta.code_graph_available = true immediately.
   → Note: "Using existing code graph (generated {generatedDate})"
   → Continue to Phase 1.
+
+Was AI-only last time but SQLite is now available?
+  Check: artifacts.code-graph.code_graph_mode == "ai-only"
+         AND code_graph.sqlite exists at the path in artifacts.code-graph.files[0]
+  If true:
+    Present:
+    ─────────────────────────────────────────────────────────────
+      Code Graph Upgrade Available
+
+      The previous analysis used AI-only mode (no static extraction).
+      A code_graph.sqlite file now exists — you can upgrade this
+      analysis to SQLite-first fidelity.
+
+      Upgrading will:
+        → Re-generate View 09 from SQL queries (exact, deterministic)
+        → Re-generate reports/ directory (entry-point-map, dead-code,
+           sre-hot-paths, sqlite-cookbook)
+        → Patch index.md to remove the "AI-only" note
+
+      Upgrade View 09 and reports/ to use the existing SQLite now?
+
+      Y   Upgrade now — regenerate View 09 + reports/ from SQLite
+      N   Keep existing AI-only outputs — continue without change
+    ─────────────────────────────────────────────────────────────
+    If Y:
+      → Set meta.code_graph_available = true, meta.code_graph_backend = sqlite
+      → Regenerate 09-code-graph.md using Phase 4B.6 SQL queries
+      → Regenerate all selected reports/ files
+      → Remove "AI-only" note from index.md
+      → Update artifacts.code-graph.code_graph_mode = "sqlite"
+      → Continue to Phase 1.
+    If N:
+      → Set meta.code_graph_available = false (keep existing AI-only outputs)
+      → Continue to Phase 1.
 ```
 
 ---

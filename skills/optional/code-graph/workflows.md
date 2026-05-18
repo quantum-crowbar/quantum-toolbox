@@ -569,6 +569,142 @@ For each node:
 
 ---
 
+## Phase 2.5: Incremental Update
+
+**Goal**: Refresh only the changed portions of an existing SQLite graph. Skip full re-extraction. Triggered by `/update` when code graph is stale, or by a direct user request ("update code graph").
+
+> **Precondition**: SQLite file exists (`code_graph.sqlite`) from a previous Phase 4B run.
+> YAML-only graphs cannot be incrementally updated — a full re-extraction is required.
+
+### 2.5.1 Detect changed files
+
+```bash
+# Identify .ts files changed since the recorded generatedDate commit SHA
+git -C code/{repo} diff {generatedDate_commit}..HEAD --name-only | grep -E '\.(ts|js|py|go|kt)$'
+```
+
+Collect the set of changed files per repo. If no files changed: skip this repo, no update needed.
+
+### 2.5.2 Delete stale data
+
+For each changed file, remove its existing nodes and all edges touching them:
+
+```sql
+-- For each changed file path in the repo:
+DELETE FROM edges
+  WHERE call_site LIKE '{changed_file}%'
+     OR from_node IN (SELECT id FROM nodes WHERE location LIKE '{changed_file}%')
+     OR to_node   IN (SELECT id FROM nodes WHERE location LIKE '{changed_file}%');
+
+DELETE FROM nodes WHERE location LIKE '{changed_file}%';
+```
+
+> **Shared library caveat**: If a shared lib (`@org/core`, `@org/connector`, etc.) changed,
+> its consumer repos also have stale edges. Extend the deletion to also remove edges from
+> consumer repos where `to_node` resolves to a node in the changed lib file:
+> ```sql
+> DELETE FROM edges
+>   WHERE to_node IN (SELECT id FROM nodes WHERE repo = '{lib_repo}'
+>                     AND location LIKE '{changed_lib_file}%');
+> ```
+
+### 2.5.3 Re-extract changed files only
+
+Run the static analysis tool scoped to the changed files only:
+```bash
+# TypeScript example (ts-morph scoped to changed files)
+node scripts/cg-extract.js --files {changed_file_list}
+```
+
+Insert the new nodes and edges for these files using the same Phase 1 + 2 logic.
+Back-fill fan_in / fan_out for all affected nodes (not just newly inserted — callers of
+changed nodes may have their fan-out counts affected):
+
+```sql
+-- Recompute fan_in and fan_out for all nodes where edges were deleted or inserted
+UPDATE nodes SET fan_in  = (SELECT COUNT(*) FROM edges WHERE to_node   = nodes.id);
+UPDATE nodes SET fan_out = (SELECT COUNT(*) FROM edges WHERE from_node = nodes.id);
+
+-- Recompute is_dead_code for affected nodes
+UPDATE nodes SET is_dead_code = CASE
+  WHEN fan_in = 0 AND is_entry_point = 0 THEN 1 ELSE 0 END;
+```
+
+### 2.5.4 Refresh derived columns and materialized views
+
+```sql
+-- Re-populate derived columns for changed nodes
+UPDATE nodes SET has_db_call       = (CASE WHEN tags LIKE '%"db"%'       THEN 1 ELSE 0 END);
+UPDATE nodes SET has_external_call = (CASE WHEN tags LIKE '%"external"%' THEN 1 ELSE 0 END);
+UPDATE nodes SET repo_path         = substr(location, 1, instr(location, ':') - 1);
+
+-- Refresh from_repo / to_repo on edges where either end was re-inserted
+UPDATE edges SET
+  from_repo = (SELECT repo FROM nodes WHERE nodes.id = edges.from_node),
+  to_repo   = (SELECT repo FROM nodes WHERE nodes.id = edges.to_node)
+WHERE from_node IN (SELECT id FROM nodes WHERE location LIKE '{changed_file}%')
+   OR to_node   IN (SELECT id FROM nodes WHERE location LIKE '{changed_file}%');
+
+-- Rebuild materialized view tables (drop and recreate)
+DROP TABLE IF EXISTS view_hot_nodes;
+DROP TABLE IF EXISTS view_dead_code;
+DROP TABLE IF EXISTS view_complexity_hotspots;
+DROP TABLE IF EXISTS view_refactor_priority;
+DROP TABLE IF EXISTS view_cross_repo_edges;
+-- (view_entry_traces, view_cycles, view_db_entry_paths also need recompute — see Phase 3)
+
+-- Recreate from updated data (same DDL as Phase 4B)
+CREATE TABLE view_hot_nodes AS
+  SELECT id, fan_in, fan_out, location FROM nodes ORDER BY fan_in DESC;
+
+CREATE TABLE view_dead_code AS
+  SELECT id, location, extraction_method FROM nodes WHERE is_dead_code = 1;
+
+CREATE TABLE view_complexity_hotspots AS
+  SELECT id, cyclomatic_complexity, location FROM nodes
+  WHERE cyclomatic_complexity > 10 ORDER BY cyclomatic_complexity DESC;
+
+CREATE TABLE view_refactor_priority AS
+  SELECT id, repo, fan_in, cyclomatic_complexity,
+         fan_in * cyclomatic_complexity AS refactor_score, location
+  FROM nodes WHERE is_dead_code = 0 ORDER BY refactor_score DESC;
+
+CREATE TABLE view_cross_repo_edges AS
+  SELECT from_node, to_node, from_repo, to_repo, call_site, is_async, is_conditional
+  FROM edges WHERE from_repo != to_repo;
+```
+
+For `view_entry_traces` and `view_cycles`: re-run the DFS traversal from Phase 3.3 and 3.4
+but **only for entry point nodes that appear in the changed file set or that call into a
+changed node**. Rebuild only those rows in the view tables:
+
+```sql
+DELETE FROM view_entry_traces
+  WHERE entry_node IN (
+    SELECT id FROM nodes WHERE location LIKE '{changed_file}%'
+  )
+  OR entry_node IN (                  -- entry points that call into changed nodes
+    SELECT DISTINCT e.from_node
+    FROM edges e
+    JOIN nodes n ON n.id = e.to_node
+    WHERE n.location LIKE '{changed_file}%' AND
+          (SELECT is_entry_point FROM nodes WHERE id = e.from_node) = 1
+  );
+
+DELETE FROM view_db_entry_paths
+  WHERE entry_node IN (SELECT entry_node FROM view_entry_traces WHERE ...);
+-- Then re-run DFS and re-insert affected rows.
+```
+
+### 2.5.5 Update manifest + complete
+
+After incremental update completes, proceed to Phase 4C (update `artifacts.code-graph`
+in manifest with new `generatedDate` and new stats) and Phase 4D (commit).
+
+Note in Phase 4D commit message: `fix(code-graph): incremental update — {N} files refreshed`
+
+---
+
 ## Phase 3: Pre-computed Views
 
 **Goal**: Calculate common query results upfront. Stored views eliminate the need for live traversal during documentation generation.
