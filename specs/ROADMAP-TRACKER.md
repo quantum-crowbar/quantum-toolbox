@@ -57,6 +57,7 @@ Master tracking document for all skill development roadmaps.
 | Phase 1B: Skill files (README, workflows, templates, checklist) | - | 🟢 Complete | High |
 | Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
 | Phase 2: SQLite export path | - | ⚪ Planned | Medium |
+| Phase 3: SQLite-first analysis (SQL replaces in-context traversal) | - | ⚪ Planned | High |
 | | | | |
 | **--- EXPLORATIONS ---** | | | |
 | EXPL-01: Analysis SQLite — early DB for arch findings | - | 🔬 Exploration | Medium |
@@ -1503,6 +1504,7 @@ ORDER BY skill, phase;
 | 2026-02-08 | Added token optimization & structural cleanup roadmap (12 items) | - |
 | 2026-05-12 | View 15 renamed to Cost Impact Report, spec added, priority raised to Medium | - |
 | 2026-05-15 | EXPL-01: Analysis SQLite exploration item added to roadmap | - |
+| 2026-05-18 | Code-Graph Phase 3 SQLite-first analysis spec added | - |
 
 ---
 
