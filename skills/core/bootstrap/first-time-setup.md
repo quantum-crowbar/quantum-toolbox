@@ -36,6 +36,13 @@ STEP 3 — Create AGENTS.md
          per operation type; the update log idempotency rule; and the commit command
     - When to Update This File
 
+  Ask user: "Do you want code-graph analysis enabled? (recommended for best analysis
+  fidelity on medium+ codebases)"
+  → If yes: tick [x] code-graph and [x] arch-analysis in AGENTS.md Enabled Skills.
+    When arch-analysis runs, Phase 0.5 will offer SQLite extraction before Phase 1
+    begins — deterministic AST queries, 90–98% fewer tokens than in-context traversal.
+  → If no: leave unchecked. Can be enabled later by editing AGENTS.md.
+
 STEP 4 — Create CONTEXT.md
   Copy .quantum-toolbox/templates/CONTEXT.template.md → ./CONTEXT.md
   Pre-fill: domain name, date, version 0.1.0
@@ -58,6 +65,8 @@ STEP 8 — Offer next action
   "Your metarepo is ready. What would you like to do next?
 
    A) Add source repos to sources/urls.md and run full analysis now
+      (If code-graph is [x] in AGENTS.md, Phase 0.5 will offer SQLite extraction
+      before analysis begins — enables SQLite-first analysis throughout)
    B) Explore skills first (/skills)
    C) Leave it here — you can run analysis later"
 ```

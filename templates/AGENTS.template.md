@@ -49,6 +49,12 @@ This document provides instructions for AI coding agents working on this project
 
 The following optional skills are enabled for this project:
 
+- [ ] `arch-analysis` - [.quantum-toolbox/skills/optional/arch-analysis/](.quantum-toolbox/skills/optional/arch-analysis/)
+- [ ] `code-graph` - [.quantum-toolbox/skills/optional/code-graph/](.quantum-toolbox/skills/optional/code-graph/)
+  <!-- SQLite-first: when enabled, arch-analysis Phase 0.5 offers code-graph extraction  -->
+  <!-- before analysis begins. Deterministic AST queries replace in-context traversal.    -->
+  <!-- 90–98% fewer tokens on medium+ codebases; 60–70% on small (<200 nodes).           -->
+  <!-- SQLite file written to code/{repo}/code_graph.sqlite (gitignored).                -->
 - [ ] `software-design` - [.quantum-toolbox/skills/optional/software-design/](.quantum-toolbox/skills/optional/software-design/)
 - [ ] `tech-stack-decisions` - [.quantum-toolbox/skills/optional/tech-stack-decisions/](.quantum-toolbox/skills/optional/tech-stack-decisions/)
 - [ ] `code-conventions` - [.quantum-toolbox/skills/optional/code-conventions/](.quantum-toolbox/skills/optional/code-conventions/)

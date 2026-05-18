@@ -63,8 +63,20 @@ If found:
   - Compare against current toolkit version (from 1.1)
   - For each repo in lastAnalysis.repositories: note if commit tracking exists
   - Summarise: "Analysis run on {date}, {N} repos tracked, toolkit {same/changed}"
+  - Code-graph status:
+      Read artifacts.code-graph (if present):
+        generatedDate, sourceRepos
+        For each sourceRepo: compare generatedDate vs current HEAD date
+        If all current: code-graph status = "✓ current ({generatedDate})"
+        If any repo newer than generatedDate: code-graph status = "⚠ stale ({N} repos)"
+      Cross-reference with Phase 1.2 enabled skills:
+        If code-graph skill is [x] but artifacts.code-graph absent:
+          code-graph status = "not run"
+        If code-graph skill is not enabled:
+          code-graph status = "not enabled"
 If not found:
   - Status = "no analysis run yet"
+  - code-graph status = "not run" (or "not enabled" if code-graph skill not in 1.2 list)
 ```
 
 ### 1.4 — Last session
@@ -92,6 +104,7 @@ Present the status block followed by the skills and commands snapshot. One scree
 
   Domain:        {domain name, or "not configured"}
   Analysis:      {date + "up to date" / "stale: {N} repos behind" / "not run yet"}
+  Code graph:    {✓ current (date) / ⚠ stale (N repos) / "not run" / "not enabled"}
   Last session:  {date, or "none found"}
 
   Commands
@@ -123,11 +136,20 @@ If toolkit version differs from manifest's `toolboxVersion`:
     Run /upgrade to see what changed and regenerate affected outputs.
 ```
 
+If code-graph skill is enabled in AGENTS.md but code-graph status is "not run":
+```
+  ⚡ code-graph enabled — SQLite extraction not yet run.
+     Phase 0.5 will offer it when you next run arch-analysis.
+     Until then, graph-dependent views (View 09) are unavailable.
+```
+
 **Notes for agents on building this block:**
 - Read `skills/manifest.yaml` to build the full skills list (tier + description)
 - Read AGENTS.md `## Enabled Skills` to mark `[ x ]` items as "enabled for this project"
 - Core skills (tier: core) always go in "active"
 - Keep one-liners to 6 words max — this is the summary view, not the detail view
+- Derive Code graph status from Phase 1.3 and format as:
+  `✓ current ({date})` / `⚠ stale ({N} repos)` / `not run` / `not enabled`
 - Run `/help` for the full invocation phrase list and per-skill details
 
 ---
@@ -433,6 +455,14 @@ Step 5 — Config gaps
   → Missing: flag for insertion
   Read AGENTS.md enabled skills list → compare against new skills available
   → New skills not listed: flag for user to review
+  Read AGENTS.md enabled skills list → check if code-graph is [x]
+  Read specs/analysis-manifest.json → artifacts.code-graph present?
+  If code-graph enabled but artifacts.code-graph absent:
+    → Flag: "⚡ code-graph enabled but no SQLite extraction exists —
+       arch-analysis Phase 0.5 will offer it on next analysis run"
+  If code-graph newly available in this version and not yet listed in AGENTS.md:
+    → Flag: "code-graph skill now available — enable in AGENTS.md to unlock
+       SQLite-first arch-analysis (90–98% token reduction on medium+ codebases)"
 
 Step 6 — Source staleness (same as /update Phase C2.1–C2.3)
   Run full source repo + code graph staleness check
@@ -468,8 +498,8 @@ Step 6 — Source staleness (same as /update Phase C2.1–C2.3)
   Config gaps
     ⚠ Post-Work Hook missing in AGENTS.md   → will insert on confirm
     ✔ Post-Work Hook present
-    ⚠ New skills not listed in AGENTS.md    → review after upgrade
-
+    ⚠ New skills not listed in AGENTS.md    → review after upgrade    ⚡ code-graph enabled, no extraction run → arch-analysis Phase 0.5 will offer it
+    ⚡ code-graph available but not enabled  → enable in AGENTS.md for SQLite-first analysis
   Source repos
     {repo}  ✓ Up-to-date / ⚠ Stale ({N} commits)
     ...
