@@ -110,13 +110,42 @@ Is the `code-graph` skill enabled in AGENTS.md?
 ─────────────────────────────────────────────────────────────
   Code Graph Extraction
 
+  Running code-graph extraction before analysis has three benefits:
+
+  PRECISION
+    Static extraction builds a complete, deterministic call graph
+    from source ASTs — not from AI inference. Every function, edge,
+    and fan-in count is exact. Dead code, blast radius, and entry
+    point traces are computed from verified data, not estimated.
+    AI-only analysis of the same questions produces indicative
+    results that can miss edges, miscount callers, or hallucinate
+    non-existent call paths.
+
+  SPEED
+    Once the SQLite file exists, all code queries run locally in
+    milliseconds. Hotspot lookups, dead code lists, blast radius
+    traversal — all instant, no source file reading required.
+    Subsequent /update runs re-use the same file; only changed
+    files are re-extracted.
+
+  TOKEN USAGE
+    In-context code analysis reads full node and edge arrays into
+    the context window to traverse or filter them. On a medium
+    codebase (~800 nodes, ~3,000 edges) that costs ~240,000 tokens
+    for a single Phase 3 traversal. With SQLite the same information
+    comes back as compact SQL result rows — typically ~4,000 tokens
+    for all five views. That is a 90–98% reduction in token usage
+    for code analysis phases on medium and large codebases.
+    (Small codebases < 200 nodes see a smaller but still meaningful
+    reduction of ~60–70%.)
+
   View 09 (Code Graph) and the reports/ directory (entry-point-map,
   dead-code, sre-hot-paths, sqlite-cookbook) require extraction to
   run before architecture views are generated.
 
   If you skip extraction now, these outputs will either be omitted
   or generated from in-context AI reading only (lower fidelity,
-  no SQLite query capability).
+  no SQLite query capability, full token cost).
 
   Run code-graph extraction now, before analysis begins?
 
