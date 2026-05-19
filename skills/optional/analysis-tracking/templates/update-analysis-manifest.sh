@@ -8,12 +8,14 @@
 #
 # What it does:
 #   1. Detects current commit SHAs in cloned code repos
-#   2. Asks which artifacts you regenerated
-#   3. Updates specs/analysis-manifest.json with new versions
-#   4. Adds entry to update history
+#   2. Detects current quantum-toolbox version from .quantum-toolbox/skills/manifest.yaml
+#   3. Asks which artifacts you regenerated
+#   4. Updates specs/analysis-manifest.json with new versions
+#   5. Adds entry to update history (including toolboxVersion)
 #
 # Requirements:
 #   - jq (for JSON manipulation)
+#   - yq OR grep (for reading YAML version field)
 #   - Code repos cloned in code/ directory
 # =============================================================================
 set -euo pipefail
@@ -22,7 +24,9 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 MANIFEST="$REPO_ROOT/specs/analysis-manifest.json"
 CODE_DIR="$REPO_ROOT/code"
-TEMP_MANIFEST="/tmp/analysis-manifest-$$.json"
+TOOLBOX_MANIFEST="$REPO_ROOT/.quantum-toolbox/skills/manifest.yaml"
+TEMP_MANIFEST=$(mktemp /tmp/analysis-manifest-XXXXXX.json)
+trap 'rm -f "$TEMP_MANIFEST" "${TEMP_MANIFEST}.tmp"' EXIT
 
 print_header() {
   echo ""
@@ -60,12 +64,26 @@ get_current_commit() {
   fi
 }
 
+get_toolbox_version() {
+  if [ ! -f "$TOOLBOX_MANIFEST" ]; then
+    echo "unknown"
+    return
+  fi
+  # Try yq first, fall back to grep
+  if command -v yq &>/dev/null; then
+    yq '.version' "$TOOLBOX_MANIFEST" 2>/dev/null || grep '^version:' "$TOOLBOX_MANIFEST" | awk '{print $2}' | tr -d '"'
+  else
+    grep '^version:' "$TOOLBOX_MANIFEST" | awk '{print $2}' | tr -d '"'
+  fi
+}
+
 detect_repo_commits() {
   print_step "Detecting current repository commits"
 
   declare -gA REPO_COMMITS
 
-  for repo in checkout-service checkout-bridge checkout; do
+  # Discover repos dynamically from manifest rather than hardcoding names
+  for repo in $(jq -r '.lastAnalysis.repositories | keys[]' "$MANIFEST"); do
     local repo_path="$CODE_DIR/$repo"
     local commit
     commit=$(get_current_commit "$repo_path")
@@ -73,9 +91,9 @@ detect_repo_commits() {
     REPO_COMMITS[$repo]=$commit
 
     if [ "$commit" = "NOT_CLONED" ]; then
-      printf "  %-20s ... ⚠ Not cloned\n" "$repo"
+      printf "  %-24s ... ⚠ Not cloned\n" "$repo"
     else
-      printf "  %-20s ... %s\n" "$repo" "$commit"
+      printf "  %-24s ... %s\n" "$repo" "$commit"
     fi
   done
 }
@@ -142,18 +160,24 @@ update_manifest() {
   local today
   today=$(date -u +"%Y-%m-%d")
 
+  local toolbox_version
+  toolbox_version=$(get_toolbox_version)
+  print_ok "quantum-toolbox version: $toolbox_version"
+
   # Start with current manifest
   cp "$MANIFEST" "$TEMP_MANIFEST"
 
-  # Update last analysis date
-  jq ".lastAnalysis.date = \"$today\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+  # Update last analysis date and top-level toolboxVersion
+  jq --arg date "$today" --arg tv "$toolbox_version" \
+    '.lastAnalysis.date = $date | .toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
   mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
 
   # Update repository commits
   for repo in "${!REPO_COMMITS[@]}"; do
     local commit="${REPO_COMMITS[$repo]}"
     if [ "$commit" != "NOT_CLONED" ]; then
-      jq ".lastAnalysis.repositories[\"$repo\"].commit = \"$commit\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+      jq --arg repo "$repo" --arg commit "$commit" \
+        '.lastAnalysis.repositories[$repo].commit = $commit' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
       mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
       print_ok "Updated $repo → $commit"
     fi
@@ -163,35 +187,25 @@ update_manifest() {
   if [ "$UPDATE_ARCH_DOCS" = true ]; then
     local all_commits
     all_commits=$(printf '%s\n' "${REPO_COMMITS[@]}" | grep -v "NOT_CLONED" | jq -R . | jq -s .)
-    jq ".lastAnalysis.artifacts.\"architecture-docs\".sourceCommits = $all_commits" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+    jq --argjson commits "$all_commits" --arg tv "$toolbox_version" \
+      '.lastAnalysis.artifacts."architecture-docs".sourceCommits = $commits | .lastAnalysis.artifacts."architecture-docs".toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
     mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
-    print_ok "Updated architecture-docs sourceCommits"
+    print_ok "Updated architecture-docs sourceCommits + toolboxVersion"
   fi
 
-  # Update coding profiles if selected
+  # Update coding profiles if selected — discover dynamically from manifest
   if [ "$UPDATE_CODING_PROFILES" = true ]; then
-    # Update each profile with its corresponding repo commit
-    for profile in "typescript-node-checkout-service.md" "typescript-node-checkout-bridge.md" "typescript-react-checkout.md" "qa-engineer.md"; do
-      local repo=""
-      case "$profile" in
-        typescript-node-checkout-service.md)
-          repo="checkout-service"
-          ;;
-        typescript-node-checkout-bridge.md)
-          repo="checkout-bridge"
-          ;;
-        typescript-react-checkout.md|qa-engineer.md)
-          repo="checkout"
-          ;;
-      esac
-
-      local commit="${REPO_COMMITS[$repo]}"
+    for profile in $(jq -r '.lastAnalysis.artifacts."coding-profiles" | keys[]' "$MANIFEST" 2>/dev/null); do
+      local repo
+      repo=$(jq -r --arg profile "$profile" '.lastAnalysis.artifacts."coding-profiles"[$profile].sourceRepo' "$MANIFEST")
+      local commit="${REPO_COMMITS[$repo]:-NOT_CLONED}"
       if [ "$commit" != "NOT_CLONED" ]; then
-        jq ".lastAnalysis.artifacts.\"coding-profiles\".\"$profile\".sourceCommit = \"$commit\"" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+        jq --arg profile "$profile" --arg commit "$commit" --arg tv "$toolbox_version" \
+          '.lastAnalysis.artifacts."coding-profiles"[$profile].sourceCommit = $commit | .lastAnalysis.artifacts."coding-profiles"[$profile].toolboxVersion = $tv' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
         mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
       fi
     done
-    print_ok "Updated coding profile sourceCommits"
+    print_ok "Updated coding profile sourceCommits + toolboxVersion"
   fi
 
   # Add history entry
@@ -207,11 +221,12 @@ update_manifest() {
   history_entry=$(jq -n \
     --arg date "$today" \
     --arg action "Analysis update" \
+    --arg toolboxVersion "$toolbox_version" \
     --argjson artifacts "$artifacts_array" \
     --arg note "$UPDATE_NOTE" \
-    '{date: $date, action: $action, artifacts: $artifacts, note: $note}')
+    '{date: $date, action: $action, toolboxVersion: $toolboxVersion, artifacts: $artifacts, note: $note}')
 
-  jq ".updateHistory += [$history_entry]" "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
+  jq --argjson entry "$history_entry" '.updateHistory += [$entry]' "$TEMP_MANIFEST" > "$TEMP_MANIFEST.tmp"
   mv "$TEMP_MANIFEST.tmp" "$TEMP_MANIFEST"
 
   # Write back to original file

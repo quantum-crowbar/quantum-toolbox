@@ -1,5 +1,14 @@
 # Codebase Analysis Skill
 
+> **DEPRECATED — use `arch-analysis` instead.**
+>
+> `arch-analysis` is now the recommended entry point for all analysis work.
+> It subsumes this skill's functionality and produces complete architecture
+> documentation including all views, diagrams, and optional code graph output.
+>
+> This skill is retained for reference compatibility only.
+> It will be removed in a future version. Do not enable it in AGENTS.md.
+
 Base analysis engine for comprehensive codebase understanding. Produces a structured analysis model that output adapters transform into various formats.
 
 ---

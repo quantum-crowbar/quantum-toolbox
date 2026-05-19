@@ -4,7 +4,10 @@ site_url: https://quantum-crowbar.github.io/quantum-toolbox/
 repo_url: https://github.com/quantum-crowbar/quantum-toolbox
 repo_name: quantum-crowbar/quantum-toolbox
 
-docs_dir: docs/site
+# docs/site is no longer committed. Source files live in docs/ and skills/.
+# Build docs with: mkdocs build  (requires: pip install mkdocs-material)
+# Serve locally:   mkdocs serve
+docs_dir: docs
 site_dir: _site
 
 theme:

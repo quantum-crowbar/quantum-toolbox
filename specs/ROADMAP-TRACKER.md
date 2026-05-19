@@ -39,6 +39,37 @@ Master tracking document for all skill development roadmaps.
 | Roadmap Skills Documentation | Phase 3 | 🟢 Complete | Low |
 | Coding Profile Skill | - | 🟢 Complete | High |
 | | | | |
+| **--- v3.0 ---** | | | |
+| | | | |
+| **--- ARCHITECTURE-DOCS VIEWS ---** | | | |
+| View 08: SRE & Reliability Analysis | - | � Complete | High |
+| View 09: Code Graph | Phase 1 | 🟢 Complete | High |
+| View 10: Deployment Architecture | - | ⚪ Planned | High |
+| View 11: Security Posture (Code-Layer) | - | ⚪ Planned | High |
+| View 12: Scalability & Capacity | - | ⚪ Planned | Medium |
+| View 13: Developer Experience (DX) | - | ⚪ Planned | Medium |
+| View 14: API Contract & Versioning | - | ⚪ Planned | Medium |
+| View 15: Cost Impact Report | - | ⚪ Planned | Medium |
+| Architecture-Docs Reports Section | - | 🟡 In Progress | High |
+| | | | |
+| **--- CODE-GRAPH SKILL ---** | | | |
+| Phase 1A: code_graph model section spec | - | 🟢 Complete | High |
+| Phase 1B: Skill files (README, workflows, templates, checklist) | - | 🟢 Complete | High |
+| Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
+| Phase 2: SQLite export path | - | ⚪ Planned | Medium |
+| Phase 3: SQLite-first analysis (SQL replaces in-context traversal) | - | ⚪ Planned | High |
+| | | | |
+| **--- EXPLORATIONS ---** | | | |
+| EXPL-01: Analysis SQLite — early DB for arch findings | - | 🔬 Exploration | Medium |
+| | | | |
+| **--- UPDATE-LOGS SKILL ---** | | | |
+| Skill files (README, workflows, templates, examples) | - | 🟢 Complete | High |
+| Registered in manifest.yaml + _index.md | - | 🟢 Complete | High |
+| | | | |
+| **--- ANALYSIS TRACKING ---** | | | |
+| View-staleness detection (toolkit version tracking) | - | 🟢 Complete | High |
+| "Update analysis views" command | - | 🟢 Complete | High |
+| | | | |
 | **--- OPEN-SOURCE READINESS ---** | | | |
 | Mental Model Override Mechanism | - | 🟢 Complete | High |
 | Mental Model Full Swap Mechanism | - | ⚪ Planned | Medium |
@@ -63,6 +94,52 @@ Master tracking document for all skill development roadmaps.
 | Fix Output Adapter Paths | - | 🟢 Complete | Low |
 | Fix Presentation Skill Categorization | - | 🟢 Complete | Low |
 | Fix Contradictory Roadmap Status | - | 🟢 Complete | Low |
+| | | | |
+| **--- TOKEN OPTIMISATION ---** | | | |
+| | | | |
+| **Context:** session-start = ~4,600 tokens (always). Large skills = 18-20K tokens each. Several | | | |
+| optimisations below reduce tokens without changing skill fidelity, by splitting or deferring. | | | |
+| | | | |
+| **OPT-1: Split _index.md into core + detail** | - | 🟢 Complete | High |
+| `Skill Dependencies` + `Invokable Skills` + `Creating New Skills` sections (~2,000 tokens) are | | | |
+| only needed when invoking a skill, not at session start. Extract to `skills/_detail.md`, | | | |
+| loaded on demand. Session-start saves ~2,000 tokens on every session where no skill is invoked. | | | |
+| | | | |
+| **OPT-2: Glossary domain split** | - | 🟢 Complete | Medium |
+| `core/glossary.md` is always loaded (~1,735 tokens). TOGAF terms (~300t) and Security terms | | | |
+| (~350t) are only needed when those skills are active. Extract to `togaf/glossary.md` and | | | |
+| `security-analysis/glossary.md`, loaded on skill invocation. Core glossary drops ~38% (~650t). | | | |
+| | | | |
+| **OPT-3: Remove command workflow duplication in workflows.md** | - | 🟢 Complete | Medium |
+| Bootstrap/`/update`/`/help`/`/skills` sections in `core/workflows.md` (~2,500 tokens) are now | | | |
+| fully defined in `skills/core/bootstrap/workflows.md`. Double-loading happens when both are | | | |
+| read. Remove the command sections from `core/workflows.md`; keep only base dev workflows | | | |
+| (Pre-Work, Autonomous Dev Loop, Feature/Bug/Hotfix/Refactor/Review, Context Update). | | | |
+| Saves ~2,500 tokens when bootstrap skill is loaded. | | | |
+| | | | |
+| **OPT-4: Phased skill loading annotations** | - | 🟢 Complete | Medium |
+| Large skills (arch-analysis 20K, security-analysis 20K, fitness-functions 18K) have | | | |
+| `templates.md` and `examples.md` flagged as "read as needed" in the reading order, but nothing | | | |
+| in the skill README reinforces this. Add explicit "Phase loading" table to each README: | | | |
+| Phase 1 (on invocation): README + workflows only. Phase 2 (on generating output): templates. | | | |
+| Phase 3 (on uncertainty): examples. Estimated savings: 7-14K tokens per large skill invocation | | | |
+| when agent reads only README + workflows upfront. | | | |
+| | | | |
+| **OPT-5: Token baseline script** | - | 🟢 Complete | Low |
+| The Per-Skill Cost table in `_index.md` is manually maintained and drifted out of date | | | |
+| (discovered in v3.0 compliance pass — 4 skills missing). Build a script | | | |
+| `scripts/measure-tokens.sh` that enumerates all skill dirs, counts bytes, converts to ~tokens | | | |
+| (~4 chars/token), and prints a markdown table. Run before major releases to keep table current. | | | |
+| | | | |
+| **OPT-6: Slim bootstrap for Mode A** | - | 🟢 Complete | Low |
+| `skills/core/bootstrap/workflows.md` loads in full for every `/start` call, even Mode A | | | |
+| (established project, session start only). The 8-step guided setup (Phase 4B) is Mode B only | | | |
+| and adds ~1,000 tokens to Mode A sessions. Extract Phase 4B into a separate | | | |
+| `skills/core/bootstrap/first-time-setup.md` loaded only in Mode B. | | | |
+| | | | |
+| **--- BOOTSTRAP IMPROVEMENTS ---** | | | |
+| /start: inline skills + commands snapshot (enabled/available marking) | - | 🟢 Complete | High |
+| /upgrade command: pull latest, diff new skills/views/templates, re-run affected analysis | - | 🟢 Complete | High |
 
 Legend: 🟢 Complete | 🟡 In Progress | ⚪ Planned | 🔴 Blocked
 
@@ -1245,6 +1322,153 @@ Address quick fixes first, then tackle structural changes:
 
 ---
 
+## View 15: Cost Impact Report
+
+> **Status:** ⚪ Planned · **Priority:** Medium · **Target:** v3.1
+
+### Problem
+
+Engineering leads cannot easily quantify the cost implications of architecture findings. Dead code, high-complexity hotspots, bloated dependency trees, and sprawling infrastructure surfaces all carry real costs — maintenance, incident response, over-provisioning, forced migrations — but nothing in the current toolkit translates them into categories that finance and leadership can reason about.
+
+### Approach
+
+Synthesis report (`reports/cost-impact.md`) generated from outputs already produced by existing skills. No new data collection pipeline needed.
+
+| Cost Category | Primary Source | Signal Mapped |
+|---|---|---|
+| Maintenance burden | code-graph | `dead_pct`, `dead_count`, dead-but-complex nodes |
+| Refactor investment | code-graph | `complexity_hotspots` (cyclomatic > 10), high fan-in nodes |
+| Infrastructure surface | arch-analysis | DB / cache / queue / external API count |
+| Dependency risk | arch-analysis Phase 6 | outdated, vulnerable, deprecated package counts |
+| Incident blast radius | code-graph | nodes with fan_in > threshold (high-blast nodes) |
+| Performance waste | nonfunctional-analysis | N+1 patterns, sync-in-async, missing connection pooling |
+| Security remediation | security-analysis | CVE count by severity, forced-upgrade count |
+
+Each category gets a **signal → cost narrative** (e.g. "X dead code nodes = Y% of codebase maintained for no return") and an **optional day-rate estimate** if the user supplies a team cost figure.
+
+### Output
+
+- `architecture-docs/reports/cost-impact.md` — cost category table + narrative per category + optional estimate block
+- Link added to `findings-summary.md` conditional on report being generated
+- No new architecture model section needed; reads from existing `code_graph`, `dependencies`, and `analysis.{phase}` sections
+
+### Prerequisites
+
+- `arch-analysis` complete (minimum)
+- Richer with `code-graph` (SQLite backend strongly recommended for dead_pct and fan_in queries)
+- Optional: `nonfunctional-analysis`, `security-analysis`
+
+### Tasks
+
+- [ ] Template: add `cost-impact.md` template to `skills/optional/analysis-outputs/architecture-docs/templates.md` (7 cost category sections)
+- [ ] Workflow step: add `cost-impact.md` generation step to architecture-docs generation workflow
+- [ ] Findings-summary template: add conditional `Cost Impact` link row
+- [ ] README: add row to reports table
+- [ ] Update ROADMAP-TRACKER status to 🟢 Complete when done
+
+---
+
+## EXPL-01: Analysis SQLite — Early DB for Architecture Findings
+
+> **Status:** 🔬 Exploration · **Priority:** Medium · **Target:** v3.1 investigation
+
+### Idea
+
+Instead of the architecture model living exclusively as YAML in-context, the agent creates `analysis/analysis.sqlite` in Phase 0 of arch-analysis and INSERTs findings as each phase completes. YAML stays as the human-readable in-session scratchpad; SQLite becomes the persistent findings store and the query target for report generation.
+
+### Motivation
+
+- **Token pressure** — the YAML model grows with every phase; by Phase 6 it can be large enough to crowd out context for the actual analysis work. SQL queries return only result rows.
+- **Cross-skill synthesis** — today joining dependency data (arch-analysis) with dead-code data (code-graph) requires the agent to hold both files in context. With a shared DB it is a single `JOIN`.
+- **Report generation** — findings-summary and cost-impact today re-read the entire YAML model. SQL aggregations (`GROUP BY severity`, `COUNT(*)`) replace full-file reads.
+- **Incremental re-run** — re-running a phase is `DELETE … WHERE phase = 'phase_5'` + re-INSERT, not a full model rebuild.
+
+### Proposed Schema
+
+```sql
+-- Phase 1
+CREATE TABLE technologies (
+  id TEXT PRIMARY KEY,
+  category TEXT,          -- language|framework|library|infra|build_tool
+  name TEXT, version TEXT, purpose TEXT,
+  evidence_file TEXT, evidence_line INTEGER,
+  documented INTEGER, accuracy TEXT   -- accurate|outdated|missing
+);
+
+CREATE TABLE dependencies (
+  id INTEGER PRIMARY KEY,
+  name TEXT, version TEXT, manager TEXT,  -- npm|pip|maven|gradle
+  category TEXT,
+  is_outdated INTEGER, is_vulnerable INTEGER,
+  cve_ids TEXT,    -- JSON array
+  license TEXT
+);
+
+CREATE TABLE infrastructure (
+  id INTEGER PRIMARY KEY,
+  name TEXT, type TEXT,   -- database|cache|queue|api|external
+  purpose TEXT, connection_method TEXT, evidence_file TEXT
+);
+
+-- Phase 2
+CREATE TABLE interfaces (
+  id INTEGER PRIMARY KEY,
+  path TEXT, method TEXT, type TEXT,   -- rest|graphql|event|cli|grpc
+  auth_required INTEGER, auth_type TEXT,
+  description TEXT, evidence_file TEXT
+);
+
+-- Phases 3-8 (and security-analysis, nonfunctional-analysis)
+CREATE TABLE findings (
+  id INTEGER PRIMARY KEY,
+  skill TEXT,        -- arch-analysis|security-analysis|nonfunctional
+  phase TEXT,        -- e.g. phase_5_injection
+  category TEXT,     -- dependency|security|performance|reliability|data
+  severity TEXT,     -- critical|high|medium|low|info
+  title TEXT, detail TEXT,
+  evidence_file TEXT, evidence_line INTEGER,
+  recommended_action TEXT,
+  created_at TEXT
+);
+```
+
+### Cross-Skill Queries That Become Possible
+
+```sql
+-- Cost-impact: findings by severity across all skills
+SELECT skill, severity, COUNT(*) FROM findings GROUP BY skill, severity;
+
+-- Dead dependencies that are also complex (impossible today without two files in context)
+ATTACH 'code_graph.sqlite' AS cg;
+SELECT d.name, n.cyclomatic_complexity, n.location
+FROM dependencies d
+JOIN cg.nodes n ON n.repo = d.manager
+WHERE d.is_outdated = 1 AND n.is_dead_code = 1;
+
+-- All critical/high findings across every skill in one table
+SELECT skill, phase, title, evidence_file
+FROM findings WHERE severity IN ('critical','high')
+ORDER BY skill, phase;
+```
+
+### Questions to Resolve Before Building
+
+1. **Extraction mechanism** — agent writes INSERT statements directly, or generates a `.sql` seed file and runs it? The latter is auditable and re-runnable.
+2. **YAML model fate** — kept as human-readable summary (generated from DB) or dropped entirely? Recommendation: keep YAML as a generated read-only export, not the authoritative source.
+3. **Shared vs separate DB** — `analysis.sqlite` + `code_graph.sqlite` as separate files with `ATTACH`, or merged into one? Separate is safer (code-graph can be regenerated independently).
+4. **Skill coupling** — security-analysis and nonfunctional-analysis would need to know the DB path to write `findings` rows. This introduces a soft dependency on arch-analysis having run first.
+5. **Migration path** — projects with existing YAML models need an import script or a bulk-insert phase.
+
+### Exploration Tasks
+
+- [ ] Prototype schema in a scratch SQLite file against a real arch-analysis output (manual INSERT from existing YAML)
+- [ ] Verify cross-attach query works between `analysis.sqlite` and existing `code_graph.sqlite`
+- [ ] Measure token delta: re-read YAML for findings-summary vs run 3 SQL queries
+- [ ] Decide YAML fate and skill coupling model
+- [ ] If viable: write spec for Phase 0 DB creation step in arch-analysis workflows
+
+---
+
 ## Progress Log
 
 | Date | Change | Commit |
@@ -1278,6 +1502,9 @@ Address quick fixes first, then tackle structural changes:
 | 2026-02-05 | Excalidraw Diagram Support complete (4th output format option) | - |
 | 2026-02-06 | TOGAF Preliminary Phase complete (principles, governance, capability assessment) | - |
 | 2026-02-08 | Added token optimization & structural cleanup roadmap (12 items) | - |
+| 2026-05-12 | View 15 renamed to Cost Impact Report, spec added, priority raised to Medium | - |
+| 2026-05-15 | EXPL-01: Analysis SQLite exploration item added to roadmap | - |
+| 2026-05-18 | Code-Graph Phase 3 SQLite-first analysis spec added | - |
 
 ---
 

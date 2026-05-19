@@ -4,6 +4,19 @@ Comprehensive security posture assessment with dual output formats.
 
 ---
 
+## File Loading Guide
+
+| Phase | When | Files to read |
+|-------|------|---------------|
+| On invocation | Always | `README.md` + `workflows.md` + `glossary.md` (~10,000 tokens) |
+| Generating output | When producing documents | `templates.md` (~7,100 tokens) |
+| On uncertainty | When examples would help | `examples.md` (~3,800 tokens) |
+| Quick reference | During execution | `checklist.md` (~1,600 tokens) |
+
+Do **not** load all files upfront. Load `glossary.md` on invocation; templates and examples only when needed.
+
+---
+
 ## Purpose
 
 Analyze codebase security to:

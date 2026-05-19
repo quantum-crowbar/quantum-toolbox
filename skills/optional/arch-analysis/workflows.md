@@ -98,6 +98,132 @@ Store the preference for use in Phase 4 (Architecture Synthesis) and Phase 7 (Da
 
 ---
 
+### Phase 0.5: Code-Graph Pre-Check
+
+**Goal**: Determine upfront whether code-graph extraction will run. This must happen before Phase 1 so that if extraction is confirmed, it completes before any view generation begins. Views 09 and the reports/ directory depend on the SQLite file — they cannot be backfilled from YAML with the same fidelity.
+
+```
+Is the `code-graph` skill enabled in AGENTS.md?
+  No  → Skip this step entirely. View 09 will not be generated.
+  Yes → Present the following:
+
+─────────────────────────────────────────────────────────────
+  Code Graph Extraction
+
+  Running code-graph extraction before analysis has three benefits:
+
+  PRECISION
+    Static extraction builds a complete, deterministic call graph
+    from source ASTs — not from AI inference. Every function, edge,
+    and fan-in count is exact. Dead code, blast radius, and entry
+    point traces are computed from verified data, not estimated.
+    AI-only analysis of the same questions produces indicative
+    results that can miss edges, miscount callers, or hallucinate
+    non-existent call paths.
+
+  SPEED
+    Once the SQLite file exists, all code queries run locally in
+    milliseconds. Hotspot lookups, dead code lists, blast radius
+    traversal — all instant, no source file reading required.
+    Subsequent /update runs re-use the same file; only changed
+    files are re-extracted.
+
+  TOKEN USAGE
+    In-context code analysis reads full node and edge arrays into
+    the context window to traverse or filter them. On a medium
+    codebase (~800 nodes, ~3,000 edges) that costs ~240,000 tokens
+    for a single Phase 3 traversal. With SQLite the same information
+    comes back as compact SQL result rows — typically ~4,000 tokens
+    for all five views. That is a 90–98% reduction in token usage
+    for code analysis phases on medium and large codebases.
+    (Small codebases < 200 nodes see a smaller but still meaningful
+    reduction of ~60–70%.)
+
+  View 09 (Code Graph) and the reports/ directory (entry-point-map,
+  dead-code, sre-hot-paths, sqlite-cookbook) require extraction to
+  run before architecture views are generated.
+
+  If you skip extraction now, these outputs will either be omitted
+  or generated from in-context AI reading only (lower fidelity,
+  no SQLite query capability, full token cost).
+
+  Run code-graph extraction now, before analysis begins?
+
+  Y   Run extraction now (recommended)
+       → Invokes code-graph skill Phase 0.0 scope dialogue
+       → Extraction completes, SQLite written
+       → Then continue arch-analysis Phase 1 onwards
+
+  S   Skip for now — generate View 09 as AI-only (no SQLite)
+       → View 09 marked as "AI-only, no code-graph extraction"
+       → reports/ directory not generated
+
+  D   Defer — run arch-analysis now, run code-graph separately later
+       → View 09 omitted from this run
+       → Can be added incrementally via /update after extraction
+─────────────────────────────────────────────────────────────
+
+If Y:
+  → Pause arch-analysis here.
+  → Invoke code-graph skill starting at Phase 0.0.
+  → After code-graph completes (Phase 4B + 4B.5 + 4D committed):
+    Resume arch-analysis at Phase 1.
+  → The SQLite file path is now available for all view generation.
+  → Set: meta.code_graph_available = true, meta.code_graph_backend = sqlite | yaml
+
+If S:
+  → Set meta.code_graph_available = false, meta.code_graph_mode = "ai-only"
+  → Note in index.md: "View 09 generated without extraction — AI reading only"
+  → Continue to Phase 1.
+
+If D:
+  → Set meta.code_graph_available = false, meta.code_graph_mode = "deferred"
+  → Omit View 09 from this run
+  → Continue to Phase 1.
+
+Already extracted? (code_graph.sqlite exists and is current per manifest):
+  → Skip the dialogue.
+  → Set meta.code_graph_available = true immediately.
+  → Note: "Using existing code graph (generated {generatedDate})"
+  → Continue to Phase 1.
+
+Was AI-only last time but SQLite is now available?
+  Check: artifacts.code-graph.code_graph_mode == "ai-only"
+         AND code_graph.sqlite exists at the path in artifacts.code-graph.files[0]
+  If true:
+    Present:
+    ─────────────────────────────────────────────────────────────
+      Code Graph Upgrade Available
+
+      The previous analysis used AI-only mode (no static extraction).
+      A code_graph.sqlite file now exists — you can upgrade this
+      analysis to SQLite-first fidelity.
+
+      Upgrading will:
+        → Re-generate View 09 from SQL queries (exact, deterministic)
+        → Re-generate reports/ directory (entry-point-map, dead-code,
+           sre-hot-paths, sqlite-cookbook)
+        → Patch index.md to remove the "AI-only" note
+
+      Upgrade View 09 and reports/ to use the existing SQLite now?
+
+      Y   Upgrade now — regenerate View 09 + reports/ from SQLite
+      N   Keep existing AI-only outputs — continue without change
+    ─────────────────────────────────────────────────────────────
+    If Y:
+      → Set meta.code_graph_available = true, meta.code_graph_backend = sqlite
+      → Regenerate 09-code-graph.md using Phase 4B.6 SQL queries
+      → Regenerate all selected reports/ files
+      → Remove "AI-only" note from index.md
+      → Update artifacts.code-graph.code_graph_mode = "sqlite"
+      → Continue to Phase 1.
+    If N:
+      → Set meta.code_graph_available = false (keep existing AI-only outputs)
+      → Continue to Phase 1.
+```
+
+---
+
 ### Phase 1: Initial Reconnaissance
 
 **Goal**: Get high-level understanding and identify documentation
@@ -256,13 +382,87 @@ Document:
 
 **Goal**: Create visual representations of the system
 
+#### 4.0 Pre-Diagram: Per-Service Dependency Verification (mandatory)
+
+> **Why this matters**: Drawing diagram edges from domain knowledge or naming conventions instead of config
+> evidence produces inaccurate diagrams. Every edge must be backed by a concrete config citation.
+> This step prevents false edges and forces explicit labelling of genuinely uncertain connections.
+
+> **SQLite-first path**: If `meta.code_graph_backend = sqlite` (i.e. a current `code_graph.sqlite` exists),
+> **skip Steps A and B entirely**. The evidence table in Step C is populated from SQL instead:
+> ```sql
+> -- Confirmed edges (cross-repo calls recorded in the graph)
+> SELECT from_repo AS "From", to_repo AS "To",
+>        'code_graph.sqlite → view_cross_repo_edges' AS "Evidence source",
+>        'edge recorded during extraction' AS "Config key"
+> FROM   view_cross_repo_edges;
+>
+> -- DB / external call flags per node (use as additional evidence rows)
+> SELECT repo_path AS "From", name AS "To (type)",
+>        'code_graph.sqlite → nodes' AS "Evidence source",
+>        CASE WHEN has_db_call      THEN 'has_db_call = 1'
+>             WHEN has_external_call THEN 'has_external_call = 1' END AS "Config key"
+> FROM   nodes
+> WHERE  has_db_call = 1 OR has_external_call = 1;
+> ```
+> Run these queries, fill the evidence table in Step C, then proceed to Step D. Steps A and B are not required.
+
+For **every** service discovered in Phase 1, complete the following before drawing a single edge:
+
+**Step A — Read outbound connection config** *(skip if SQLite path — see above)*
+
+For each service, read its primary config file (`application.yml`, `application.properties`, etc.) and extract:
+
+| Config pattern | Dependency type | Example |
+|----------------|-----------------|---------|
+| `ldap.host`, `*.ldap.host` | LDAP server | `ldap.host: ${LDAP_HOST}` |
+| `oauth.token-uri`, `security.oauth2.client.access-token-uri` | OAuth2 / OIDC IDP | `oauth.token-uri: ${IDP_BASE_URL}/token` |
+| `kafka.bootstrap-servers`, `spring.kafka.bootstrap-servers` | Kafka (producer or consumer) | `kafka.bootstrap-servers: ${KAFKA_BROKERS}` |
+| `redis.host`, `spring.data.redis.host` | Redis | `redis.host: ${REDIS_HOST}` |
+| `dynamodb.*`, `spring.cloud.aws.dynamodb.*` | DynamoDB | `dynamodb.region: ${AWS_REGION}` |
+| `spring.datasource.url`, `spring.r2dbc.url` | RDBMS | `spring.datasource.url: jdbc:postgresql://...` |
+| `*.baseUrl: http://service-name:port` | Internal HTTP service | `baseUrl: http://user-service:8080` |
+| `uri.service-name: http://...` (Spring Cloud Gateway) | Gateway upstream | `uri.order-service: http://order-service:8080` |
+| `sqs.queue-url`, `sqs-configuration*.url` | AWS SQS | `sqs.queue-url: ${SQS_QUEUE_URL}` |
+| `sns.topic-arn` | AWS SNS | `sns.topic-arn: arn:aws:sns:...` |
+
+**Step B — Read build manifest for client libraries** *(optional for deep analysis; skip if SQLite path)*
+
+Scan `pom.xml` or `build.gradle` for HTTP client or messaging client library declarations:
+- `spring-cloud-openfeign`, `spring-cloud-starter-openfeign` → service-to-service HTTP calls
+- `kafka-clients`, `spring-kafka` → Kafka producer or consumer
+- `aws-sdk-java`, `software.amazon.awssdk:*` → AWS services (DynamoDB, SQS, SNS, S3…)
+- `lettuce-core`, `spring-data-redis` → Redis
+
+**Step C — Record evidence before drawing**
+
+Before adding any edge to the diagram, record it in an evidence table:
+
+```markdown
+| From | To | Evidence source | Config key |
+|------|----|-----------------|------------|
+| auth-service | ldap-server | auth-service/src/main/resources/application.yml | ldap.host: ${LDAP_HOST} |
+| api-gateway | identity-provider | api-gateway/src/main/resources/application.yml | oauth.token-uri: ${IDP_BASE_URL}/token |
+| order-service | Kafka | order-service/src/main/resources/application.yml | kafka.bootstrap-servers: ${KAFKA_BROKERS} |
+```
+
+**Step D — Classify each edge**
+
+- **Confirmed** (`-->`): Found in config file. Cite source + key.
+- **Inferred** (`-.->` dashed): Not found in config, but strongly implied by code patterns, README, or naming. Mark explicitly in the evidence table with reason.
+- **Do not draw**: Never add an edge based on cluster membership, naming conventions, or assumed patterns in the absence of at least one of the above.
+
+> **Example of a false edge to avoid**: "auth-service is in the auth cluster, so it probably calls the identity provider" — edges inferred from naming or co-location have produced wrong diagrams. Always verify with config before drawing.
+
 #### 4.1 Component Diagram
 
 Create Mermaid diagram showing:
 - Major components/services
-- Dependencies between components
+- Dependencies between components (confirmed in Step 4.0 above)
 - External system integrations
 - Data stores
+
+Use dashed arrows (`-.->`) for inferred-only edges. Add a note to the diagram stating evidence policy.
 
 ```markdown
 ## Architecture Diagram
@@ -836,6 +1036,51 @@ Identify gaps in error handling:
 
 ---
 
+## Phase 4B.6: SQL Dispatch (SQLite backend only)
+
+**Applies when:** `meta.code_graph_available = true` AND `meta.code_graph_backend = sqlite`
+
+> **SQLite-first rule**: When a SQLite file is present and current, the agent MUST route
+> code-graph questions through SQL. Reading source files or traversing YAML for any operation
+> listed in the table below is not permitted.
+
+When the user asks a question during analysis that can be answered from the DB, route to SQL first:
+
+| User asks about… | SQL to run |
+|---|---|
+| "most called functions" | `SELECT id, repo, fan_in, fan_out, location FROM view_hot_nodes LIMIT 20` |
+| "dead code" | `SELECT id, repo, location FROM view_dead_code` |
+| "complex functions" | `SELECT id, repo, cyclomatic_complexity, location FROM view_complexity_hotspots LIMIT 10` |
+| "blast radius of X" | Recursive CTE forward from X (see `sqlite-cookbook.md`) |
+| "what calls X" | `SELECT * FROM edges WHERE to_node LIKE '%X%'` |
+| "what does X call" | `SELECT * FROM edges WHERE from_node LIKE '%X%'` |
+| "cross-repo calls" | `SELECT * FROM view_cross_repo_edges LIMIT 20` |
+| "async calls" | `SELECT from_node, to_node, call_site FROM edges WHERE is_async = 1` |
+| "unresolved calls" | `SELECT from_node, target, reason FROM unresolved_calls` |
+| "refactor candidates" | `SELECT id, repo, fan_in, cyclomatic_complexity, refactor_score FROM view_refactor_priority LIMIT 10` |
+| "entry points that hit DB" | `SELECT entry_node, entry_type, db_nodes FROM view_db_entry_paths` |
+| "dead code by repo" | `SELECT repo, COUNT(*) AS dead FROM view_dead_code GROUP BY repo ORDER BY dead DESC` |
+| "cycles" | `SELECT nodes FROM view_cycles` |
+
+**Fallback:** If the SQLite file is absent or the query returns no rows, fall back to YAML or source reading and note: `"SQLite not available — falling back to in-context analysis"`.
+
+### View 09 generation (SQLite path)
+
+When generating `09-code-graph.md` and SQLite is active, source each section from SQL rather than YAML:
+
+| View 09 section | SQL replacement |
+|---|---|
+| Extraction summary | `SELECT COUNT(*) FROM nodes` / `SELECT COUNT(*) FROM edges` + manifest meta |
+| Hot nodes table | `SELECT id, repo, fan_in, fan_out, location FROM view_hot_nodes LIMIT 20` |
+| Dead code table | `SELECT id, repo, location FROM view_dead_code` |
+| Complexity hotspots | `SELECT id, repo, cyclomatic_complexity, location FROM view_complexity_hotspots LIMIT 10` |
+| Entry point traces | `SELECT entry_node, entry_type, path FROM view_entry_traces` |
+| Cycle list | `SELECT nodes FROM view_cycles` |
+| Cross-repo calls | `SELECT from_repo, to_repo, COUNT(*) AS calls FROM view_cross_repo_edges GROUP BY from_repo, to_repo ORDER BY calls DESC LIMIT 20` |
+| Refactor priority | `SELECT id, repo, fan_in, cyclomatic_complexity, refactor_score FROM view_refactor_priority LIMIT 10` |
+
+---
+
 ## Output Compilation
 
 ### Final Directory Structure
@@ -844,16 +1089,18 @@ After analysis is complete:
 
 ```
 {docs-directory}/
-└── architecture-docs/
-    ├── index.md                              # Main entry, links to all reports
-    └── analysis/
-        ├── 01-technology-manifest.md         # Complete
-        ├── 02-interface-specification.md     # Complete
-        ├── 03-architecture-diagrams.md       # Complete
-        ├── 04-documentation-audit.md         # Complete
-        ├── 05-dependency-health.md           # Complete
-        ├── 06-data-flow-map.md               # Complete
-        └── 07-error-handling.md              # Complete
+├── architecture-docs/
+│   ├── index.md                              # Main entry, links to all reports
+│   └── analysis/
+│       ├── 01-technology-manifest.md         # Complete
+│       ├── 02-interface-specification.md     # Complete
+│       ├── 03-architecture-diagrams.md       # Complete
+│       ├── 04-documentation-audit.md         # Complete
+│       ├── 05-dependency-health.md           # Complete
+│       ├── 06-data-flow-map.md               # Complete
+│       └── 07-error-handling.md              # Complete
+└── update-logs/
+    └── YYYY-MM-DD-<topic-slug>.md        # Created last (see below)
 ```
 
 ### Deliverable Checklist
@@ -885,3 +1132,109 @@ Update `index.md` status for each completed section:
 - [ ] Index.md updated with correct status for each document
 - [ ] Executive summary added to index.md
 - [ ] All internal links verified working
+- [ ] **Update log created in `{docs-directory}/update-logs/`** (see below)
+- [ ] **`specs/analysis-manifest.json` updated** with current commit SHAs and new history entry
+
+---
+
+## Phase 9: Update Log
+
+**Goal**: Record what was analysed, why, and what changed. Runs on every analysis — both initial and incremental.
+
+### 9.1 Create the Update Log File
+
+Create `{docs-directory}/update-logs/YYYY-MM-DD-<topic-slug>.md` using this template:
+
+```markdown
+# Update: <short human-readable title>
+
+**Date**: YYYY-MM-DD
+**Changed by**: <name or agent>
+**Topic**: <tech stack / initiative slug, e.g. `drm-dream-events-gw` + ML 5.1>
+**Trigger**: <why this update ran — new repos cloned, stale analysis detected, new URLs, etc.>
+**Method**: quantum-toolbox `arch-analysis` skill
+
+---
+
+## Files Changed
+
+| File | Change |
+|------|--------|
+| `docs/architecture-docs/index.md` | ... |
+| `docs/architecture-docs/analysis/01-technology-manifest.md` | ... |
+
+---
+
+## Key Findings
+
+- ...
+
+---
+
+## Repos Examined at HEAD
+
+| Repo | Key files read |
+|------|---------------|
+| `repo-name` | `file1`, `file2` |
+```
+
+**Naming rules**:
+- `YYYY-MM-DD` = analysis date
+- `<topic-slug>` = kebab-case key repos or initiative: `hero-product-search-gw`, `events-gw-ml51`, `initial-full-scan`
+- One file per session; incremental passes get their own file
+
+### 9.2 Update Analysis Manifest
+
+After creating the update log, update `specs/analysis-manifest.json`:
+
+1. Update `lastAnalysis.date` and per-repo `commit` SHAs
+2. Add entry to `updateHistory`:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "action": "Incremental update — <topic>",
+  "artifacts": ["architecture-docs"],
+  "repos": ["repo-a", "repo-b"],
+  "updateLog": "docs/update-logs/YYYY-MM-DD-<topic-slug>.md",
+  "note": "<one-line summary of what changed>"
+}
+```
+
+The `updateLog` field links the manifest history entry directly to the human-readable log.
+
+### 9.3 Staleness Check Connection
+
+After committing, the staleness check script (`scripts/check-analysis-status.sh`) uses `lastAnalysis.date` and per-repo commit SHAs from the manifest. **The update log is the human-readable companion to that machine-readable state** — it answers *why* the manifest changed, not just *what* changed.
+
+If staleness is detected in future runs, reference the most recent update log to understand the current analysis state before deciding which files need regeneration.
+
+---
+
+## Final Step: Sync context files
+
+**This step is non-skippable — the skill workflow is not complete until it is done.**
+Does not apply if the skill produced no committed artefacts.
+
+→ Run the Post-Work Hook defined in the repo's AGENTS.md.
+
+Specifically update:
+
+1. **CONTEXT.md**
+   - Key paths: add any new view files or docs directories committed
+   - Update log: append or overwrite today's row — `| <date> | arch-analysis complete — <N> views, repos: <list> |`
+   - Current state → Implemented: add any newly delivered architectural views or capabilities
+
+2. **AGENTS.md**
+   - Step 2 view list: update to reflect the exact set of view files now present
+   - Staleness line: update analysis date(s) at the bottom of the file
+
+3. **README.md** — only if:
+   - A new `docs/architecture-docs/` file was committed that is missing from the README
+   - A "Available Without Cloning" checklist item has stale stats
+
+4. **Commit:**
+   ```bash
+   git add CONTEXT.md AGENTS.md README.md
+   git commit -m "docs: sync context files after arch-analysis run"
+   ```

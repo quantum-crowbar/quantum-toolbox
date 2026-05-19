@@ -317,3 +317,31 @@ When user says `"Refresh coding profile"`:
 When user says `"Refresh profile for [stack]"`:
 - Re-read only repos in that stack group
 - Overwrite only that stack's profile file
+
+---
+
+## Final Step: Sync context files
+
+**This step is non-skippable — the skill workflow is not complete until it is done.**
+Does not apply if the skill produced no committed artefacts.
+
+→ Run the Post-Work Hook defined in the repo's AGENTS.md.
+
+Specifically update:
+
+1. **CONTEXT.md**
+   - Key paths: add any new `.ai-coding-skills-local/` files committed
+   - Update log: append or overwrite today's row — `| <date> | coding-profile complete — <N> stacks profiled, repos: <list> |`
+   - Current state → Implemented: add coding profiles as a delivered capability
+
+2. **AGENTS.md**
+   - Step 3 coding profiles list: add each new `.ai-coding-skills-local/<stack>.md` file to the profile list
+   - Staleness line: update analysis date(s) at the bottom of the file
+
+3. **README.md** — only if a new profile file is missing from the README
+
+4. **Commit:**
+   ```bash
+   git add CONTEXT.md AGENTS.md README.md
+   git commit -m "docs: sync context files after coding-profile run"
+   ```

@@ -25,6 +25,7 @@ These skills are automatically loaded for every project:
 |-------|-------------|------|
 | **git-workflow** | Git best practices, branching strategies, commit hygiene | [core/git-workflow/](core/git-workflow/) |
 | **todo-workflow** | Invokable autonomous/semi-autonomous development workflow | [core/todo-workflow/](core/todo-workflow/) |
+| **bootstrap** | Session bootstrap — orient the agent, report project state, guide to first action | [core/bootstrap/](core/bootstrap/) |
 
 ### Optional Skills (Opt-In)
 
@@ -32,9 +33,8 @@ Enable these by checking them in your project's `AGENTS.md`:
 
 | Skill | Description | Path |
 |-------|-------------|------|
-| **codebase-analysis** | Base analysis engine producing structured analysis model | [optional/codebase-analysis/](optional/codebase-analysis/) |
-| **analysis-outputs** | Output adapters (architecture-docs, coding-context, etc.) | [optional/analysis-outputs/](optional/analysis-outputs/) |
-| **arch-analysis** | Architecture documentation (codebase-analysis + architecture-docs) | [optional/arch-analysis/](optional/arch-analysis/) |
+| **arch-analysis** | **Default analysis skill** — full architecture documentation (tech stack, interfaces, diagrams, dependency health, data flows, code graph). Use this for all analysis work. | [optional/arch-analysis/](optional/arch-analysis/) |
+| ~~codebase-analysis~~ | ~~Base analysis engine~~ **(deprecated — arch-analysis subsumes this)** | [optional/codebase-analysis/](optional/codebase-analysis/) |
 | **security-analysis** | Security posture assessment with dual output (human-readable + compliance) | [optional/security-analysis/](optional/security-analysis/) |
 | **nonfunctional-analysis** | Testing coverage, configuration audit, performance, code health | [optional/nonfunctional-analysis/](optional/nonfunctional-analysis/) |
 | **architecture-synthesis** | Middle-out architecture from diagrams and specs | [optional/architecture-synthesis/](optional/architecture-synthesis/) |
@@ -51,6 +51,9 @@ Enable these by checking them in your project's `AGENTS.md`:
 | **roadmap-building** | Generate phased implementation roadmaps with ADRs, epics, tickets, risk register, and roadmap tracker | [optional/roadmap-building/](optional/roadmap-building/) |
 | **roadmap-analysis** | Deep-dive roadmap analysis: expand initiatives, research, complexity, spikes, estimation, PDF export, team/financial planning | [optional/roadmap-analysis/](optional/roadmap-analysis/) |
 | **coding-profile** | Generate per-stack coding skill files from real repository code — conventions, testing, error handling, API design | [optional/coding-profile/](optional/coding-profile/) |
+| **code-graph** | Function-level call graph: hot paths, dead code, entry point tracing, cycle detection. Adaptive YAML/SQLite backend | [optional/code-graph/](optional/code-graph/) |
+| **analysis-tracking** | Track analyzed commits and toolkit version; detect code staleness and new views after toolkit upgrades | [optional/analysis-tracking/](optional/analysis-tracking/) |
+| **update-logs** | Structured audit trail for agentic multi-file changes — what changed, why, what was read, what is still open | [optional/update-logs/](optional/update-logs/) |
 
 ---
 
@@ -75,45 +78,55 @@ When a skill is enabled, AI agents should read all files in that skill's directo
 **Lazy loading**: Do NOT read all skill files at session start. Only load a skill when invoking it.
 
 - **Session start**: Read this index file (`_index.md`) for skill discovery
-- **On invocation**: Read the skill's `README.md` + `workflows.md`
-- **As needed**: Read `templates.md`, `examples.md`, `checklist.md` during skill execution
+- **Before invoking a skill**: Read `skills/_detail.md` for the dependency and invocation tables
+- **On invocation**: Read the skill's `README.md` + `workflows.md` (Phase 1)
+- **As needed**: Read `templates.md` when generating output; `examples.md` on uncertainty; `checklist.md` for quick reference
+
+Use `scripts/measure-tokens.sh` to get current token counts before each release.
 
 ## Token Budget
 
-Approximate context window cost when using this toolkit.
+Approximate context window cost when using this toolkit. To remeasure: `bash scripts/measure-tokens.sh`.
 
-### Session Start (~4,600 tokens)
+### Session Start (~7,000 tokens)
 
 | File | Tokens |
 |------|--------|
-| Toolkit AGENTS.md | ~500 |
-| core/instructions.md | ~440 |
-| core/glossary.md | ~1,580 |
-| skills/_index.md (this file) | ~2,100 |
-| **Total** | **~4,620** |
+| User's AGENTS.md | ~500 |
+| core/instructions.md | ~435 |
+| core/glossary.md | ~1,213 |
+| skills/_index.md (this file) | ~2,228 |
+| core/architecture-thinking.md | ~3,168 |
+| **Total** | **~7,544** |
 
-Additional core docs (read when needed): core/workflows.md (~1,940), core/architecture-thinking.md (~3,170).
+On-demand (read when triggered): `core/workflows.md` (~1,333), `skills/_detail.md` (~1,600), domain glossaries (~300 each).
+
+**Pre-OPT savings**: session-start overhead dropped from ~13,745 → ~7,544 tokens (−45%) via OPT-1/2/3.
 
 ### Per-Skill Cost (on invocation)
 
-| Skill | Tokens | Skill | Tokens |
-|-------|--------|-------|--------|
-| arch-analysis | ~20,100 | security-analysis | ~20,100 |
-| architecture-synthesis | ~19,600 | fitness-functions | ~18,100 |
-| structurizr | ~15,600 | nonfunctional-analysis | ~12,700 |
-| code-conventions | ~8,500 | codebase-analysis | ~8,400 |
-| software-design | ~7,300 | tech-stack-decisions | ~6,900 |
-| analysis-outputs | ~3,900 | togaf (index only) | ~2,300 |
-| **TOGAF phases** | **~10K-24K each** | **TOGAF all phases** | **~154,500** |
+Measured with `scripts/measure-tokens.sh`. Phase 1 = README + workflows only (use the File Loading Guide in each skill README).
+
+| Skill | Phase 1 | Full | Skill | Phase 1 | Full |
+|-------|---------|------|-------|---------|------|
+| arch-analysis | ~8,500 | ~20,900 | security-analysis | ~8,600 | ~21,200 |
+| architecture-synthesis | ~8,000 | ~19,700 | fitness-functions | ~6,700 | ~18,200 |
+| structurizr | ~8,000 | ~15,700 | nonfunctional-analysis | — | ~12,700 |
+| codebase-analysis | — | ~9,800 | code-graph | — | ~8,200 |
+| code-conventions | — | ~8,500 | software-design | — | ~7,300 |
+| tech-stack-decisions | — | ~6,900 | update-logs | — | ~5,400 |
+| analysis-tracking | — | ~2,900 | bootstrap | — | ~2,800 |
+| togaf (index only) | ~2,300 | — | analysis-outputs (index) | ~2,100 | — |
+| **TOGAF all phases** | — | **~157,000** | **TOGAF per phase** | — | **~10K-24K** |
 
 ### Context Window Planning
 
 | Window Size | Budget After Session Start | Practical Limit |
 |-------------|---------------------------|-----------------|
-| 100K tokens | ~95K for skills + code | 1-2 large skills + codebase |
-| 200K tokens | ~195K for skills + code | 3-4 large skills + codebase |
+| 100K tokens | ~92K for skills + code | 1-2 large skills (Phase 1) + codebase |
+| 200K tokens | ~192K for skills + code | 3-4 large skills (Phase 1) + codebase |
 
-**Rule of thumb**: Reserve at least 50% of context for actual codebase content. A single analysis skill (arch, security, nonfunctional) uses ~15-20K tokens.
+**Rule of thumb**: Reserve at least 50% of context for actual codebase content. Using Phase 1 loading, a large analysis skill costs ~8-9K tokens instead of ~20K.
 
 ---
 
@@ -142,96 +155,25 @@ When skills generate output files, they use these defaults (confirm with user be
 
 ---
 
-## Creating New Skills
-
-To add a new skill:
-
-1. Create a directory in `skills/optional/` (or `skills/core/` if always-on)
-2. Add the required files following the structure above
-3. Update this index with the new skill
-4. Submit a pull request
-
-### Skill Naming Conventions
-
-- Use `kebab-case` for directory names
-- Keep names concise but descriptive
-- Avoid generic names like "best-practices"
-
-### Good Examples
-- `api-design` - REST/GraphQL API design principles
-- `testing-strategy` - Test pyramid, coverage, TDD
-- `security-practices` - OWASP, auth, secrets management
-
-### Avoid
-- `misc` - Too vague
-- `stuff` - Not descriptive
-- `my-skill` - Not meaningful
-
----
-
-## Skill Dependencies
-
-Some skills may recommend reading other skills first:
-
-| Skill | Recommended Prerequisites |
-|-------|--------------------------|
-| `git-workflow` | None |
-| `todo-workflow` | `git-workflow` (uses git operations) |
-| `codebase-analysis` | None (base analysis engine) |
-| `analysis-outputs` | `codebase-analysis` (consumes analysis model) |
-| `arch-analysis` | None (uses codebase-analysis internally) |
-| `security-analysis` | `arch-analysis` or `codebase-analysis` (recommended) |
-| `nonfunctional-analysis` | `codebase-analysis` (optional, for context) |
-| `architecture-synthesis` | None (parses diagrams/specs directly) |
-| `fitness-functions` | None (standalone or with migration-planning) |
-| `structurizr` | None (standalone C4 modeling) |
-| `togaf` | `arch-analysis` (recommended for baseline) |
-| `software-design` | None |
-| `tech-stack-decisions` | `software-design` (optional) |
-| `code-conventions` | None |
-| `presentation` | None (standalone, uses exported diagrams) |
-| `roadmap-building` | `arch-analysis` or `architecture-synthesis` (recommended); `togaf` (optional for Phase E/F integration) |
-| `roadmap-analysis` | `roadmap-building` (recommended; can also parse external roadmaps) |
-| `coding-profile` | None (reads source directly; `codebase-analysis` output can supplement) |
-
----
-
-## Invokable Skills
-
-Some skills can be explicitly invoked during a session:
-
-| Skill | Invocation | Description |
-|-------|------------|-------------|
-| `skill-discovery` | `"What skills do you have?"` / `"List your capabilities"` | List all skills with offer to elaborate |
-| `todo-workflow` | `"Use todo workflow"` | Start autonomous/semi-autonomous development |
-| `codebase-analysis` | `"Analyze this codebase"` | Base analysis with multi-output adapter selection |
-| `arch-analysis` | `"Analyze the architecture"` | Architecture documentation (shortcut) |
-| `security-analysis` | `"Analyze security"` | Security posture assessment with compliance reports |
-| `nonfunctional-analysis` | `"Analyze code quality"` | Testing, config, performance, health assessment |
-| `architecture-synthesis` | `"Synthesize architecture from diagrams"` | Parse diagrams/specs into architecture model |
-| `fitness-functions` | `"Define fitness functions"` / `"Analyze system fitness"` | Evolutionary architecture fitness assessment |
-| `structurizr` | `"Create C4 model"` | Architecture modeling with Structurizr DSL |
-| `togaf` | `"Apply TOGAF"` / `"Create architecture vision"` | Enterprise architecture using ADM |
-| `presentation` | `"Generate presentation"` / `"Create slides"` | Markdown to PPTX/PDF slide generation |
-| `roadmap-building` | `"Build implementation roadmap"` / `"Build roadmap with epics and tickets"` | Generate phased roadmap with ADRs, epics, tickets, and tracker |
-| `roadmap-analysis` | `"Analyze roadmap complexity"` / `"Expand initiative [N]"` / `"Plan team for roadmap"` | 7-mode deep analysis of an existing roadmap |
-| `coding-profile` | `"Create coding profile"` / `"Profile this directory"` / `"Profile repos: ..."` | Generate per-stack coding skill files from real repo code |
-
-See the skill's README for full invocation options. Skill Discovery is defined in [core/workflows.md](../core/workflows.md#skill-discovery).
+> **Contributing a new skill?** See [skills/_detail.md](_detail.md#creating-new-skills).
 
 ---
 
 ## Agent Notes
 
 ### Analysis Workflow
-- Use `codebase-analysis` as the base engine
-- Select output adapters based on user needs
+- Use `arch-analysis` as the default analysis entry point (subsumes codebase-analysis)
+- Enable `code-graph` alongside `arch-analysis` for SQLite-first call graph analysis
+- Select additional output adapters as needed (coding-context, structurizr, etc.)
 - Run analysis once, output multiple formats
 
 ### TOGAF Integration
 - Core concepts in `core/architecture-thinking.md` apply automatically
 - ADM phases in `togaf/` are invokable as needed
 - Supports lightweight/partial use (not all-or-nothing)
+
+### On Skill Invocation
+Before loading any skill, read [skills/_detail.md](_detail.md) for the Skill Dependencies and Invokable Skills tables.
 
 ---
 

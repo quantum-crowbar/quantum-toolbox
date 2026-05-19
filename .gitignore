@@ -10,3 +10,6 @@ docs/presentations/*.pptx
 docs/presentations/*.pdf
 *.pptx
 *.pdf
+
+# Local exports (not committed)
+exports/

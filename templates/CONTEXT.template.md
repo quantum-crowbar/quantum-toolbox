@@ -148,6 +148,21 @@ Current project context and state information for AI agents.
 
 ---
 
+## Analysis Preferences
+
+<!-- Populated after first arch-analysis + code-graph extraction run. -->
+<!-- When code_graph.sqlite is current, the agent uses SQL queries in preference -->
+<!-- to in-context graph traversal for all arch-analysis phases that read code   -->
+<!-- structure (SQLite-first rule). Update this table after extraction runs.     -->
+
+| Setting | Value |
+|---------|-------|
+| SQLite-first | <!-- `enabled` once code-graph skill is [x] in AGENTS.md and extraction has run; `disabled` otherwise --> |
+| Last extraction | <!-- YYYY-MM-DD, or `not run` --> |
+| Extraction scope | <!-- `all repos` / comma-separated repo list / `not run` --> |
+
+---
+
 ## Update Log
 
 <!-- Track major context updates -->

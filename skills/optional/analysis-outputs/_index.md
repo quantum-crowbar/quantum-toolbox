@@ -19,11 +19,15 @@ codebase-analysis → analysis_model → output adapter → formatted output
 | Adapter | Output | Use Case |
 |---------|--------|----------|
 | [core-architecture](core-architecture/) | Canonical architecture docs | Single source of truth for TOGAF |
-| [architecture-docs](architecture-docs/) | 7 markdown reports + index | Detailed analysis documentation |
+| [architecture-docs](architecture-docs/) | 9 analysis views + reports/ + index | Detailed analysis documentation |
 | [coding-context](coding-context/) | AGENTS.md, CONTEXT.md | AI coding assistance |
 | [product-spec](product-spec/) | Features, flows, data model | Product documentation |
 | [structurizr](structurizr/) | workspace.dsl | C4 architecture diagrams |
 | [archimate](archimate/) | PlantUML or Open Exchange XML | Enterprise architecture |
+| [excalidraw-output](excalidraw-output.md) | `.excalidraw` JSON files | Hand-drawn-style diagrams for stakeholders |
+| [excalidraw-import](excalidraw-import.md) | Mermaid + optional arch-analysis feed | Parse an existing `.excalidraw` file into a component model |
+
+> **architecture-docs views**: Views 01–08 from standard codebase analysis. View 09 (Code Graph) and all `reports/` require the `code-graph` optional skill.
 
 ---
 
@@ -40,6 +44,9 @@ When invoking analysis, select output adapters:
 "Extract product spec"                → product-spec
 "Generate C4 model"                   → structurizr
 "Generate ArchiMate model"            → archimate
+"Analyse this excalidraw file"        → excalidraw-import
+"Convert excalidraw to Mermaid"       → excalidraw-import
+"Use this excalidraw as input"        → excalidraw-import
 ```
 
 ### Multiple Adapters

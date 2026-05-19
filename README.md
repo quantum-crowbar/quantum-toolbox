@@ -6,7 +6,7 @@
 
 <p align="center"><em>AI Agent toolbox for software architecture</em></p>
 
-<p align="center"><a href="CHANGELOG.md#260---2026-03-04">What's new in v2.6.0</a></p>
+<p align="center"><a href="CHANGELOG.md#300---2026-05-18">What's new in v3.0.0</a></p>
 
 > **Audience:** Humans (GitHub landing page)
 
@@ -48,6 +48,42 @@ Ask your agent:
 
 This re-reads the toolkit and presents all capabilities with invokable commands. Useful after toolkit updates or when you want a reminder of what's available.
 
+### Commands
+
+All commands are invoked by typing them directly to your agent:
+
+| Command | What it does | Modifies files? |
+|---------|-------------|-----------------|
+| `/start` | Orient the agent: presents project state, enabled skills, and available commands. Detects first-time setup vs. established project. | No |
+| `/help` | Full command reference with descriptions and examples. | No |
+| `/skills` | Lists all registered skills with enabled/disabled status for your project. | No |
+| `/update` | **Refresh the KB.** Re-runs enabled analysis skills on source repos that have changed since the last run, regenerates affected views and documentation, then writes updated SHAs and view lists back to the manifest and context files. Also checks toolkit version — flags if `/upgrade` should follow. | Yes |
+| `/upgrade` | **Apply a new toolkit version.** Pulls the latest toolkit, diffs old→new (new skills, views, reports, config requirements), checks source staleness, then generates new views/reports and re-runs analysis where needed. By the end, project is fully current with the new toolkit version. | Yes (on confirm) |
+
+> **`/update` vs `/upgrade`** — `/update` keeps your KB current with *code changes* (source repos moved ahead). `/upgrade` keeps your KB current with *toolkit changes* (new skills, views, hooks shipped in a new version). Run both after updating the submodule.
+
+### Keeping Your KB Current
+
+There are two commands for keeping your knowledge base in sync — one for source changes, one for toolkit changes.
+
+**When your source repos have changed** (code commits since the last analysis run):
+
+```
+/update
+```
+
+Re-runs enabled analysis skills on the repos that moved, regenerates the affected architecture-docs views, and writes updated SHAs + view lists back to the manifest and context files. Both source and documentation are refreshed together.
+
+**When the toolkit has a new version** (you've pulled a new `.quantum-toolbox`):
+
+```
+/upgrade
+```
+
+Pulls the latest toolkit, diffs v_old → v_new for new skills, views, reports, and config requirements, then generates new views/reports and re-runs analysis where the new views need fresh source data. By the end, your project is fully current with the new toolkit version — new views generated, missing config inserted, source re-analysed where needed.
+
+> Run `/update` routinely as code evolves. Run `/upgrade` after pulling a new toolkit version — and `/update` first if your sources are also stale.
+
 ### Recommended Models
 
 | Model | Best For | When to Use |
@@ -88,22 +124,26 @@ The skills are the tools. The mental model is what makes them coherent.
 
 ## Skills at a Glance
 
-The toolkit provides **27+ specialized skills** organized into 4 categories:
+The toolkit provides **30+ specialized skills** organized into 5 categories:
 
 | Category | Count | Skills |
 |----------|-------|--------|
-| **Analysis** | 6 | codebase-analysis, arch-analysis, security-analysis, nonfunctional-analysis, architecture-synthesis, fitness-functions |
+| **Analysis** | 5 | arch-analysis *(default)*, security-analysis, nonfunctional-analysis, architecture-synthesis, fitness-functions |
+| **Code Intelligence** | 2 | code-graph *(SQLite call-graph extraction)*, coding-profile |
 | **Architecture** | 11 | structurizr, TOGAF ADM (Preliminary + Phases A-H) |
-| **Workflow** | 2 | git-workflow (core), todo-workflow |
-| **Output** | 8 | core-architecture, architecture-docs, coding-context, product-spec, structurizr, archimate, presentation, pdf-report |
+| **Workflow** | 4 | bootstrap *(session lifecycle)*, git-workflow, todo-workflow, update-logs |
+| **Output** | 9 | core-architecture, architecture-docs, coding-context, product-spec, structurizr, archimate, presentation, pdf-report, excalidraw-import |
 
 ### Common Invocations
 
 ```
 "Analyze the architecture"              → arch-analysis
+"Analyze this codebase"                → arch-analysis (default entry point)
+"Extract the code graph"               → code-graph
 "Analyze security with OWASP"          → security-analysis
 "Apply TOGAF Business Architecture"    → togaf/business-architecture
 "Create C4 model"                      → structurizr
+"Analyse this excalidraw file"         → excalidraw-import
 "Export to PDF"                        → pdf-report
 "Generate presentation"                → presentation
 ```

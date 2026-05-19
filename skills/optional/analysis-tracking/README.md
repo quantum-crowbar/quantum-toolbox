@@ -15,8 +15,9 @@ When maintaining architecture documentation and coding profiles:
 
 This skill provides:
 1. **Manifest structure** — JSON schema to track analyzed commits and artifacts
-2. **Staleness detection** — Script to compare current vs. analyzed commits
-3. **Manifest updater** — Helper to update tracking after regenerating analysis
+2. **Toolkit version tracking** — Detect when quantum-toolbox was upgraded and new views are available
+3. **Staleness detection** — Script to compare current vs. analyzed commits
+4. **Manifest updater** — Helper to update tracking after regenerating analysis
 
 ---
 
@@ -51,27 +52,40 @@ Which commit SHA was analyzed for each source repository:
 }
 ```
 
-### 2. Generated Artifacts
-Which artifacts were generated from which commits:
+### 2. Toolkit Version (per artifact)
+Which quantum-toolbox version was used to generate each artifact:
 ```json
 {
-  "artifacts": {
-    "architecture-docs": {
-      "path": "docs/architecture/",
-      "sourceCommits": ["a1b2c3d", "e4f5g6h"],
-      "files": ["index.md", "api-spec.md"]
-    },
-    "coding-profiles": {
-      "typescript-api.md": {
-        "sourceRepo": "api-service",
-        "sourceCommit": "a1b2c3d"
+  "toolboxVersion": "2.6.2",
+  "lastAnalysis": {
+    "artifacts": {
+      "architecture-docs": {
+        "toolboxVersion": "2.6.2",
+        "views": ["01-technology-manifest", "02-interface-specification", "..."]
       }
     }
   }
 }
 ```
 
-### 3. Update History
+This enables detecting when a toolkit upgrade brings new views that weren't generated in a prior analysis. The check script compares `.toolboxVersion` in the manifest against the current version in `.quantum-toolbox/skills/manifest.yaml`.
+
+### 3. Generated Artifacts
+Which artifacts were generated from which commits:
+```json
+{
+  "artifacts": {
+    "architecture-docs": {
+      "path": "docs/architecture/",
+      "toolboxVersion": "2.6.2",
+      "sourceCommits": ["a1b2c3d", "e4f5g6h"],
+      "views": ["01-technology-manifest", "..."]
+    }
+  }
+}
+```
+
+### 4. Update History
 Log of analysis updates:
 ```json
 {
@@ -79,7 +93,9 @@ Log of analysis updates:
     {
       "date": "2026-03-03",
       "action": "Initial analysis",
+      "toolboxVersion": "2.6.2",
       "artifacts": ["architecture-docs", "coding-profiles"],
+      "updateLog": "docs/update-logs/2026-03-03-initial-full-scan.md",
       "note": "Created from initial codebase scan"
     }
   ]
@@ -96,7 +112,8 @@ After running `arch-analysis` or `coding-profile` skills:
 
 1. Create `specs/analysis-manifest.json` from template
 2. Fill in current commit SHAs and artifact paths
-3. Commit manifest to your documentation/metarepo
+3. **Create first update log** in `docs/update-logs/` (see Step 3 below)
+4. Commit manifest + update log to your documentation/metarepo
 
 ### 2. Check Staleness
 
@@ -113,16 +130,84 @@ Output shows which repos have new commits since last analysis:
   frontend           ... ⚠ Not cloned (analyzed: j1k2l3m)
 ```
 
+When stale repos are reported, read the most recent `updateLog` from `updateHistory` in the manifest to understand the current documentation state before deciding what to regenerate.
+
 ### 3. Decide What to Regenerate
 
 Based on staleness report:
 - **Minor changes** (bug fixes, small features): Usually OK to skip
 - **Significant changes** (new patterns, major refactors): Re-run analysis
-- **Specific repos**: Regenerate only affected coding profiles
+- **Specific repos**: Regenerate only affected analysis files
 
-### 4. Update Manifest
+### 3b. Update Analysis Views (toolkit upgrade path)
 
-After regenerating analysis:
+If the check reports a **toolkit version change** — quantum-toolbox was updated in `.quantum-toolbox/` — you may have new views available that weren't generated with the prior version.
+
+**Trigger phrase:** `"Update analysis views"`
+
+**Agent workflow:**
+
+1. Read `specs/analysis-manifest.json` — note `lastAnalysis.artifacts["architecture-docs"].toolboxVersion` and `views[]`
+2. Read `.quantum-toolbox/skills/optional/analysis-outputs/architecture-docs/README.md` — note all views the current toolkit supports
+3. Diff: which views are in the toolkit but absent from the manifest's `views[]` list?
+4. For each missing view: generate it from the **existing analysis model** in memory (no re-cloning or re-scanning of source code)
+5. Write the new view files to `docs/architecture-docs/analysis/`
+6. Update `manifest.json`: add new view IDs to `views[]`, update `toolboxVersion`
+7. Create an update log in `docs/update-logs/` documenting which views were added
+8. Commit everything together
+
+**Key principle:** If the analysis model is still current (source code hasn't changed significantly), new views can be generated without touching the source repos. The model already exists in the prior analysis docs — the agent reads those and synthesises the new view format.
+
+### 4. Create Update Log
+
+**Before committing any changes**, create an update log at:
+
+```
+{docs-directory}/update-logs/YYYY-MM-DD-<topic-slug>.md
+```
+
+Template:
+
+```markdown
+# Update: <short human-readable title>
+
+**Date**: YYYY-MM-DD
+**Changed by**: <name or agent>
+**Topic**: <tech stack / initiative slug>
+**Trigger**: <why this ran — staleness detected, new repos cloned, new context, etc.>
+**Method**: quantum-toolbox `arch-analysis` | `security-analysis` | `coding-profile`
+
+---
+
+## Files Changed
+
+| File | Change |
+|------|--------|
+| `docs/architecture-docs/...` | ... |
+
+---
+
+## Key Findings
+
+- ...
+
+---
+
+## Repos Examined at HEAD
+
+| Repo | Key files read |
+|------|---------------|
+| `repo-name` | `file1`, `file2` |
+```
+
+**Naming rules**:
+- `YYYY-MM-DD` = date of this analysis pass
+- `<topic-slug>` = kebab-case key repos or initiative: `initial-full-scan`, `hero-search-gw`, `events-gw-ml51`
+- One file per session; each incremental pass gets its own file
+
+### 5. Update Manifest
+
+After creating the update log and regenerating analysis:
 
 ```bash
 bash scripts/update-analysis-manifest.sh
@@ -134,12 +219,89 @@ Interactive script asks:
 - Updates manifest with new versions
 - Adds entry to update history
 
-### 5. Commit Updated Analysis
+The `updateHistory` entry must include a `updateLog` field pointing to the file created in Step 4:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "action": "Incremental update — <topic>",
+  "toolboxVersion": "2.6.2",
+  "artifacts": ["architecture-docs"],
+  "repos": ["repo-a", "repo-b"],
+  "updateLog": "docs/update-logs/YYYY-MM-DD-<topic-slug>.md",
+  "note": "<one-line summary of what changed>"
+}
+```
+
+This links the machine-readable commit state to the human-readable account of what changed and why.
+
+### 6. Commit Everything Together
 
 ```bash
-git add specs/analysis-manifest.json docs/architecture/ .ai-coding-skills/
-git commit -m "docs: update analysis after significant code changes"
+git add specs/analysis-manifest.json docs/update-logs/ docs/architecture-docs/ .ai-coding-skills/
+git commit -m "docs: update analysis — <topic> (YYYY-MM-DD)"
 git push
+```
+
+---
+
+## Regenerable Artefacts
+
+Not all tracked artefacts are markdown documents. Binary and regenerable artefacts (SQLite graphs, YAML call graphs, pre-computed view files) use a different staleness check pattern from document-based artefacts.
+
+### Manifest fields for regenerable artefacts
+
+```json
+{
+  "artifacts": {
+    "code-graph": {
+      "generatedDate": "2026-04-28",
+      "method": "ts-morph v21 static AST extraction + node:sqlite",
+      "regenerate": "node scripts/cg-extract.js && node scripts/cg-reports.js",
+      "sourceRepos": ["api-service", "worker-service", "core-lib"],
+      "files": ["libs.sqlite", "consumers.sqlite"],
+      "stats": { "totalNodes": 4200, "resolvedEdges": 18000, "crossRepoCalls": 340 }
+    }
+  }
+}
+```
+
+| Field | Purpose |
+|-------|---------|
+| `generatedDate` | ISO date when the artefact was last produced |
+| `regenerate` | Exact command to reproduce the artefact from scratch |
+| `sourceRepos` | Repos whose source files were consumed during generation |
+| `files` | Output files produced by the regeneration |
+
+### Staleness check for regenerable artefacts
+
+**Check:** compare `generatedDate` against the newest commit date of any repo in `sourceRepos`.
+
+```
+For each repo in sourceRepos:
+  Get current HEAD commit date: git -C code/{repo} log -1 --format=%ci HEAD
+  If HEAD commit date > generatedDate → artefact is stale
+```
+
+This is distinct from commit-SHA staleness (which tracks individual analysis runs). For regenerable artefacts the question is: "has anything in the source repos been committed since this artefact was built?"
+
+### Output format in check script
+
+```
+Regenerable artefacts:
+  ⚠ code-graph  — generated 2026-04-28, 2 source repos have newer commits
+      - api-service    (2 commits since 2026-04-28)
+      - worker-service (7 commits since 2026-04-28)
+      regenerate: node scripts/cg-extract.js && node scripts/cg-reports.js
+
+  ✓ code-graph  — current (generated 2026-04-28, all source repos up-to-date)
+```
+
+### When this section is absent (artefact not yet generated)
+
+If `artifacts.code-graph` is absent from the manifest, the check script notes:
+```
+  — code-graph  — not yet generated
 ```
 
 ---
@@ -150,7 +312,7 @@ git push
 JSON manifest structure with:
 - Repository commit tracking
 - Artifact-to-commit mapping
-- Update history log
+- Update history log (each entry links to an update log file via `updateLog` field)
 
 ### 2. `check-analysis-status.sh`
 Bash script that:
@@ -158,13 +320,15 @@ Bash script that:
 - Compares with current HEAD in cloned repos
 - Reports staleness (X commits behind)
 - Handles missing repos gracefully
+- Prints path to most recent update log for context
 
 ### 3. `update-analysis-manifest.sh`
 Interactive bash script that:
 - Detects current commit SHAs in cloned repos
 - Asks which artifacts were regenerated
+- Asks for update log path and note
 - Updates manifest with new versions
-- Adds entry to update history
+- Adds entry to update history (including `updateLog` reference)
 
 ---
 
@@ -174,7 +338,8 @@ Works alongside:
 
 | Skill | Integration |
 |-------|-------------|
-| `arch-analysis` | Track which commits were analyzed for architecture docs |
+| `arch-analysis` | Track which commits were analyzed for architecture docs; Phase 9 writes update log + calls manifest update |
+| `security-analysis` | Track which commits were analyzed for security docs; Phase 8 writes update log + calls manifest update |
 | `coding-profile` | Track which commits were used to extract coding conventions |
 | `codebase-analysis` | Record base analysis commit provenance |
 | `roadmap-building` | Link roadmap to analyzed code state |
@@ -225,9 +390,11 @@ Track analysis for multiple branches:
 
 1. **Commit manifest alongside analysis** — Keep tracking in sync with artifacts
 2. **Check staleness periodically** — Weekly or monthly review recommended
-3. **Document update decisions** — Use `note` field in update history
-4. **Incremental updates** — Don't always regenerate everything
-5. **Automate checks** — Run staleness check in CI for visibility
+3. **Create an update log on every analysis pass** — Before committing, write `docs/update-logs/YYYY-MM-DD-<topic>.md`; link it in the manifest `updateHistory[].updateLog` field
+4. **Document update decisions** — Use `note` field in update history + update log trigger field
+5. **Incremental updates** — Don't always regenerate everything
+6. **After toolkit upgrade** — Run `bash scripts/check-analysis-status.sh` first; if version changed, use `"Update analysis views"` to generate only the new views without re-scanning code
+6. **Automate checks** — Run staleness check in CI for visibility
 
 ---
 
@@ -243,6 +410,9 @@ metarepo/
 │   ├── check-analysis-status.sh       # Detect staleness
 │   └── update-analysis-manifest.sh    # Update tracking
 ├── docs/
+│   ├── update-logs/                   # Human-readable record of every analysis pass
+│   │   ├── 2026-03-03-initial-full-scan.md
+│   │   └── 2026-04-13-events-gw-ml51.md
 │   └── architecture-docs/             # Generated from arch-analysis
 └── .ai-coding-skills/                 # Generated from coding-profile
     ├── typescript-api.md
