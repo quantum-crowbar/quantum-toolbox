@@ -58,6 +58,18 @@ This is a major version. Four new skills, a full SQLite-first analysis architect
 
 All code analysis that can be answered from `code_graph.sqlite` **must** use SQL. Traversing YAML or reading source files for questions the graph can answer is prohibited when the SQLite file is current.
 
+Together, the changes in this section replace non-deterministic AI inference with facts read from a call graph extracted directly from source code:
+
+| Change | What it replaces | Effect on output quality |
+|---|---|---|
+| Phase 4.0 evidence-based edges | Edges inferred from naming conventions, cluster co-location, or domain knowledge | Component & data-flow diagrams only show edges that exist in code; false edges are structurally prevented |
+| Phase 4B.6 SQL Dispatch (View 09) | AI summary of code structure from YAML or file scan | Code-graph report is a deterministic read from the extracted graph — same codebase always produces the same output |
+| Phase 3 nonfunctional SQLite delegation | AI estimates of dead code, complexity, async usage | Findings are exact counts from the graph, not approximations |
+| Phase 2.5 incremental graph update | Full re-extraction or accepting a stale graph | Evidence stays current with the codebase; precision doesn't decay between analyses |
+| `nodes.has_db_call` / `has_external_call` columns | Guessing which services touch a DB or external endpoint | DB-boundary and external-call classifications are extraction-time facts, not inferred from naming |
+
+The net result: with `code_graph.sqlite` current, the analysis pipeline is a *projection of the actual codebase* rather than a best-effort narrative. Inferred edges and estimates still appear where the graph lacks coverage, but they are explicitly flagged — solid arrows mean confirmed, dashed arrows mean uncertain.
+
 **`arch-analysis/workflows.md`**
 - **Phase 0.5** — Code-graph pre-check: Y/S/D dialogue before Phase 1 with detailed PRECISION / SPEED / TOKEN USAGE table (90–98% token reduction on medium+ codebases; 60–70% on small). Fast-path skips the dialogue when a current `code_graph.sqlite` already exists. AI-only upgrade sub-path: detects `code_graph_mode = "ai-only"` + SQLite now available → offers to regenerate View 09 and reports/ from SQLite without re-running analysis.
 - **Phase 4B.6** — SQL Dispatch table: 13-rule routing table + full View 09 section → SQL query mapping (8 view sections sourced from SQL on the SQLite path).
