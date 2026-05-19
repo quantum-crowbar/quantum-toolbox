@@ -18,10 +18,11 @@ Give your AI coding assistant the skills to do real architecture work — analys
 
 It ships as a git submodule your agent reads at session start. No plugins, no API calls — just markdown that teaches the agent how to think about architecture.
 
-- **Analysis** — Codebase analysis, security analysis, nonfunctional analysis, architecture synthesis, fitness functions
+- **Analysis** — Architecture analysis (SQLite-first), security analysis, nonfunctional analysis, architecture synthesis, fitness functions
+- **Code Intelligence** — Full call-graph extraction into SQLite; SQL-speed queries at near-zero token cost
 - **Architecture** — TOGAF ADM (Preliminary + Phases A-H), C4 modeling with Structurizr DSL
-- **Workflows** — Git conventions, task management, autonomous development loop
-- **Outputs** — 8 structured formats: architecture docs, PDF reports, presentations, C4 workspaces, and more
+- **Workflows** — Session lifecycle (`/start`, `/update`, `/upgrade`), git conventions, task management
+- **Outputs** — 9 structured formats: architecture docs, PDF reports, presentations, C4 workspaces, Excalidraw, and more
 
 ---
 
@@ -31,22 +32,24 @@ It ships as a git submodule your agent reads at session start. No plugins, no AP
 
 Copy and paste this prompt to your AI assistant:
 
-> Add the AI architect toolbox by adding a git submodule from `https://github.com/quantum-crowbar/quantum-toolbox.git` into `.quantum-toolbox`. Once downloaded, read through the toolkit to learn its capabilities. When done, tell me "what skills do you have?"
+> Add the AI architect toolbox by adding a git submodule from `https://github.com/quantum-crowbar/quantum-toolbox.git` into `.quantum-toolbox`. Once downloaded, read `AGENTS.md` and the toolkit files it references, then run `/start`.
 
 This will:
 1. Add the toolbox as a submodule
-2. Train your agent on all available skills
-3. Trigger the skill discovery workflow
-4. Present capabilities organized by category
-5. Offer to elaborate on any skill
+2. Load the skill catalog and bootstrap workflows
+3. Run `/start` — which detects first-time setup vs. established project
+4. First-time: guide you through 8-step project setup (AGENTS.md, CONTEXT.md, enabled skills)
+5. Established project: print a live snapshot of enabled skills, code-graph status, and available commands
 
-### Anytime Refresh
+### Starting a Session
 
-Ask your agent:
+At the start of every session, run:
 
-> "What skills do you have?"
+```
+/start
+```
 
-This re-reads the toolkit and presents all capabilities with invokable commands. Useful after toolkit updates or when you want a reminder of what's available.
+The agent reads your project's `AGENTS.md` and `CONTEXT.md`, validates enabled skills and the analysis manifest, and prints a status snapshot — code-graph currency, any dependency warnings, and available commands. Use `/skills` to see the full skill list, or `/help` for the complete command reference.
 
 ### Commands
 
@@ -106,7 +109,7 @@ graph TD
     MM --> M["Modeling Skills"]
     MM --> W["Workflow Skills"]
 
-    A --> O["Outputs<br/><i>8 formats</i>"]
+    A --> O["Outputs<br/><i>9 formats</i>"]
     M --> O
     W --> O
 ```
