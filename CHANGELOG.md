@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2026-05-18
 
-This is a major version. Four new skills, a full SQLite-first analysis architecture, a structured command lifecycle for AI agent sessions, and a 74% reduction in session-start token overhead compared to v2.6.
+This is a major version. Four new skills, a full SQLite-first analysis architecture, evidence-based diagram edges, a structured command lifecycle for AI agent sessions, and a 74% reduction in session-start token overhead compared to v2.6.
 
 ### New Skills
 
@@ -65,6 +65,10 @@ All code analysis that can be answered from `code_graph.sqlite` **must** use SQL
 **`nonfunctional-analysis/workflows.md`** — Phase 3 SQLite delegation pre-check: dead-code, complexity, async-in-sync, and unresolved-call checks delegated to SQL when the graph is current. Falls back to full source scan when absent or stale.
 
 **`sqlite-cookbook.template.md`** — Naming bug fixed: all `vw_X` → `view_X` (5 view names). Schema table updated with 3 new `nodes` columns and all 8 view table names. New sections: **Refactor Priority Analysis** (3 query variants) and **DB Entry Paths** (2 query variants). Cross-repo pair query added.
+
+**`arch-analysis/workflows.md` — Phase 4.0: Evidence-Based Diagram Edges** — New mandatory gate before any diagram edge is drawn. For every service, the agent must build a per-edge evidence table (`From → To → source file → config key`) and classify each edge as Confirmed (`-->`) or Inferred (`-.->`) before writing a single line of Mermaid. Explicit prohibition: edges based solely on naming conventions, co-location, or assumed patterns are forbidden. On the SQLite path, Steps A and B (config file reading + build manifest scan) are skipped entirely — the evidence table is populated from `view_cross_repo_edges` and `nodes.has_db_call`/`has_external_call` instead.
+
+This is the conceptual completion of the SQLite-first shift: the call graph built during extraction is now the authoritative source of truth for diagram edges. Diagrams generated with `code_graph.sqlite` current are projections of the actual codebase, not best-effort narratives. Inferred edges still appear (as dashed arrows) but are explicitly marked uncertain — which is significantly more honest than a solid arrow drawn from a naming heuristic.
 
 ### Auto-Sync Hook (Post-Work Hook)
 
