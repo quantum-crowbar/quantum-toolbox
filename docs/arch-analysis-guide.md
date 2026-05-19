@@ -21,9 +21,15 @@ When you encounter a new codebase and need to understand how it works, this skil
 
 ## How to Invoke
 
-Simply ask your AI assistant to analyze the architecture:
+Simply ask your AI assistant:
 
-> "Analyze the architecture of this codebase"
+```
+"Analyze the architecture"
+"Analyze this codebase"
+"Run analysis"
+```
+
+Or run `/start` at session start — the bootstrap skill will offer to run analysis if no prior run is detected.
 
 More specific variants:
 - "Map all technologies used in this project"
@@ -217,5 +223,8 @@ For critical decisions, validate findings against actual system behavior.
 
 ## Related Skills
 
-- [software-design](../skills/optional/software-design/) - For design decisions after analysis
-- [tech-stack-decisions](../skills/optional/tech-stack-decisions/) - For evaluating modernization options
+- [code-graph](../skills/optional/code-graph/) — SQLite call-graph extraction for evidence-based analysis
+- [security-analysis](../skills/optional/security-analysis/) — security posture and compliance after architecture analysis
+- [nonfunctional-analysis](../skills/optional/nonfunctional-analysis/) — code quality, testing, performance
+- [architecture-synthesis](../skills/optional/architecture-synthesis/) — for design decisions after analysis
+- [roadmap-building](../skills/optional/roadmap-building/) — generate phased roadmaps from analysis findings

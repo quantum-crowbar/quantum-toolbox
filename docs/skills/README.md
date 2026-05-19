@@ -29,22 +29,32 @@ This document provides **detailed per-skill documentation** for each skill in th
 
 ## Quick Start
 
+### Starting a Session
+
+```
+/start
+```
+
+Runs the bootstrap skill: detects first-time setup vs. established project. Prints enabled skills, code-graph status, dependency warnings, and available commands.
+
 ### Viewing Available Skills
 
 ```
-"What skills do you have?"
-"List available analysis skills"
-"Show me TOGAF skills"
+/skills
 ```
+
+Lists all registered skills from `manifest.yaml` with enabled/disabled status for your project.
 
 ### Using a Skill
 
 ```
-"Analyze the architecture"              → arch-analysis
-"Analyze security posture"              → security-analysis
-"Apply TOGAF Business Architecture"     → togaf/business-architecture
-"Export to Structurizr"                 → analysis-outputs/structurizr
-"Generate presentation"                 → presentation
+"Analyze the architecture"              → arch-analysis (default)
+"Analyze this codebase"                → arch-analysis
+"Extract the code graph"               → code-graph
+"Analyze security posture"             → security-analysis
+"Apply TOGAF Business Architecture"    → togaf/business-architecture
+"Export to Structurizr"                → analysis-outputs/structurizr
+"Generate presentation"                → presentation
 ```
 
 ### Enabling Optional Skills
@@ -55,10 +65,12 @@ In your project's `AGENTS.md`:
 ## Enabled Skills
 
 - [x] arch-analysis
+- [x] code-graph
 - [x] security-analysis
 - [x] togaf (ADM phases)
 - [x] structurizr
-- [ ] software-design (optional)
+- [ ] nonfunctional-analysis
+- [ ] roadmap-building
 ```
 
 
@@ -66,103 +78,89 @@ In your project's `AGENTS.md`:
 
 ## Analysis Skills
 
-### 1. Codebase Analysis (Base Engine)
-
-**Location**: `skills/optional/codebase-analysis/`  
-**Status**: Complete
-
-**Purpose**: Base analysis engine that produces a structured analysis model consumed by output adapters.
-
-**Key Features**:
-- 8-phase analysis workflow
-- Structured data model
-- Technology manifest
-- Dependency mapping
-- Interface discovery
-- Data flow analysis
-
-**Output**: Internal analysis model (JSON/structured format)
-
-**When to Use**:
-- As foundation for other analysis skills
-- When you need machine-readable analysis results
-- For custom output adapter development
-
-**Typical Workflow**:
-1. Invoke codebase-analysis
-2. Select output adapter(s)
-3. Generate formatted outputs
-
-**Invocation**:
-```
-"Run codebase analysis"
-"Analyze this codebase"
-```
-
----
-
-### 2. Architecture Analysis
+### 1. Architecture Analysis *(Default entry point)*
 
 **Location**: `skills/optional/arch-analysis/`  
-**Status**: Complete
+**Status**: Complete — Default analysis skill
 
-**Purpose**: Generate comprehensive architecture documentation for unfamiliar codebases.
+**Purpose**: Comprehensive architecture analysis of real codebases — from reconnaissance through diagnosis to evidence-based diagrams. The default entry point for all analysis work; invoked by `"Analyze the architecture"`, `"Analyze this codebase"`, `"Run analysis"`, `"Analyze this repo"`.
 
 **Key Features**:
-- 8-phase analysis process
-- 7 detailed markdown reports
-- Technology stack inventory
-- Component architecture mapping
-- Integration patterns
-- Data flow analysis
-- Dependency visualization
-- Infrastructure design
-- Recommendations
+- Phase 0.5: Code-graph pre-check (Y/S/D dialogue; 90–98% token reduction with SQLite)
+- Phase 4.0: Mandatory per-edge evidence verification before any diagram is drawn — edges sourced from `view_cross_repo_edges` on SQLite path, config files on AI-only path
+- Phase 4B.6: SQL Dispatch — 13-rule routing table for SQLite-first views
+- 9-phase analysis: setup → reconnaissance → tech deep-dive → interface discovery → architecture synthesis → docs audit → dependency health → data flow → error handling
+- View 08 (SRE & Reliability) and View 09 (Code-Graph Summary)
+- Post-work hook: auto-syncs `CONTEXT.md`, `AGENTS.md`, and commits
 
-**Output**: 
+**Output**:
 ```
 analysis/architecture-docs/
 ├── index.md
 ├── 01-technology-manifest.md
 ├── 02-interface-specification.md
-├── 03-component-architecture.md
+├── 03-architecture-diagrams.md    ← evidence-based edges
 ├── 04-integration-patterns.md
 ├── 05-data-flow-analysis.md
 ├── 06-dependency-analysis.md
-└── 07-infrastructure-recommendations.md
+├── 07-infrastructure-recommendations.md
+├── 08-sre-reliability.md
+└── 09-code-graph.md               ← SQLite-sourced
 ```
 
-**When to Use**:
-- Onboarding to new codebase
-- Technical due diligence
-- Architecture review
-- Modernization planning
-- Documentation generation
-
-**Typical Workflow**:
-1. Navigate to repository root
-2. Invoke arch-analysis
-3. Wait for analysis completion (~15-30 min)
-4. Review generated documentation
-5. Export to other formats if needed
+**When to Use**: Default for all architecture work — onboarding, technical due diligence, architecture review, modernization planning, documentation generation.
 
 **Invocation**:
 ```
 "Analyze the architecture"
-"Document this system's architecture"
-"Run architecture analysis"
+"Analyze this codebase"
+"Run analysis"
+"Analyze this repo"
 ```
-
-**Integration**:
-- Uses `codebase-analysis` internally
-- Outputs to `architecture-docs` adapter
-- Can feed TOGAF baseline assessment
 
 **See Also**: [Architecture Guide](../arch-analysis-guide.md)
 
 ---
 
-### 3. Security Analysis
+### 2. Codebase Analysis *(Deprecated — use arch-analysis)*
+
+**Location**: `skills/optional/codebase-analysis/`  
+**Status**: **Deprecated** as of v3.0.0 — retained for migration compatibility, will be removed in v4.
+
+Use `arch-analysis` instead. See migration notes in `skills/optional/codebase-analysis/README.md`.
+
+---
+
+### 3. Code Graph
+
+**Location**: `skills/optional/code-graph/`  
+**Status**: Complete
+
+**Purpose**: Extract a full call-graph from source code into `code_graph.sqlite` — enabling SQL-speed queries at near-zero token cost. Required for the SQLite-first analysis path.
+
+**Key Features**:
+- Phase 0.0: Scope & setup dialogue (single vs multi-repo)
+- Phase 2.5: Incremental update — only re-extracts changed files via `git diff`
+- 8 materialized view tables: `view_entry_traces`, `view_cycles`, `view_db_entry_paths`, `view_refactor_priority`, `view_cross_repo_edges`, and more
+- Phase 4B.5: Auto-generates `reports/sqlite-cookbook.md` with project-specific SQL queries
+- YAML stub mode: when SQLite active, YAML contains stats + `sqlite_path` pointer only
+
+**Output**: `code_graph.sqlite` + `reports/sqlite-cookbook.md` + YAML stub
+
+**When to Use**: Enable this skill to make arch-analysis and nonfunctional-analysis SQLite-first. Essential for medium/large codebases or multi-repo analysis.
+
+**Dependency**: `arch-analysis` must be enabled.
+
+**Invocation**:
+```
+"Extract the code graph"
+"Build code graph"
+"Run code-graph extraction"
+```
+
+---
+
+### 4. Security Analysis
 
 **Location**: `skills/optional/security-analysis/`  
 **Status**: Complete
@@ -221,7 +219,7 @@ analysis/security/
 
 ---
 
-### 4. Nonfunctional Analysis
+### 5. Nonfunctional Analysis
 
 **Location**: `skills/optional/nonfunctional-analysis/`  
 **Status**: Complete
@@ -267,7 +265,7 @@ analysis/nonfunctional/
 
 ---
 
-### 5. Architecture Synthesis
+### 6. Architecture Synthesis
 
 **Location**: `skills/optional/architecture-synthesis/`  
 **Status**: Complete
@@ -313,7 +311,7 @@ analysis/nonfunctional/
 
 ---
 
-### 6. Fitness Functions
+### 7. Fitness Functions
 
 **Location**: `skills/optional/fitness-functions/`  
 **Status**: Complete
@@ -362,9 +360,56 @@ fitness-functions/
 
 ---
 
+### 8. Roadmap Building
+
+**Location**: `skills/optional/roadmap-building/`  
+**Status**: Complete
+
+**Purpose**: Generates full phased implementation roadmaps from architecture analysis, TOGAF Phase E/F output, or standalone requirements. Produces initiatives, ADRs, risk register, epic/ticket breakdown with XS–XL complexity sizing and team assignments.
+
+**Invocation**:
+```
+"Build a roadmap"
+"Create implementation roadmap"
+"Generate phased roadmap from analysis"
+```
+
+---
+
+### 9. Roadmap Analysis
+
+**Location**: `skills/optional/roadmap-analysis/`  
+**Status**: Complete
+
+**Purpose**: Seven-mode deep-dive analysis of an existing roadmap: expand initiative, research questions, complexity scoring, spike candidates, effort estimates, PDF export, team/financial model.
+
+**Invocation**:
+```
+"Analyse this roadmap"
+"Score roadmap complexity"
+"Estimate effort for this roadmap"
+```
+
+---
+
+### 10. Coding Profile
+
+**Location**: `skills/optional/coding-profile/`  
+**Status**: Complete
+
+**Purpose**: Reads real repository code and generates per-stack coding skill files that agents load before writing code. Captures naming conventions, async style, testing framework, error handling, API design, and review standards — from actual code, not generic best practices.
+
+**Invocation**:
+```
+"Build coding profile"
+"Generate coding conventions from this repo"
+```
+
+---
+
 ## Architecture & Modeling Skills
 
-### 7. Structurizr
+### 11. Structurizr
 
 **Location**: `skills/optional/structurizr/`  
 **Status**: Complete
@@ -418,7 +463,7 @@ architecture/
 
 ---
 
-### 8-17. TOGAF ADM Phases
+### 12-21. TOGAF ADM Phases
 
 **Location**: `skills/optional/togaf/`  
 **Status**: All phases complete
@@ -467,7 +512,20 @@ TOGAF provides a comprehensive framework for enterprise architecture. Each phase
 
 ## Development Workflow Skills
 
-### 18. Git Workflow (Core - Always Active)
+### 22. Bootstrap *(Core — Session Lifecycle)*
+
+**Location**: `skills/core/bootstrap/`  
+**Status**: Complete — Core skill (always active)
+
+**Purpose**: Standardised session entry point and upgrade lifecycle. Provides `/start`, `/help`, `/skills`, `/update`, `/upgrade`.
+
+**When to Use**: Run `/start` at the beginning of every session.
+
+**See Also**: [Bootstrap README](../../skills/core/bootstrap/README.md)
+
+---
+
+### 23. Git Workflow *(Core — Always Active)*
 
 **Location**: `skills/core/git-workflow/`  
 **Status**: Complete
@@ -489,7 +547,7 @@ TOGAF provides a comprehensive framework for enterprise architecture. Each phase
 
 ---
 
-### 19. Todo Workflow
+### 24. Todo Workflow
 
 **Location**: `skills/optional/todo-workflow/`  
 **Status**: Complete
@@ -518,11 +576,27 @@ TOGAF provides a comprehensive framework for enterprise architecture. Each phase
 
 ---
 
+### 25. Update Logs
+
+**Location**: `skills/optional/update-logs/`  
+**Status**: Complete
+
+**Purpose**: Structured log generation for project update communications — changelogs, release notes, sprint summaries.
+
+**Invocation**:
+```
+"Generate update log"
+"Write release notes"
+"Create sprint summary"
+```
+
+---
+
 ## Output Adapters
 
-Output adapters transform analysis results into different formats. They consume the structured analysis model from `codebase-analysis`.
+Output adapters transform analysis results into different formats.
 
-### 20. Core Architecture
+### 26. Core Architecture
 
 **Location**: `skills/optional/analysis-outputs/core-architecture/`  
 **Status**: Complete
@@ -546,7 +620,7 @@ analysis/core-architecture/
 
 ---
 
-### 21. Architecture Docs
+### 27. Architecture Docs
 
 **Location**: `skills/optional/analysis-outputs/architecture-docs/`  
 **Status**: Complete
@@ -562,7 +636,7 @@ analysis/core-architecture/
 
 ---
 
-### 22. Coding Context
+### 28. Coding Context
 
 **Location**: `skills/optional/analysis-outputs/coding-context/`  
 **Status**: Complete
@@ -582,7 +656,7 @@ CONTEXT.md      # Current project state
 
 ---
 
-### 23. Product Spec
+### 29. Product Spec
 
 **Location**: `skills/optional/analysis-outputs/product-spec/`  
 **Status**: Complete
@@ -604,7 +678,7 @@ product-spec/
 
 ---
 
-### 24. Structurizr Export
+### 30. Structurizr Export
 
 **Location**: `skills/optional/analysis-outputs/structurizr/`  
 **Status**: Complete
@@ -620,7 +694,7 @@ product-spec/
 
 ---
 
-### 25. ArchiMate Export
+### 31. ArchiMate Export
 
 **Location**: `skills/optional/analysis-outputs/archimate/`  
 **Status**: Complete
@@ -636,7 +710,23 @@ product-spec/
 
 ---
 
-### 26. Presentation
+### 32. Excalidraw Import
+
+**Location**: `skills/optional/analysis-outputs/excalidraw-import.md`  
+**Status**: Complete
+
+**Purpose**: Parses `.excalidraw` JSON files and feeds them into the architecture model. 5-phase pipeline: parse elements → map colours to component roles → disambiguation dialogue → write Mermaid diagram → optionally pre-populate `architecture_model` and hand off to `arch-analysis`.
+
+**Invocation**:
+```
+"Analyse this excalidraw file"
+"Convert excalidraw to Mermaid"
+"Use this excalidraw as architecture input"
+```
+
+---
+
+### 33. Presentation
 
 **Location**: `skills/optional/analysis-outputs/presentation/`  
 **Status**: Complete
@@ -674,7 +764,7 @@ presentations/topic/
 
 ---
 
-### 27. PDF Report
+### 34. PDF Report
 
 **Location**: `skills/optional/analysis-outputs/pdf-report/`  
 **Status**: Complete
@@ -719,7 +809,8 @@ analysis/pdf/
 
 ### Core Skills (Always Active)
 
-- `git-workflow` - Always available
+- `bootstrap` — Session lifecycle (`/start`, `/help`, `/skills`, `/update`, `/upgrade`)
+- `git-workflow` — Git conventions and commit format
 
 ### Optional Skills (Opt-In)
 
@@ -728,22 +819,15 @@ Enable in your project's `AGENTS.md`:
 ```markdown
 ## Enabled Skills
 
-### Analysis
 - [x] arch-analysis
+- [x] code-graph
 - [x] security-analysis
-- [ ] nonfunctional-analysis
-
-### Architecture
-- [x] togaf
+- [x] togaf (ADM phases)
 - [x] structurizr
-
-### Workflows
-- [x] todo-workflow
-
-### Output Adapters
-- [x] architecture-docs
-- [x] pdf-report
-- [x] presentation
+- [ ] nonfunctional-analysis
+- [ ] roadmap-building
+- [ ] roadmap-analysis
+- [ ] coding-profile
 ```
 
 ---
@@ -753,21 +837,23 @@ Enable in your project's `AGENTS.md`:
 ### Discovery
 
 ```
-"What skills do you have?"
-"List available analysis skills"
-"Show me TOGAF skills"
-"What can you help me with?"
+/start       ← orient the agent at session start
+/skills      ← list all registered skills
+/help        ← full command reference
 ```
 
 ### Direct Invocation
 
 ```
-"Analyze the architecture"
-"Analyze security with OWASP"
-"Apply TOGAF Business Architecture"
-"Create C4 model"
-"Generate presentation"
-"Export to PDF"
+"Analyze the architecture"           → arch-analysis (default)
+"Analyze this codebase"             → arch-analysis
+"Extract the code graph"            → code-graph
+"Analyse this excalidraw file"      → excalidraw-import
+"Analyze security with OWASP"       → security-analysis
+"Apply TOGAF Business Architecture" → togaf/business-architecture
+"Create C4 model"                   → structurizr
+"Generate presentation"             → presentation
+"Export to PDF"                     → pdf-report
 ```
 
 ### Task-Specific
@@ -807,7 +893,7 @@ Enable in your project's `AGENTS.md`:
 To add new skills or improve documentation:
 
 1. Follow the 5-file standard structure
-2. Update `skills/_index.md`
+2. Update `skills/_index.md` and `skills/manifest.yaml`
 3. Submit pull request
 
-See [AGENTS.md](../../AGENTS.md) for contribution guidelines.
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for the full contribution guide, PR process, and release checklist.

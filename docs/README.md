@@ -1,12 +1,8 @@
-# AI Documentation
+# Documentation
 
-This directory contains human-readable documentation for AI-related tooling and processes.
+> **Audience:** Humans (contributor and user reference)
 
-## Purpose
-
-- Provide clear, accessible documentation for AI agent workflows
-- Serve as reference for human developers working alongside AI agents
-- Can be used as a git submodule in other projects
+Human-readable documentation for the quantum-toolbox.
 
 ## Guides
 
@@ -14,21 +10,8 @@ This directory contains human-readable documentation for AI-related tooling and 
 |-------|-------------|
 | [Architectural Analysis](arch-analysis-guide.md) | Analyze unfamiliar codebases systematically |
 
-## Structure
+## Skills Reference
 
-Documentation is organized by topic:
+Detailed per-skill documentation: [skills/README.md](skills/README.md)
 
-| Directory/File | Description |
-|---------------|-------------|
-| `skills/` | Skill-specific documentation |
-| `workflows/` | Workflow guides and procedures |
-
-## Usage as Submodule
-
-To include this in your project:
-
-```bash
-git submodule add <repo-url> docs/ai
-```
-
-Then reference these docs from your project's main documentation.
+For the canonical skill catalog (used by agents): [skills/_index.md](../skills/_index.md)
