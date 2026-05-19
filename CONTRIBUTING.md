@@ -244,12 +244,14 @@ Follow these steps when cutting a new version. Maintainers only.
 
 ### 2. Write Release Notes in CHANGELOG.md
 
-Move `[Unreleased]` content to a new `[X.Y.Z] - YYYY-MM-DD` section. Use this structure:
+Move `[Unreleased]` content to a new `[X.Y.Z] - YYYY-MM-DD` section. Use a compound structure grouped by theme — see existing entries in CHANGELOG.md for the established pattern. Every section should include:
 
-1. **New Skills** — one paragraph per skill, what it does and what it produces
-2. **Quick Start & Onboarding** — any changes to setup, templates, or agent instructions
-3. **Core Tooling & Conventions** — structural changes, audience tags, workflow updates
-4. **Improvements & Optimisations** — concrete numbers where possible (token delta, lines removed)
+1. **One-sentence intro** — what this version is and its headline features
+2. **New Skills** — one paragraph per skill, what it does and what it produces
+3. **Feature sections** — one section per major change area (e.g. Bootstrap, SQLite Architecture, Token Optimisation)
+4. **Deprecations & Consolidation** — anything deprecated with migration path
+5. **Infrastructure** — tooling and build changes
+6. **Bug Fixes** — runtime-breaking bugs first, then cosmetic
 
 ### 3. Update the README "What's new" Link
 

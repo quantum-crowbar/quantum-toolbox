@@ -6,7 +6,7 @@
 
 <p align="center"><em>AI Agent toolbox for software architecture</em></p>
 
-<p align="center"><a href="CHANGELOG.md#300---2026-05-12">What's new in v3.0.0</a></p>
+<p align="center"><a href="CHANGELOG.md#300---2026-05-18">What's new in v3.0.0</a></p>
 
 > **Audience:** Humans (GitHub landing page)
 
@@ -124,22 +124,26 @@ The skills are the tools. The mental model is what makes them coherent.
 
 ## Skills at a Glance
 
-The toolkit provides **27+ specialized skills** organized into 4 categories:
+The toolkit provides **30+ specialized skills** organized into 5 categories:
 
 | Category | Count | Skills |
 |----------|-------|--------|
-| **Analysis** | 6 | codebase-analysis, arch-analysis, security-analysis, nonfunctional-analysis, architecture-synthesis, fitness-functions |
+| **Analysis** | 5 | arch-analysis *(default)*, security-analysis, nonfunctional-analysis, architecture-synthesis, fitness-functions |
+| **Code Intelligence** | 2 | code-graph *(SQLite call-graph extraction)*, coding-profile |
 | **Architecture** | 11 | structurizr, TOGAF ADM (Preliminary + Phases A-H) |
-| **Workflow** | 2 | git-workflow (core), todo-workflow |
-| **Output** | 8 | core-architecture, architecture-docs, coding-context, product-spec, structurizr, archimate, presentation, pdf-report |
+| **Workflow** | 4 | bootstrap *(session lifecycle)*, git-workflow, todo-workflow, update-logs |
+| **Output** | 9 | core-architecture, architecture-docs, coding-context, product-spec, structurizr, archimate, presentation, pdf-report, excalidraw-import |
 
 ### Common Invocations
 
 ```
 "Analyze the architecture"              → arch-analysis
+"Analyze this codebase"                → arch-analysis (default entry point)
+"Extract the code graph"               → code-graph
 "Analyze security with OWASP"          → security-analysis
 "Apply TOGAF Business Architecture"    → togaf/business-architecture
 "Create C4 model"                      → structurizr
+"Analyse this excalidraw file"         → excalidraw-import
 "Export to PDF"                        → pdf-report
 "Generate presentation"                → presentation
 ```
