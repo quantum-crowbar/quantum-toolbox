@@ -382,13 +382,68 @@ Document:
 
 **Goal**: Create visual representations of the system
 
+#### 4.0 Pre-Diagram: Per-Service Dependency Verification (mandatory)
+
+> **Why this matters**: Drawing diagram edges from domain knowledge or naming conventions instead of config
+> evidence produces inaccurate diagrams. Every edge must be backed by a concrete config citation.
+> This step prevents false edges and forces explicit labelling of genuinely uncertain connections.
+
+For **every** service discovered in Phase 1, complete the following before drawing a single edge:
+
+**Step A — Read outbound connection config**
+
+For each service, read its primary config file (`application.yml`, `application.properties`, etc.) and extract:
+
+| Config pattern | Dependency type | Example |
+|----------------|-----------------|---------|
+| `ldap.host`, `*.ldap.host` | LDAP server | `ldap.host: ${LDAP_HOST}` |
+| `oauth.token-uri`, `security.oauth2.client.access-token-uri` | OAuth2 / OIDC IDP | `oauth.token-uri: ${IDP_BASE_URL}/token` |
+| `kafka.bootstrap-servers`, `spring.kafka.bootstrap-servers` | Kafka (producer or consumer) | `kafka.bootstrap-servers: ${KAFKA_BROKERS}` |
+| `redis.host`, `spring.data.redis.host` | Redis | `redis.host: ${REDIS_HOST}` |
+| `dynamodb.*`, `spring.cloud.aws.dynamodb.*` | DynamoDB | `dynamodb.region: ${AWS_REGION}` |
+| `spring.datasource.url`, `spring.r2dbc.url` | RDBMS | `spring.datasource.url: jdbc:postgresql://...` |
+| `*.baseUrl: http://service-name:port` | Internal HTTP service | `baseUrl: http://user-service:8080` |
+| `uri.service-name: http://...` (Spring Cloud Gateway) | Gateway upstream | `uri.order-service: http://order-service:8080` |
+| `sqs.queue-url`, `sqs-configuration*.url` | AWS SQS | `sqs.queue-url: ${SQS_QUEUE_URL}` |
+| `sns.topic-arn` | AWS SNS | `sns.topic-arn: arn:aws:sns:...` |
+
+**Step B — Read build manifest for client libraries** (optional for deep analysis)
+
+Scan `pom.xml` or `build.gradle` for HTTP client or messaging client library declarations:
+- `spring-cloud-openfeign`, `spring-cloud-starter-openfeign` → service-to-service HTTP calls
+- `kafka-clients`, `spring-kafka` → Kafka producer or consumer
+- `aws-sdk-java`, `software.amazon.awssdk:*` → AWS services (DynamoDB, SQS, SNS, S3…)
+- `lettuce-core`, `spring-data-redis` → Redis
+
+**Step C — Record evidence before drawing**
+
+Before adding any edge to the diagram, record it in an evidence table:
+
+```markdown
+| From | To | Evidence source | Config key |
+|------|----|-----------------|------------|
+| auth-service | ldap-server | auth-service/src/main/resources/application.yml | ldap.host: ${LDAP_HOST} |
+| api-gateway | identity-provider | api-gateway/src/main/resources/application.yml | oauth.token-uri: ${IDP_BASE_URL}/token |
+| order-service | Kafka | order-service/src/main/resources/application.yml | kafka.bootstrap-servers: ${KAFKA_BROKERS} |
+```
+
+**Step D — Classify each edge**
+
+- **Confirmed** (`-->`): Found in config file. Cite source + key.
+- **Inferred** (`-.->` dashed): Not found in config, but strongly implied by code patterns, README, or naming. Mark explicitly in the evidence table with reason.
+- **Do not draw**: Never add an edge based on cluster membership, naming conventions, or assumed patterns in the absence of at least one of the above.
+
+> **Example of a false edge to avoid**: "auth-service is in the auth cluster, so it probably calls the identity provider" — edges inferred from naming or co-location have produced wrong diagrams. Always verify with config before drawing.
+
 #### 4.1 Component Diagram
 
 Create Mermaid diagram showing:
 - Major components/services
-- Dependencies between components
+- Dependencies between components (confirmed in Step 4.0 above)
 - External system integrations
 - Data stores
+
+Use dashed arrows (`-.->`) for inferred-only edges. Add a note to the diagram stating evidence policy.
 
 ```markdown
 ## Architecture Diagram
