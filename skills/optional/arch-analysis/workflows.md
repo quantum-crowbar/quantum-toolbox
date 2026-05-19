@@ -388,9 +388,28 @@ Document:
 > evidence produces inaccurate diagrams. Every edge must be backed by a concrete config citation.
 > This step prevents false edges and forces explicit labelling of genuinely uncertain connections.
 
+> **SQLite-first path**: If `meta.code_graph_backend = sqlite` (i.e. a current `code_graph.sqlite` exists),
+> **skip Steps A and B entirely**. The evidence table in Step C is populated from SQL instead:
+> ```sql
+> -- Confirmed edges (cross-repo calls recorded in the graph)
+> SELECT from_repo AS "From", to_repo AS "To",
+>        'code_graph.sqlite → view_cross_repo_edges' AS "Evidence source",
+>        'edge recorded during extraction' AS "Config key"
+> FROM   view_cross_repo_edges;
+>
+> -- DB / external call flags per node (use as additional evidence rows)
+> SELECT repo_path AS "From", name AS "To (type)",
+>        'code_graph.sqlite → nodes' AS "Evidence source",
+>        CASE WHEN has_db_call      THEN 'has_db_call = 1'
+>             WHEN has_external_call THEN 'has_external_call = 1' END AS "Config key"
+> FROM   nodes
+> WHERE  has_db_call = 1 OR has_external_call = 1;
+> ```
+> Run these queries, fill the evidence table in Step C, then proceed to Step D. Steps A and B are not required.
+
 For **every** service discovered in Phase 1, complete the following before drawing a single edge:
 
-**Step A — Read outbound connection config**
+**Step A — Read outbound connection config** *(skip if SQLite path — see above)*
 
 For each service, read its primary config file (`application.yml`, `application.properties`, etc.) and extract:
 
@@ -407,7 +426,7 @@ For each service, read its primary config file (`application.yml`, `application.
 | `sqs.queue-url`, `sqs-configuration*.url` | AWS SQS | `sqs.queue-url: ${SQS_QUEUE_URL}` |
 | `sns.topic-arn` | AWS SNS | `sns.topic-arn: arn:aws:sns:...` |
 
-**Step B — Read build manifest for client libraries** (optional for deep analysis)
+**Step B — Read build manifest for client libraries** *(optional for deep analysis; skip if SQLite path)*
 
 Scan `pom.xml` or `build.gradle` for HTTP client or messaging client library declarations:
 - `spring-cloud-openfeign`, `spring-cloud-starter-openfeign` → service-to-service HTTP calls
