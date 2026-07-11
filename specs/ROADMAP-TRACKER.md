@@ -56,8 +56,8 @@ Master tracking document for all skill development roadmaps.
 | Phase 1A: code_graph model section spec | - | 🟢 Complete | High |
 | Phase 1B: Skill files (README, workflows, templates, checklist) | - | 🟢 Complete | High |
 | Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
-| Phase 2: SQLite export path | - | ⚪ Planned | Medium |
-| Phase 3: SQLite-first analysis (SQL replaces in-context traversal) | - | ⚪ Planned | High |
+| Phase 2: SQLite export path | - | 🟢 Complete | Medium |
+| Phase 3: SQLite-first analysis (SQL replaces in-context traversal) | - | 🟢 Complete | High |
 | Phase 4: Cross-language tree-sitter backend | - | ⚪ Planned | Medium |
 | Phase 5: Architectural layer tagging + per-node LLM descriptions | - | ⚪ Planned | Medium |
 | | | | |
