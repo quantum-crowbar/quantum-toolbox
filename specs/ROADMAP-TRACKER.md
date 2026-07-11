@@ -58,6 +58,8 @@ Master tracking document for all skill development roadmaps.
 | Phase 1C: View 09 output + reports/ templates | - | 🟢 Complete | High |
 | Phase 2: SQLite export path | - | ⚪ Planned | Medium |
 | Phase 3: SQLite-first analysis (SQL replaces in-context traversal) | - | ⚪ Planned | High |
+| Phase 4: Cross-language tree-sitter backend | - | ⚪ Planned | Medium |
+| Phase 5: Architectural layer tagging + per-node LLM descriptions | - | ⚪ Planned | Medium |
 | | | | |
 | **--- EXPLORATIONS ---** | | | |
 | EXPL-01: Analysis SQLite — early DB for arch findings | - | 🔬 Exploration | Medium |
