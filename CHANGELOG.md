@@ -16,7 +16,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Code-Graph Skill — Swift/Kotlin tree-sitter tooling (Phase 4, in progress)
+## [3.1.0] - 2026-08-17
+
+### Bootstrap — incremental source-registry reconciliation for `/update`
+
+`/update` previously only diffed already-known repos against git HEAD SHAs — it had
+no way to discover new repos or docs, or to track documentation staleness at all.
+
+- New **Phase C1.5: Reconcile Source Registries**, run on every `/update`: normalizes
+  and diffs a project's flat URL list (`sources/urls.md`) against its optional
+  structured catalog (e.g. `repos.json`) and the analysis manifest.
+- New repos/docs found in the URL list are **auto-added** (catalog entry + first
+  analysis / first fetch) — additive and reversible, no confirmation needed.
+- Entries present in the catalog/manifest but missing from the URL list are
+  **flagged and asked about**, never silently removed (may have been added
+  directly to the catalog).
+- New `lastAnalysis.docs` manifest field tracks each doc URL's source version
+  (e.g. Confluence page version) so re-fetches are incremental — only pages
+  whose version actually changed are re-fetched, not the whole tree.
+- Doc URLs support both a recursive crawl (default — page + all descendants)
+  and a `[page-only]` marker for a single page.
+- `/update --full` (or "full re-analysis") opts out of all diffing and rebuilds
+  the manifest baseline from scratch.
+- Schema: `analysis-manifest-schema.json` gains `lastAnalysis.docs` and a
+  top-level `registryFiles` field.
+
+### Code-Graph Skill — Swift/Kotlin tree-sitter tooling (Phase 4)
 
 Validated via a prototype run against real iOS/Android app repos in a production polyglot metarepo (2026-08-17):
 
