@@ -25,7 +25,7 @@ Validated via a prototype run against real iOS/Android app repos in a production
 - Flagged that Periphery (the well-known Swift dead-code tool) went commercial and archived its OSS repo read-only on 2026-08-12 — removed as a recommendation.
 - Documented a real gotcha: `tree-sitter-swift` and `tree-sitter-kotlin` require incompatible `tree-sitter` core versions (`^0.22.x` vs `^0.21.x`) and need isolated npm installs, not a shared root dependency.
 - Prototype measured ~7.5ms/file — an 11k-file iOS app or 14k-file Android app extracts in under two minutes.
-- Follow-up: promote the prototype into real extractor scripts, add `extraction_method`/`language` columns to the SQLite schema, and land results in a consuming project before cutting this as a formal patch release.
+- Follow-up: promote the prototype into real extractor scripts, add `extraction_method`/`language` columns to the SQLite schema, and land results in a consuming project.
 
 ## [3.0.0] - 2026-05-18
 

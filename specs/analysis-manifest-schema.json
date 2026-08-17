@@ -9,6 +9,13 @@
 
   "properties": {
 
+    "registryFiles": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths to source-of-truth registry file(s) that /update reconciles against (e.g. sources/urls.md, repos.json). Optional — projects without a structured catalog only use the flat URL list.",
+      "examples": [["sources/urls.md", "repos.json"]]
+    },
+
     "toolboxVersion": {
       "type": "string",
       "description": "Toolkit version (semver) at the time of the last /upgrade run. Updated by /upgrade only.",
@@ -39,6 +46,38 @@
                 "type": "string",
                 "description": "Short commit SHA at the time of analysis.",
                 "examples": ["a1b2c3d"]
+              }
+            }
+          }
+        },
+        "docs": {
+          "type": "object",
+          "description": "Map of documentation source URL (e.g. a Confluence page) → last-fetched state. Enables /update to diff by source version and re-fetch only changed pages instead of re-crawling everything.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["version", "lastFetchedDate"],
+            "additionalProperties": false,
+            "properties": {
+              "version": {
+                "type": ["integer", "string"],
+                "description": "Source system's page version/revision number at last fetch.",
+                "examples": [12]
+              },
+              "lastFetchedDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "localPath": {
+                "type": "string",
+                "description": "Path to the mirrored markdown file for this page."
+              },
+              "crawlMode": {
+                "type": "string",
+                "enum": ["recursive", "single-page"],
+                "description": "recursive = this URL's page + all descendant pages were mirrored; single-page = only this page."
+              },
+              "title": {
+                "type": "string"
               }
             }
           }

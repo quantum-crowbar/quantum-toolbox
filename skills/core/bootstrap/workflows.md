@@ -262,7 +262,8 @@ If user chooses A (or names a skill directly):
 
 ### Triggers
 
-- `/update`
+- `/update` — incremental (default): only touches repos/docs identified as new, changed, or removed
+- `/update --full` / `"full re-analysis"` / `"re-run everything"` — ignores all diffing, re-runs every enabled skill against every registered repo and re-fetches every doc regardless of version, then rewrites the manifest baseline from scratch
 - `"Update my analysis"`
 - `"Refresh my docs"`
 - `"Re-run analysis"`
@@ -281,9 +282,70 @@ If not found:
 Extract:
   - lastAnalysis.date
   - lastAnalysis.repositories  (repo → commit SHA map)
+  - lastAnalysis.docs         (doc URL → version/fetch-state map, if present)
   - artifacts                  (which skills have been run, which views exist)
   - toolboxVersion
   - artifacts.code-graph (if present)
+```
+
+---
+
+### Phase C1.5: Reconcile Source Registries
+
+Skip this phase entirely if the project has neither a flat URL list nor a structured
+catalog (nothing to reconcile).
+
+```
+Locate the project's registry file(s) (record in manifest.registryFiles):
+  - A flat URL list (e.g. sources/urls.md) — human-curated seed list, grouped
+    under `# Docs` and `# repos` headers, one URL per line, optional
+    `[description]` suffix. Doc lines default to a RECURSIVE crawl (fetch that
+    page + every descendant page); append `[page-only]` to fetch just that one
+    page instead.
+  - An optional structured catalog (e.g. repos.json) — richer per-repo metadata
+    (name, path, url, branch, description, type) used by routing/orchestration
+    skills. Not every project has one — skip the catalog half if absent.
+
+Step 1 — Normalize repo URLs (needed to compare across files)
+  - GitHub browse URL     → derive SSH clone URL (git@github.com:<org>/<repo>.git)
+  - Host-specific browse URL (e.g. Bitbucket) → derive that host's SSH clone URL
+  - Already an SSH/HTTPS clone URL → use as-is
+
+Step 2 — Diff repos
+  new_in_url_list        = normalized(flat-list repos) − normalized(catalog repos)
+  missing_from_url_list   = normalized(catalog repos) − normalized(flat-list repos)
+  new_in_manifest_scope   = normalized(catalog ∪ flat-list) − lastAnalysis.repositories.keys()
+
+  → new_in_url_list: AUTO-ADD to the structured catalog (infer name/type/
+    description where possible; mark incomplete fields for follow-up).
+    Additive and reversible — no confirmation needed.
+  → missing_from_url_list: do NOT remove automatically — it may have been
+    added to the catalog directly and the URL list just hasn't caught up yet.
+    Flag and ASK: "{repo} is in the catalog but not in the URL list. Remove
+    from the catalog, add back to the URL list, or leave as-is?"
+  → new_in_manifest_scope: never analyzed — surface in the Phase C3 report
+    under "New" (not "Stale").
+
+Step 3 — Diff docs
+  new_docs     = flat-list `# Docs` URLs − lastAnalysis.docs.keys()
+  removed_docs = lastAnalysis.docs.keys() − flat-list `# Docs` URLs
+
+  → new_docs: AUTO-FETCH (recursive or single-page per the `[page-only]`
+    marker), write to the project's docs mirror path, add a lastAnalysis.docs
+    entry per page fetched. Additive — no confirmation needed.
+  → removed_docs: do NOT delete mirrored files automatically. Flag and ASK:
+    "{url} was removed from the URL list but mirrored pages still exist at
+    {localPath}. Delete them, or leave as a historical record?"
+
+Step 4 — Doc staleness (URLs already tracked in lastAnalysis.docs)
+  For each tracked URL:
+    Fetch the current version number via the source API
+    (e.g. Confluence `GET /rest/api/content/{id}?expand=version`)
+    Compare to the stored version
+    → Changed: re-fetch just that page. If crawlMode=recursive, check each
+      child page's version too — re-fetch only the children whose version
+      actually changed, not the whole tree.
+    → Unchanged: skip.
 ```
 
 ---
@@ -364,21 +426,43 @@ If different:
   Code graph
     ✓ Current / ⚠ Stale ({repos})
 
+  New (from registry reconciliation — Phase C1.5)
+    Repos:  {list or "(none)"} — will be added to the catalog automatically
+    Docs:   {list or "(none)"} — will be fetched automatically
+
+  Flagged for review (needs your decision, not auto-applied)
+    {repo/doc} — in catalog/manifest but missing from the URL list
+    ...
+
 ─────────────────────────────────────────────────────────────
   {If all current:}
   Everything is up-to-date. No action needed.
 
-  {If stale:}
+  {If stale or new items exist:}
   Ready to re-run: {skill list} on {repo list}
+  New repos/docs above will be onboarded automatically.
   Missing views will be generated from the updated analysis.
 
   Proceed? (Y / select repos / N)
+  {If any "Flagged for review" items:} Also resolve flagged items above
+  (remove / restore / leave-as-is per item) before or after proceeding.
 ─────────────────────────────────────────────────────────────
 ```
 
 ---
 
 ### Phase C4: Re-Run Analysis on Stale Repos
+
+For new repos/docs (from Phase C1.5), apply automatically — no confirmation needed
+beyond the Phase C3 report already shown:
+```
+1. New repos: clone into code/{repo}, add a repos.json entry (via repo-catalog-updater
+   logic), run each enabled skill against it, add a fresh lastAnalysis.repositories entry.
+2. New docs: fetch (recursive or single-page per its marker), write mirrored files,
+   add a lastAnalysis.docs entry per page.
+3. Flagged items (missing_from_url_list / removed_docs): apply exactly what the user
+   decided in Phase C3 — do nothing further if they chose "leave as-is".
+```
 
 For each stale repo the user confirmed:
 ```
@@ -411,6 +495,10 @@ For each stale repo the user confirmed:
 Update specs/analysis-manifest.json:
   - lastAnalysis.date → today
   - lastAnalysis.repositories.{repo}.commit → new HEAD SHA  (per updated repo)
+  - lastAnalysis.repositories.{repo} → add entry  (per newly onboarded repo)
+  - lastAnalysis.docs.{url} → add/update {version, lastFetchedDate, localPath,
+    crawlMode}  (per fetched/re-fetched doc)
+  - registryFiles → set if not already recorded
   - artifacts.architecture-docs.views[] → add any newly generated views
   - artifacts.{skill}.lastAnalyzedCommit → new SHA  (per skill per repo)
   (toolboxVersion is NOT updated here — that is /upgrade's responsibility)
