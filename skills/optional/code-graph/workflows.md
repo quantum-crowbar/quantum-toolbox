@@ -118,21 +118,26 @@ Do not collapse or abbreviate them.
 ─────────────────────────────────────────────────────────────
 
   WHAT WILL BE SCANNED
-  ┌────────────────────────────────┬──────────────┬─────────┐
-  │ Category (TypeScript)          │ Est. .ts     │ Tool    │
-  ├────────────────────────────────┼──────────────┼─────────┤
-  │ Backend services (~10–20 repos)│ ~3,500 files │ ts-morph│
-  │ Frontend apps                  │ ~4,000 files │ ts-morph│
-  │ Shared libs (@org/*)           │ ~2,000 files │ ts-morph│
-  ├────────────────────────────────┼──────────────┼─────────┤
-  │ iOS (Swift)                    │ ~2,000 .swift│  n/a*  │
-  │ Android (Kotlin)               │ ~1,500 .kt   │  n/a*  │
-  │ Scripts (Python)               │    ~50 .py   │ pyan3* │
-  └────────────────────────────────┴──────────────┴─────────┘
-  * ts-morph does not cover Swift, Kotlin, or Python.
-    These require a separate pass and produce a separate
-    graph file — they cannot be merged into the TypeScript
-    graph.
+  ┌────────────────────────────────┬──────────────┬────────────────────┐
+  │ Category (TypeScript)          │ Est. .ts     │ Tool               │
+  ├────────────────────────────────┼──────────────┼────────────────────┤
+  │ Backend services (~10–20 repos)│ ~3,500 files │ ts-morph           │
+  │ Frontend apps                  │ ~4,000 files │ ts-morph           │
+  │ Shared libs (@org/*)           │ ~2,000 files │ ts-morph           │
+  ├────────────────────────────────┼──────────────┼────────────────────┤
+  │ iOS (Swift)                    │ ~2,000 .swift│ tree-sitter-swift  │
+  │ Android (Kotlin)               │ ~1,500 .kt   │ tree-sitter-kotlin │
+  │ Scripts (Python)               │    ~50 .py   │ pyan3*             │
+  └────────────────────────────────┴──────────────┴────────────────────┘
+  * ts-morph does not cover Swift, Kotlin, or Python — these
+    require a separate pass and produce a separate graph file
+    (cannot be merged into the TypeScript graph, though they can
+    share the same SQLite database file with a `language` column).
+    Swift/Kotlin default to `tree-sitter-swift`/`tree-sitter-kotlin`
+    (npm, syntax-only, no Xcode/Gradle build required — validated
+    at ~7.5ms/file). Each needs its own isolated npm install: the
+    two grammars require incompatible `tree-sitter` core versions
+    (`^0.22.x` vs `^0.21.x`) and cannot share one `node_modules`.
 
   Estimated TypeScript graph: 15,000–40,000 nodes
   → Backend: SQLite REQUIRED at this scale
@@ -397,6 +402,14 @@ Python detected?
   → Check: pyan3 --version | pyright --version
 Java/Kotlin detected?
   → Check tooling availability via jdtls or build system
+  → If unavailable (common — jdtls needs a working Gradle build):
+    fall back to `tree-sitter-kotlin` (npm, syntax-only, no build needed)
+Swift detected?
+  → IndexStoreDB/SourceKit-LSP needs a full Xcode.app build (not just
+    Command Line Tools) — often unavailable in CI/sandboxed environments
+  → Default to `tree-sitter-swift` (npm, syntax-only, no build needed)
+  → Do not recommend Periphery — it went commercial and archived its
+    OSS repo read-only on 2026-08-12
 Go detected?
   → Check: go version (go/callgraph is stdlib)
 C# detected?

@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Code-Graph Skill — Swift/Kotlin tree-sitter tooling (Phase 4, in progress)
+
+Validated via a prototype run against real iOS/Android app repos in a production polyglot metarepo (2026-08-17):
+
+- `code-graph-skill-spec.md` and `workflows.md`: added a named Swift row and a revised Java/Kotlin row to the tooling-by-language tables — `tree-sitter-swift` and `tree-sitter-kotlin` (both npm packages, syntax-only, no build step) are now the recommended default before AI-only fallback for these two languages, tagged `extraction_method: static`.
+- Documented that `jdtls`/IndexStoreDB require a full working build (Gradle / Xcode.app, not just Command Line Tools) and are frequently unavailable in CI/sandboxed environments — tree-sitter needs neither.
+- Flagged that Periphery (the well-known Swift dead-code tool) went commercial and archived its OSS repo read-only on 2026-08-12 — removed as a recommendation.
+- Documented a real gotcha: `tree-sitter-swift` and `tree-sitter-kotlin` require incompatible `tree-sitter` core versions (`^0.22.x` vs `^0.21.x`) and need isolated npm installs, not a shared root dependency.
+- Prototype measured ~7.5ms/file — an 11k-file iOS app or 14k-file Android app extracts in under two minutes.
+- Follow-up: promote the prototype into real extractor scripts, add `extraction_method`/`language` columns to the SQLite schema, and land results in a consuming project before cutting this as a formal patch release.
+
 ## [3.0.0] - 2026-05-18
 
 This is a major version. Four new skills, a full SQLite-first analysis architecture, evidence-based diagram edges, a structured command lifecycle for AI agent sessions, and a 74% reduction in session-start token overhead compared to v2.6.

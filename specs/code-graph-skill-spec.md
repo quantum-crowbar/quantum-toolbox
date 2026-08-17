@@ -123,13 +123,20 @@ For each node, capture:
 |----------|-------------|----------------------|
 | TypeScript / JS | `ts-morph`, TypeScript compiler API | AI reads imports + call expressions |
 | Python | `pyan3`, `pyright` | AI reads function defs + call sites |
-| Java / Kotlin | `jdtls`, Spoon AST | AI reads class methods + invocations |
+| Java / Kotlin | `jdtls`, Spoon AST (if project builds); else `tree-sitter-kotlin` (npm, syntax-only, no build needed) | AI reads class methods + invocations |
+| Swift | `tree-sitter-swift` (npm, syntax-only, no build needed) | AI reads func/method declarations + call expressions |
 | Go | `go/callgraph` (`pointer` analysis) | AI reads func declarations + calls |
 | C# | Roslyn API | AI reads method defs + invocations |
 | Ruby | `ruby-parser` + custom walker | AI reads def blocks + send nodes |
 | Multi-lang fallback | `tree-sitter` (AST, no type resolution) | AI-only extraction |
 
 AI-driven fallback note: produces nodes and edges but cannot resolve dynamic dispatch, generics, or cross-package overloads. Mark these nodes with `extraction_method: ai` for transparency.
+
+**Swift/Kotlin via tree-sitter — validated 2026-08-17** (prototype run against real iOS/Android app repos in a production polyglot metarepo):
+- `jdtls` (Java/Kotlin language server) and IndexStoreDB/SourceKit-LSP (Swift's real semantic indexer) both require a **successful full build** of the target — `jdtls` needs Gradle, IndexStoreDB needs Xcode.app (not just Command Line Tools) plus `-index-store-path`. At iOS/Android app scale (10k+ source files) this is slow and fragile, and CI/sandboxed environments frequently lack a full Xcode install.
+- **Periphery** (the well-known Swift dead-code tool built on IndexStoreDB) went commercial and archived its OSS repo read-only on 2026-08-12 — no longer a safe long-term dependency to recommend.
+- `tree-sitter-swift` (`alex-pinkus/tree-sitter-swift`) and `tree-sitter-kotlin` (`fwcd/tree-sitter-kotlin`) are both actively maintained, npm-installable, syntax-only parsers — no build step required, ~7.5ms/file, so an 11k-file iOS app or 14k-file Android app extracts in under two minutes. This is the recommended default before falling back to AI-only extraction for these two languages specifically — tag results `extraction_method: static` (not `ai`), same tier of confidence as `ts-morph`'s syntax-based resolution.
+- **Gotcha**: `tree-sitter-swift` requires `tree-sitter@^0.22.x` while `tree-sitter-kotlin` requires `tree-sitter@^0.21.x` — they cannot share one `node_modules`/`package.json`. Give each language extractor its own isolated npm project (own lockfile), not a single shared `tree-sitter` root dependency the way `ts-morph` is set up today.
 
 ---
 
