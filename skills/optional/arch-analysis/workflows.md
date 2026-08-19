@@ -1180,7 +1180,7 @@ Create `{docs-directory}/update-logs/YYYY-MM-DD-<topic-slug>.md` using this temp
 
 **Naming rules**:
 - `YYYY-MM-DD` = analysis date
-- `<topic-slug>` = kebab-case key repos or initiative: `hero-product-search-gw`, `events-gw-ml51`, `initial-full-scan`
+- `<topic-slug>` = kebab-case key repos or initiative: `payments-service`, `search-index-migration`, `initial-full-scan`
 - One file per session; incremental passes get their own file
 
 ### 9.2 Update Analysis Manifest

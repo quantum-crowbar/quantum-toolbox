@@ -157,12 +157,10 @@ When injecting the code-graph stats block into `findings-summary.md`, add a line
 
 ## Reference Implementation
 
-A hand-authored version of this output is committed at:
+A hand-authored version of this output has been committed in a consuming project at:
 
 ```
 docs/architecture-docs/reports/sqlite-cookbook.md
 ```
-
-in `dxpcore-lowerfunnel-metarepo` (branch `update/q-t_3.0v_dev`).
 
 This file should be used as the canonical template when implementing the skill output. The template variables listed above are the only parts that need to be dynamically substituted — all query text is static.
