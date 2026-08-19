@@ -16,6 +16,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-08-19
+
+Bundled release covering the two remaining gaps in the code-graph tooling-by-language
+table (Java, Objective-C) — both validated the same day against the same prototype
+methodology used for Swift/Kotlin in 3.1.0, so they ship together in one version.
+
+### Code-Graph Skill — Java tree-sitter tooling
+
+- Fixed a stale table row: the previous "Java / Kotlin" row named `tree-sitter-kotlin`
+  as the fallback for *both* languages — Java had no working syntax-only fallback
+  documented at all. Split into separate Java and Kotlin rows.
+- Documented why `jdtls`/Spoon AST are not safe Java defaults: `jdtls` needs a
+  successful full Gradle build (same requirement already flagged for Kotlin); Spoon's
+  automatic project-model launcher (`MavenLauncher`) only understands Maven's
+  `pom.xml` — there is no equivalent auto-detecting Gradle launcher, so Gradle
+  projects need the dependency graph resolved and supplied by hand, which is
+  fragile and tends to fail silently rather than erroring clearly.
+- `tree-sitter-java` (`tree-sitter-grammars/tree-sitter-java`) is now the recommended
+  default before AI-only fallback — npm-installable, syntax-only, no build step,
+  sidesteps the Maven/Gradle gap entirely instead of fixing it. Tagged
+  `extraction_method: static`.
+- Documented Java grammar facts in `code-graph-skill-spec.md`: separate node types
+  per declaration kind (unlike Kotlin/Swift's unified node types), `method_invocation`
+  resolves callees directly via `object:`/`name:` fields (simpler than the
+  navigation-expression pattern needed for Kotlin/Swift), modifiers are anonymous
+  children of a `modifiers` node (same quirk as Swift's `async`), and anonymous-class/
+  lambda bodies are attributed to their nearest enclosing named method — same
+  simplification already used for Kotlin/Swift trailing lambdas.
+- `tree-sitter-java` requires `tree-sitter@^0.21.x` — the same range as
+  `tree-sitter-kotlin`, so the two share one isolated npm install with no new
+  version conflict (unlike the Swift/Objective-C pair, below).
+
+### Code-Graph Skill — Objective-C tree-sitter tooling
+
+- Objective-C was previously undocumented in the code-graph skill entirely — no
+  tool row, no fallback guidance.
+- `tree-sitter-objc` (`tree-sitter-grammars/tree-sitter-objc`) added as the
+  recommended default — npm-installable, syntax-only, no build step, same tier as
+  the other three mobile/JVM languages.
+- Documented a structural difference worth flagging clearly: Objective-C's
+  message-passing call syntax (`[receiver selectorPart1:arg1 selectorPart2:arg2]`)
+  means its call node does not carry one callee identifier — it carries a
+  *sequence* of selector-part fields that must be reconstructed into a full
+  selector string and matched against declarations reconstructed the same way.
+  This needs its own resolution routine; it is not a variant of the
+  receiver-plus-name pattern shared by Java/Kotlin/Swift, and should not be
+  force-fit into that shared helper.
+- `tree-sitter-objc` requires `tree-sitter@^0.22.x` — the same range as
+  `tree-sitter-swift`, so it needs its own isolated npm install, separate from
+  the Java/Kotlin pair, for the reason already documented for Swift.
+
 ## [3.1.0] - 2026-08-17
 
 ### Bootstrap — incremental source-registry reconciliation for `/update`

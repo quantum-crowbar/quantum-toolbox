@@ -126,18 +126,24 @@ Do not collapse or abbreviate them.
   │ Shared libs (@org/*)           │ ~2,000 files │ ts-morph           │
   ├────────────────────────────────┼──────────────┼────────────────────┤
   │ iOS (Swift)                    │ ~2,000 .swift│ tree-sitter-swift  │
+  │ iOS (Objective-C, legacy)      │  ~200 .m/.mm │ tree-sitter-objc   │
   │ Android (Kotlin)               │ ~1,500 .kt   │ tree-sitter-kotlin │
+  │ Android (Java, legacy)         │  ~500 .java  │ tree-sitter-java   │
   │ Scripts (Python)               │    ~50 .py   │ pyan3*             │
   └────────────────────────────────┴──────────────┴────────────────────┘
-  * ts-morph does not cover Swift, Kotlin, or Python — these
-    require a separate pass and produce a separate graph file
-    (cannot be merged into the TypeScript graph, though they can
-    share the same SQLite database file with a `language` column).
-    Swift/Kotlin default to `tree-sitter-swift`/`tree-sitter-kotlin`
-    (npm, syntax-only, no Xcode/Gradle build required — validated
-    at ~7.5ms/file). Each needs its own isolated npm install: the
-    two grammars require incompatible `tree-sitter` core versions
-    (`^0.22.x` vs `^0.21.x`) and cannot share one `node_modules`.
+  * ts-morph does not cover Swift, Objective-C, Kotlin, Java, or
+    Python — these require a separate pass and produce a separate
+    graph file (cannot be merged into the TypeScript graph, though
+    they can share the same SQLite database file with a `language`
+    column). All four mobile languages default to their tree-sitter
+    grammar (`tree-sitter-swift`/`tree-sitter-objc`/`tree-sitter-kotlin`/
+    `tree-sitter-java` — npm, syntax-only, no Xcode/Gradle build
+    required — validated at ~7.5ms/file). Give each language its own
+    isolated npm install: Swift and Objective-C need `tree-sitter@^0.22.x`,
+    Kotlin and Java need `tree-sitter@^0.21.x` — the two pairs cannot
+    share one `node_modules`. Objective-C's message-passing selector
+    resolution also needs its own routine, distinct from the
+    receiver-plus-name call pattern shared by Java/Kotlin/Swift.
 
   Estimated TypeScript graph: 15,000–40,000 nodes
   → Backend: SQLite REQUIRED at this scale
@@ -400,7 +406,13 @@ TypeScript/JS detected?
   → Check: npx ts-morph --version | tsc --version
 Python detected?
   → Check: pyan3 --version | pyright --version
-Java/Kotlin detected?
+Java detected?
+  → Check tooling availability via jdtls or build system
+  → If unavailable (common — jdtls needs a working Gradle build),
+    or if the project is Gradle-based (Spoon's `MavenLauncher`
+    auto-configuration only covers Maven, not Gradle):
+    fall back to `tree-sitter-java` (npm, syntax-only, no build needed)
+Kotlin detected?
   → Check tooling availability via jdtls or build system
   → If unavailable (common — jdtls needs a working Gradle build):
     fall back to `tree-sitter-kotlin` (npm, syntax-only, no build needed)
@@ -410,6 +422,13 @@ Swift detected?
   → Default to `tree-sitter-swift` (npm, syntax-only, no build needed)
   → Do not recommend Periphery — it went commercial and archived its
     OSS repo read-only on 2026-08-12
+Objective-C detected?
+  → No comparable semantic indexer story exists (no maintained
+    equivalent of IndexStoreDB tooling for this extraction use case)
+  → Default to `tree-sitter-objc` (npm, syntax-only, no build needed)
+  → Note: its call node (`message_expression`) resolves via
+    multi-part selector reconstruction, not receiver-plus-name —
+    do not reuse the Java/Kotlin/Swift callee-resolution logic as-is
 Go detected?
   → Check: go version (go/callgraph is stdlib)
 C# detected?

@@ -87,13 +87,18 @@ See [workflows.md](workflows.md) for the full pre-flight check procedure.
 |----------|-------------|----------|
 | TypeScript / JS | `ts-morph`, TypeScript compiler API | AI-driven AST reading |
 | Python | `pyan3`, `pyright` | AI-driven extraction |
-| Java / Kotlin | `jdtls`, Spoon AST | AI-driven extraction |
+| Java | `tree-sitter-java` (npm, syntax-only, no build needed); `jdtls`/Spoon AST only if the project builds cleanly | AI-driven extraction |
+| Kotlin | `tree-sitter-kotlin` (npm, syntax-only, no build needed); `jdtls` only if the project builds cleanly | AI-driven extraction |
+| Swift | `tree-sitter-swift` (npm, syntax-only, no build needed) | AI-driven extraction |
+| Objective-C | `tree-sitter-objc` (npm, syntax-only, no build needed) | AI-driven extraction |
 | Go | `go/callgraph` (pointer analysis) | AI-driven extraction |
 | C# | Roslyn API | AI-driven extraction |
 | Ruby | `ruby-parser` + custom walker | AI-driven extraction |
 | Multi-lang / unknown | `tree-sitter` (AST, no type resolution) | AI-only extraction |
 
 **AI-driven fallback**: Produces nodes and edges from source reading. Cannot resolve dynamic dispatch, generics, or cross-package overloads. All nodes marked `extraction_method: ai` for transparency.
+
+**Java/Kotlin/Swift/Objective-C via tree-sitter**: all four are syntax-only, npm-installable, no-build-required parsers — the recommended default over `jdtls`/Spoon/IndexStoreDB, which all require a successful full project build (Gradle or Xcode.app) and, for Spoon specifically, only auto-configure classpaths for Maven projects (no equivalent for Gradle). See `specs/code-graph-skill-spec.md` Phase 1 for full grammar-facts notes and per-language gotchas (incompatible `tree-sitter` core version ranges between the Swift/Objective-C pair (`^0.22.x`) and the Java/Kotlin pair (`^0.21.x`); Objective-C's message-passing selector resolution needs its own routine, distinct from the receiver-plus-name pattern shared by Java/Kotlin/Swift).
 
 ---
 
