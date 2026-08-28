@@ -101,7 +101,7 @@ GUI tools:
 | `from_node` | TEXT | Calling node id |
 | `call_site` | TEXT | `file.ts:line` |
 | `target` | TEXT | What was called (string form) |
-| `reason` | TEXT | `external-package` \| `missing-repo` \| `dynamic` \| `type-alias` |
+| `reason` | TEXT | `external-package` \| `missing-repo` \| `dynamic` \| `type-alias` — required closed enum, see workflow [2.1.1 Handle Unresolved Calls](workflows.md). Do not substitute ad hoc values (e.g. a catch-all "ambiguous" bucket) — that collapses `external-package` and `type-alias` together and makes `edgeResolutionCoverage` (3.6) uninterpretable. |
 
 ---
 

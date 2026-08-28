@@ -197,7 +197,7 @@ omitted. This is what `crossRepoMechanismCoverage` in the coverage scorecard tra
 
 ### Coverage Scorecard
 
-Every extraction run computes and surfaces three coverage metrics in View 09 (also written to
+Every extraction run computes and surfaces four coverage metrics in View 09 (also written to
 `specs/analysis-manifest.json` → `artifacts.code-graph.stats`):
 
 | Metric | Meaning |
@@ -205,10 +205,15 @@ Every extraction run computes and surfaces three coverage metrics in View 09 (al
 | `repoCoverage` | Repos actually analyzed / repos tracked in `specs/repos.json` |
 | `languageCoverage` | Languages extracted with a real type-aware tool or tree-sitter grammar / languages present across cloned repos |
 | `crossRepoMechanismCoverage` | Cross-repo correlation mechanisms actually resolved into edges / mechanisms detected as present in the codebase |
+| `edgeResolutionCoverage` | Call-site edges resolved to a known node / (resolved + `unresolved_calls`) — **must** be reported blended AND per-language (see 2.1.1) |
 
 Any metric below 100% must come with a named reason (missing grammar, unresolvable mechanism,
-inaccessible repo) in `stats.gaps` and in View 09 — never a silent gap. See workflow [3.6 Coverage
-Scorecard](workflows.md).
+inaccessible repo, dominant `type-alias` bucket after applying the 2.1.1 heuristics) in `stats.gaps`
+and in View 09 — never a silent gap. A single blended `edgeResolutionCoverage` number is explicitly
+not sufficient on its own: mixing a type-aware language with tree-sitter-only languages can drag a
+blended figure down for entirely expected reasons (heuristic-only Kotlin/Swift/Java resolution, or a
+large volume of legitimately-external framework calls) that look identical to a real regression
+unless broken out per language. See workflow [3.6 Coverage Scorecard](workflows.md).
 
 ---
 

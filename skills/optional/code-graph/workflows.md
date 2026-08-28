@@ -644,6 +644,49 @@ For each call site in the codebase, extract:
   is_async: true        # true if awaited or Promise-chained
 ```
 
+### 2.1.1 Handle Unresolved Calls
+
+A call that cannot be resolved to a known node must still be recorded — never dropped silently.
+Insert it into `unresolved_calls` with a `reason` drawn from this **required, closed enum** (see
+the `unresolved_calls` schema in the sqlite cookbook):
+
+| `reason` | Meaning |
+|----------|---------|
+| `external-package` | Callee resolves to a known third-party/framework/SDK identifier (import path outside tracked repos, or matches a maintained per-language framework-call allowlist) |
+| `missing-repo` | Callee would resolve into a repo that is not cloned/in scope for this run |
+| `dynamic` | Callee is reached via reflection, interface dispatch, DI container lookup, or another form of indirection the extractor cannot follow statically |
+| `type-alias` | Callee is a member call (`obj.method()`) whose receiver type could not be determined — the true default for anything that isn't confidently one of the other three |
+
+**Do not invent additional ad hoc reason values** (e.g. a catch-all like `ambiguous_or_external`) —
+doing so collapses `external-package` and `type-alias` into one bucket and makes the resolve rate
+uninterpretable. If unsure which of the four applies, use `type-alias` and let the heuristics below
+narrow it down.
+
+**Cheap resolution heuristics** — apply these, in order, to every member call before falling back
+to `type-alias`. None require a full type checker; all are within reach of a tree-sitter-only
+extractor:
+
+1. **Same-class `this`/`self` lookup** — `this.foo()` / `self.foo()` (or language equivalent):
+   resolve directly against sibling methods declared in the enclosing class/struct. Cheapest and
+   highest-confidence heuristic; apply first.
+2. **Known-framework-call allowlist** — maintain a small per-language list of common SDK/framework
+   call names that will never resolve to an in-repo node (e.g. React/fp-ts, Jetpack Compose
+   (`Text`, `Column`, `Box`, `remember`, `stringResource`), SwiftUI/XCTest (`XCTFail`), Spring). A
+   match short-circuits straight to `external-package` instead of falling through to `type-alias` —
+   this keeps the resolve-rate honest by not counting expected, correctly-unresolvable framework
+   calls as a coverage gap.
+3. **Typed-variable tracking** — where the grammar exposes a type annotation or an inline
+   constructor call (`const x: Foo = ...`, `x = new Foo()`, `val x: Foo`), resolve `x.method()`
+   against the tracked type `Foo` instead of a repo-wide same-name search.
+4. **DI/constructor-injection resolution** — for constructor-parameter or field-injection patterns
+   (NestJS/Spring/Awilix-style `constructor(private fooService: FooService)`), resolve
+   `this.fooService.bar()` to `FooService.bar` when the injected type is unambiguous; otherwise use
+   `dynamic`.
+
+Any reason distribution should be reported per-language, not only blended (see 3.6) — a bucket
+dominated by `type-alias` after applying all four heuristics is a genuine, actionable coverage gap;
+a bucket dominated by `external-package` is expected and not a defect.
+
 ### 2.2 Back-fill Fan-in and Fan-out
 
 After all edges are extracted:
@@ -866,6 +909,14 @@ meta.cross_repo_mechanism_gaps:
 This list feeds `crossRepoMechanismCoverage` in 3.6 and must be surfaced in View 09 as a named
 finding, matching the same never-silently-report-and-move-on posture used for access failures (0.0.4).
 
+> **Near-miss diagnostics**: if HTTP/gRPC/queue correlation (2.6.1) finds zero matches despite both
+> inbound and outbound candidates existing (e.g. N routes detected in one repo, M outbound call
+> sites detected in another, but 0 paired), do not report a silent `0`. Log the top 5 closest
+> non-matching pairs by path/topic-name string similarity (e.g. Levenshtein or token overlap) so a
+> human can tell whether it's a genuine absence of correlation or a template-mismatch bug (path
+> params formatted differently, base-path prefix stripped inconsistently, trailing slashes, etc.).
+> A `0` with no near-miss evidence attached is indistinguishable from a broken matcher.
+
 ---
 
 ## Phase 3: Pre-computed Views
@@ -999,7 +1050,13 @@ complete extraction apart from one that quietly covers less than it could.
 repoCoverage              = repos analyzed (Phase 0.0.4 confirmed set) / repos tracked in specs/repos.json
 languageCoverage          = languages extracted at tier 1 or 2 (0.1)   / languages present across cloned repos
 crossRepoMechanismCoverage = mechanisms extracted into edges (2.6.2)   / mechanisms detected as present (2.6.1)
+edgeResolutionCoverage     = edges resolved (2.1)                      / (edges resolved (2.1) + unresolved_calls (2.1.1))
 ```
+
+`edgeResolutionCoverage` **must** be reported both blended and per-language — a single blended
+number is not sufficient once a codebase mixes languages with different resolution ceilings (e.g. a
+type-aware TS pass alongside tree-sitter-only Kotlin/Swift/Java): the blended figure alone cannot
+tell a genuine regression apart from an expected side-effect of adding a harder-to-resolve language.
 
 ```yaml
 views:
@@ -1007,14 +1064,23 @@ views:
     repo_coverage: "28/32 (88%)"
     language_coverage: "5/5 (100%)"
     cross_repo_mechanism_coverage: "2/3 (67%)"
+    edge_resolution_coverage:
+      overall: "23%"
+      by_language:
+        ts: "33%"
+        java: "15%"
+        kotlin: "19%"
+        swift: "21%"
     gaps:
       - "content-service, reviews-service excluded — not cloned (Phase 0.0.4)"
       - "grpc mechanism detected but not resolved into edges (Phase 2.6.3)"
+      - "kotlin/swift: no type-aware tool available (0.1); type-alias resolution limited to the
+         heuristics in 2.1.1, no receiver-type tracking beyond same-class this/self"
 ```
 
 Any metric below 100% must appear in View 09 with its named reason (missing grammar, unresolved
-mechanism, inaccessible repo) — not just as a bare percentage. These same three values are written
-to `specs/analysis-manifest.json` in Phase 4C.
+mechanism, inaccessible repo, dominant `type-alias` bucket after 2.1.1 heuristics) — not just as a
+bare percentage. These same four values are written to `specs/analysis-manifest.json` in Phase 4C.
 
 ---
 

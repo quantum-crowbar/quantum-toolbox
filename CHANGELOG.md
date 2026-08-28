@@ -43,6 +43,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now stops and asks (`wait` / `fix now` / `partial`) instead of silently falling back to "continue".
 - SQLite cookbook template gained schema reference and query examples for `mechanism_edges`.
 
+### `code-graph` — resolution quality (edge-level)
+
+- **New Phase 2.1.1: Handle Unresolved Calls** — `unresolved_calls.reason` is now a required, closed
+  enum (`external-package` \| `missing-repo` \| `dynamic` \| `type-alias`), previously documented only
+  in the sqlite cookbook reference and never enforced as a normative extraction rule. Ad hoc reason
+  values (e.g. a single catch-all "ambiguous" bucket) are now explicitly disallowed — they collapse
+  `external-package` and `type-alias` together and make the resolve rate uninterpretable.
+- Added four **cheap resolution heuristics** to Phase 2.1.1, applied before falling back to
+  `type-alias`: same-class `this`/`self` lookup, a per-language known-framework-call allowlist
+  (React/fp-ts, Compose, SwiftUI/XCTest, Spring, etc.), typed-variable tracking, and DI/constructor-
+  injection resolution — all reachable by a tree-sitter-only extractor, no full type checker required.
+- **New Coverage Scorecard metric: `edgeResolutionCoverage`** (3.6) — edges resolved / (resolved +
+  unresolved), required to be reported both blended and per-language. A blended-only figure cannot
+  distinguish a genuine regression from the expected effect of adding a harder-to-resolve language
+  (heuristic-only Kotlin/Swift/Java, or a large volume of legitimately-external framework calls) — this
+  was a real gap discovered from production use: a metarepo's blended resolve rate dropped from 33%
+  to 23% purely from adding two mobile repos, with zero scorecard signal to explain why.
+  `specs/analysis-manifest-schema.json` gained the matching `stats.edgeResolutionCoverage` and
+  `historyEntry.coverage.edgeResolutionCoverage` fields.
+- **Phase 2.6.3 near-miss diagnostics** — cross-repo HTTP/gRPC/queue correlation must log the top 5
+  closest non-matching candidate pairs (by path/topic-name similarity) when it finds zero matches
+  despite both inbound and outbound candidates existing, instead of silently reporting `0`.
+
 ## [3.2.0] - 2026-08-19
 
 Bundled release covering the two remaining gaps in the code-graph tooling-by-language
