@@ -186,7 +186,11 @@
             "crossRepoCalls": { "type": ["integer", "string"] },
             "entryPoints": { "type": ["integer", "string"] },
             "deadCodeNodes": { "type": ["integer", "string"] },
-            "deadCodeRate": { "type": "string", "examples": ["12%"] }
+            "deadCodeRate": { "type": "string", "examples": ["12%"] },
+            "repoCoverage": { "type": "string", "description": "Repos analyzed / repos tracked in specs/repos.json.", "examples": ["28/32 (88%)"] },
+            "languageCoverage": { "type": "string", "description": "Languages extracted with a real type-aware tool or tree-sitter grammar / languages present across cloned repos.", "examples": ["5/5 (100%)"] },
+            "crossRepoMechanismCoverage": { "type": "string", "description": "Cross-repo correlation mechanisms (imports, HTTP, gRPC, queues, GraphQL federation, shared DB, OpenAPI, config) resolved into edges / mechanisms detected as present in the codebase.", "examples": ["2/3 (67%)"] },
+            "gaps": { "type": "array", "items": { "type": "string" }, "description": "Named reasons behind any coverage metric below 100% — excluded repos, AI-fallback languages, unresolved cross-repo mechanisms. Never leave a sub-100% metric unexplained." }
           }
         }
       }
@@ -203,6 +207,16 @@
         "repos": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Snapshot of the code-graph coverage scorecard at this run, for trend tracking across history entries (is coverage improving or regressing over time).",
+          "properties": {
+            "repoCoverage": { "type": "string", "examples": ["28/32 (88%)"] },
+            "languageCoverage": { "type": "string", "examples": ["5/5 (100%)"] },
+            "crossRepoMechanismCoverage": { "type": "string", "examples": ["2/3 (67%)"] }
+          }
         },
         "notes": { "type": "string" }
       }

@@ -2,7 +2,7 @@
 
 > **Generated:** {extraction_date}  
 > **Database:** `{sqlite_path}`  
-> **Extraction stats:** {node_count} nodes · {edge_count} edges · {repo_count} repos · {entry_count} entry points · {dead_count} dead code nodes ({dead_pct})
+> **Extraction stats:** {node_count} nodes · {edge_count} edges · {mechanism_count} cross-repo mechanism edges · {repo_count} repos · {entry_count} entry points · {dead_count} dead code nodes ({dead_pct})
 
 This file is the query reference for direct SQLite access to the code graph.
 Use it alongside `sqlite3`, [DB Browser for SQLite](https://sqlitebrowser.org/), or DBeaver.
@@ -33,6 +33,7 @@ GUI tools:
 -- Run in sqlite3 to see full DDL
 .schema nodes
 .schema edges
+.schema mechanism_edges
 .schema unresolved_calls
 .schema view_hot_nodes
 .schema view_dead_code
@@ -80,6 +81,18 @@ GUI tools:
 | `is_dynamic` | INTEGER | 1 = via interface dispatch or reflection |
 | `is_conditional` | INTEGER | 1 = inside if/try/catch — not guaranteed to execute |
 | `is_async` | INTEGER | 1 = awaited or Promise-chained |
+
+### `mechanism_edges` — repo-to-repo connections beyond direct function calls
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK | Auto-increment |
+| `from_repo` | TEXT | Repo where the connection originates |
+| `to_repo` | TEXT | Repo the connection points at |
+| `type` | TEXT | `import` \| `http` \| `grpc` \| `queue` \| `graphql` \| `db-shared` \| `openapi` \| `config` |
+| `mechanism` | TEXT | Specific protocol/tool, e.g. `kafka`, `openapi`, `grpc` |
+| `evidence` | TEXT | Human-readable description of what was found |
+| `location` | TEXT | `file:line` where the evidence was found |
 
 ### `unresolved_calls` — calls that could not be resolved to a node
 
@@ -406,10 +419,29 @@ ORDER BY calls DESC;
 ### All edges between two specific repos
 
 ```sql
-SELECT e.from_node, e.to_node, e.call_site, e.is_async
+SELECT e.from_node, e.to_node, e.type, e.mechanism, e.call_site, e.is_async
 FROM view_cross_repo_edges e
 WHERE e.from_repo = 'api-service' AND e.to_repo = 'core-lib'
 ORDER BY e.call_site;
+```
+
+### Cross-repo mechanisms by type (imports, HTTP, gRPC, queues, GraphQL, shared DB, OpenAPI, config)
+
+```sql
+SELECT type, mechanism, from_repo, to_repo, evidence, location
+FROM mechanism_edges
+ORDER BY type, from_repo;
+```
+
+### Which repos does this repo actually connect to, and how?
+
+```sql
+-- Function-level calls + repo-level mechanisms, side by side
+SELECT from_repo, to_repo, type, mechanism, COUNT(*) AS occurrences
+FROM view_cross_repo_edges
+WHERE from_repo = 'worker-service'
+GROUP BY from_repo, to_repo, type, mechanism
+ORDER BY occurrences DESC;
 ```
 
 ---

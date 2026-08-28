@@ -16,6 +16,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-08-28
+
+### `code-graph` — coverage maximization
+
+- **Tooling order (0.1)** now mandates tree-sitter as a real 2nd-choice extractor for every
+  language, ahead of AI-only fallback, with a new 0.1.1 grammar install-offer step. Type-aware
+  tools (compiler/type-checker APIs) stay 1st choice because they resolve generics, dynamic
+  dispatch, and overloads — resolution tree-sitter's pure syntax parsing cannot do — so
+  tree-sitter is promoted to "always try before AI", not to "replace a working type-aware tool".
+  AI-only extraction is a last resort, not a shortcut, and is always counted against
+  `languageCoverage`.
+- **New Phase 2.6: Cross-Repo Correlation Mechanisms** — actively detects and extracts imports,
+  HTTP, gRPC, message queues, GraphQL federation, shared DB tables, OpenAPI clients, and shared
+  config as repo-to-repo edges (new `mechanism_edges` SQLite table), not just same-language
+  function calls.
+- **New Phase 3.6: Coverage Scorecard** — computes `repoCoverage`, `languageCoverage`,
+  `crossRepoMechanismCoverage`, and requires a named reason for anything under 100%. Phase 4C now
+  actually writes these fields to `specs/analysis-manifest.json` (schema support existed but was
+  unused before this release), plus a new `stats.gaps[]` field.
+- **Phase 0.0.2** now flags that a Targeted (1–3 repo) run has partial `repoCoverage` and
+  `crossRepoMechanismCoverage` by definition — an explicit, named tradeoff instead of a silent one.
+- **`historyEntry` schema** gained an optional `coverage` snapshot so coverage trend (improving vs
+  regressing) can be read back across runs, not just the latest extraction.
+- **Phase 0.0.4** access-ask: a clone failure for access reasons (SSH/VPN/org membership/404/403)
+  now stops and asks (`wait` / `fix now` / `partial`) instead of silently falling back to "continue".
+- SQLite cookbook template gained schema reference and query examples for `mechanism_edges`.
+
 ## [3.2.0] - 2026-08-19
 
 Bundled release covering the two remaining gaps in the code-graph tooling-by-language
