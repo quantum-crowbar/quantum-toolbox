@@ -188,8 +188,9 @@
             "deadCodeNodes": { "type": ["integer", "string"] },
             "deadCodeRate": { "type": "string", "examples": ["12%"] },
             "repoCoverage": { "type": "string", "description": "Repos analyzed / repos tracked in specs/repos.json.", "examples": ["28/32 (88%)"] },
-            "languageCoverage": { "type": "string", "description": "Languages with a real tree-sitter extractor / languages present across cloned repos.", "examples": ["5/5 (100%)"] },
-            "crossRepoMechanismCoverage": { "type": "string", "description": "Cross-repo correlation passes implemented (imports, HTTP, Kafka, etc.) / mechanisms actually present in the codebase.", "examples": ["2/3 (67%)"] }
+            "languageCoverage": { "type": "string", "description": "Languages extracted with a real type-aware tool or tree-sitter grammar / languages present across cloned repos.", "examples": ["5/5 (100%)"] },
+            "crossRepoMechanismCoverage": { "type": "string", "description": "Cross-repo correlation mechanisms (imports, HTTP, gRPC, queues, GraphQL federation, shared DB, OpenAPI, config) resolved into edges / mechanisms detected as present in the codebase.", "examples": ["2/3 (67%)"] },
+            "gaps": { "type": "array", "items": { "type": "string" }, "description": "Named reasons behind any coverage metric below 100% — excluded repos, AI-fallback languages, unresolved cross-repo mechanisms. Never leave a sub-100% metric unexplained." }
           }
         }
       }

@@ -15,7 +15,8 @@ flowchart LR
     subgraph Extraction
         P1[Phase 1: Node Extraction\nFunctions, methods\nMetadata + tags]
         P2[Phase 2: Edge Extraction\nCall relationships\nFan-in/out back-fill]
-        P3[Phase 3: Pre-computed Views\nHot nodes, dead code\nEntry traces, cycles]
+        P26[Phase 2.6: Cross-Repo Mechanisms\nimports, HTTP, gRPC, queues\nGraphQL, shared DB, OpenAPI, config]
+        P3[Phase 3: Pre-computed Views\nHot nodes, dead code\nEntry traces, cycles\nCoverage scorecard]
     end
 
     subgraph Serialization
@@ -28,7 +29,7 @@ flowchart LR
         R[Reports\nentry-point-map\ndead-code\nsre-hot-paths\nfindings-summary\nsqlite-cookbook]
     end
 
-    P0 --> P1 --> P2 --> P3
+    P0 --> P1 --> P2 --> P26 --> P3
     P3 --> P4A
     P3 --> P4B
     P4A --> V09 --> R
@@ -419,51 +420,76 @@ Only after **Y** → continue to Phase 0.1 (detect tooling),
 
 ### 0.1 Detect Static Analysis Tooling
 
-Check for available tools in the project environment:
+> **Maximization directive**: for every language detected in scope, try the richest available
+> extractor before settling for less. AI-only extraction is a last resort, not a shortcut — every
+> language that ends up AI-only counts against `languageCoverage` in the coverage scorecard (3.6)
+> and must be named as a gap in View 09, never silently accepted.
+
+For each language detected in scope, resolve tooling in this order:
 
 ```
-TypeScript/JS detected?
-  → Check: npx ts-morph --version | tsc --version
-Python detected?
-  → Check: pyan3 --version | pyright --version
-Java detected?
-  → Check tooling availability via jdtls or build system
-  → If unavailable (common — jdtls needs a working Gradle build),
-    or if the project is Gradle-based (Spoon's `MavenLauncher`
-    auto-configuration only covers Maven, not Gradle):
-    fall back to `tree-sitter-java` (npm, syntax-only, no build needed)
-Kotlin detected?
-  → Check tooling availability via jdtls or build system
-  → If unavailable (common — jdtls needs a working Gradle build):
-    fall back to `tree-sitter-kotlin` (npm, syntax-only, no build needed)
-Swift detected?
-  → IndexStoreDB/SourceKit-LSP needs a full Xcode.app build (not just
-    Command Line Tools) — often unavailable in CI/sandboxed environments
-  → Default to `tree-sitter-swift` (npm, syntax-only, no build needed)
-  → Do not recommend Periphery — it went commercial and archived its
-    OSS repo read-only on 2026-08-12
-Objective-C detected?
-  → No comparable semantic indexer story exists (no maintained
-    equivalent of IndexStoreDB tooling for this extraction use case)
-  → Default to `tree-sitter-objc` (npm, syntax-only, no build needed)
-  → Note: its call node (`message_expression`) resolves via
-    multi-part selector reconstruction, not receiver-plus-name —
-    do not reuse the Java/Kotlin/Swift callee-resolution logic as-is
-Go detected?
-  → Check: go version (go/callgraph is stdlib)
-C# detected?
-  → Check .NET SDK for Roslyn availability
-Unknown/multi-lang?
-  → Fall back to tree-sitter or AI-only extraction
+1. Type-aware tool (best fidelity — resolves generics, dynamic dispatch, overloads)
+     TypeScript/JS → npx ts-morph --version | tsc --version
+     Python        → pyan3 --version | pyright --version
+     Java          → jdtls or build system tooling, only if the project builds cleanly
+                     (jdtls needs a working Gradle build; Spoon's `MavenLauncher`
+                     auto-configuration only covers Maven, not Gradle)
+     Kotlin        → jdtls or build system tooling, only if the project builds cleanly
+                     (same Gradle-build caveat as Java)
+     Swift         → IndexStoreDB/SourceKit-LSP, only if a full Xcode.app build is
+                     available (not just Command Line Tools) — often unavailable in
+                     CI/sandboxed environments. Do not recommend Periphery — it went
+                     commercial and archived its OSS repo read-only on 2026-08-12
+     Objective-C   → no comparable semantic indexer exists for this extraction use
+                     case; there is no type-aware 1st choice for this language
+     Go            → go version (go/callgraph is stdlib)
+     C#            → .NET SDK for Roslyn availability
+     Ruby          → ruby-parser + custom walker
+
+2. Tree-sitter grammar (real syntax-aware AST — no type resolution, but NOT inference)
+     → Check for a tree-sitter-<lang> grammar, installed or installable
+     → If missing but installable, install it now rather than skipping to AI-only
+     → Covers any language above when its type-aware tool is unavailable, plus any
+       other language present in the repo set that has a maintained grammar
+     → Java/Kotlin/Swift/Objective-C default here: `tree-sitter-java`,
+       `tree-sitter-kotlin`, `tree-sitter-swift`, `tree-sitter-objc` (npm,
+       syntax-only, no build required). Objective-C's call node
+       (`message_expression`) resolves via multi-part selector reconstruction,
+       not receiver-plus-name — do not reuse the Java/Kotlin/Swift
+       callee-resolution logic as-is
+
+3. AI-only extraction (last resort)
+     → Only when neither (1) nor (2) is available, or both fail
+     → Flag extraction_method: ai and record the language as a gap
 ```
 
-Capture:
+Capture, per language:
 ```yaml
 meta.code_graph_tooling:
-  tool: string        # e.g. "ts-morph", "pyan3", "ai-only"
-  available: boolean
-  fallback: boolean   # true if using AI extraction
+  - language: string
+    tool: string          # e.g. "ts-morph", "tree-sitter-python", "ai-only"
+    tier: 1 | 2 | 3        # 1 = type-aware, 2 = tree-sitter, 3 = AI-only
+    fallback: boolean      # true if tier > 1
 ```
+
+---
+
+#### 0.1.1 Tree-sitter grammar coverage check
+
+Before accepting AI-only for any language, confirm whether a tree-sitter grammar exists and can be
+installed in this environment (e.g. `npm install tree-sitter-<lang>`, or the language-appropriate
+package manager equivalent). If installable:
+
+```
+  ⚠ No type-aware tool found for <language>, but tree-sitter-<language> is available.
+
+    install   Install the grammar now and extract with tree-sitter (recommended)
+    ai-only   Skip straight to AI-driven extraction for this language
+```
+
+Default: `install`. Only fall through to AI-only if installation fails or no grammar exists for
+the language at all — and in that case, record the language in the coverage-gap list carried into
+3.6, so it's surfaced instead of silently dropped.
 
 ### 0.2 Pre-flight Size Estimate
 
@@ -722,9 +748,17 @@ CREATE TABLE view_refactor_priority AS
   FROM nodes WHERE is_dead_code = 0 ORDER BY refactor_score DESC;
 
 CREATE TABLE view_cross_repo_edges AS
-  SELECT from_node, to_node, from_repo, to_repo, call_site, is_async, is_conditional
-  FROM edges WHERE from_repo != to_repo;
+  SELECT from_node, to_node, from_repo, to_repo, type, call_site, is_async, is_conditional,
+         NULL AS mechanism, NULL AS evidence
+  FROM edges WHERE from_repo != to_repo
+  UNION ALL
+  SELECT NULL, NULL, from_repo, to_repo, type, location, 0, 0, mechanism, evidence
+  FROM mechanism_edges;
 ```
+
+> `mechanism_edges` is only rebuilt from scratch when Phase 2.6 re-runs cross-repo mechanism
+> detection (not scoped to individual changed files the way call edges are) \u2014 re-run 2.6 whenever
+> any repo's manifests/config/`.proto`/OpenAPI specs changed since the last extraction.
 
 For `view_entry_traces` and `view_cycles`: re-run the DFS traversal from Phase 3.3 and 3.4
 but **only for entry point nodes that appear in the changed file set or that call into a
@@ -754,6 +788,67 @@ After incremental update completes, proceed to Phase 4C (update `artifacts.code-
 in manifest with new `generatedDate` and new stats) and Phase 4D (commit).
 
 Note in Phase 4D commit message: `fix(code-graph): incremental update — {N} files refreshed`
+
+---
+
+## Phase 2.6: Cross-Repo Correlation Mechanisms
+
+**Goal**: Function-call edges only capture same-language, same-repo relationships. Actively detect
+and extract every other mechanism by which repos actually connect, so `code_graph.sqlite` can answer
+whole-system questions ("what breaks if this Kafka topic's schema changes?", "what's the blast
+radius of this shared DB table?") — not just single-language call chains.
+
+> **Maximization directive**: scan for ALL mechanisms below that are present in the codebase, not
+> only the one relevant to today's question. A mechanism detected but not resolved into edges must
+> be recorded as a gap (feeding `crossRepoMechanismCoverage`), never silently skipped.
+
+### 2.6.1 Detect mechanisms present
+
+| Mechanism | Evidence to scan for | Edge type |
+|-----------|----------------------|-----------|
+| Imports / shared packages | Cross-repo `package.json`/`pom.xml`/`go.mod`/`*.csproj` deps on internal shared libs | `import` |
+| HTTP / REST calls | HTTP client calls whose base URL/host/service-discovery name matches another tracked repo | `http` |
+| gRPC | `.proto` file imports, generated stub calls | `grpc` |
+| Message queues | Kafka/SQS/SNS/RabbitMQ producer + consumer topic/queue names | `queue` |
+| GraphQL federation | Subgraph schema references, `@key`/`@extends` directives | `graphql` |
+| Shared database tables | Same table name/connection string referenced from multiple repos | `db-shared` |
+| OpenAPI-generated clients | Generated SDK/client code pointing at another repo's OpenAPI/Swagger spec | `openapi` |
+| Shared config / env vars | Env vars or config keys whose value is another tracked repo's URL/service name | `config` |
+
+For each mechanism, check config files, manifests, lockfiles, `.proto`/OpenAPI specs, docker-compose
+/ k8s manifests, and CI pipeline definitions across all repos in scope — these are usually cheaper
+and more reliable evidence than trying to infer connections from application code alone.
+
+### 2.6.2 Extract mechanism edges
+
+For each mechanism confirmed present, extract it into a typed repo-to-repo edge. These are
+repo-level relationships (not function-to-function), so they're stored separately from the call
+graph's `edges` table — see `mechanism_edges` in Phase 4B — but are unioned with cross-repo call
+edges in `view_cross_repo_edges` so queries can treat them uniformly:
+
+```yaml
+- from_repo: "checkout-service"
+  to_repo: "basket-api"
+  type: queue              # import | http | grpc | queue | graphql | db-shared | openapi | config
+  mechanism: "kafka"
+  evidence: "checkout-service consumes topic `order.created` produced by basket-api"
+  location: "packages/order-consumer/src/index.ts:1"
+```
+
+### 2.6.3 Record unresolved mechanisms as gaps
+
+If a mechanism is detected as present (e.g. a Kafka topic name appears in config) but cannot be
+resolved into edges (no parser, ambiguous evidence, time-boxed out) — do not drop it silently.
+Record it in a running gap list:
+
+```yaml
+meta.cross_repo_mechanism_gaps:
+  - mechanism: "grpc"
+    reason: "proto files present in 2 repos but no stub-call resolution implemented yet"
+```
+
+This list feeds `crossRepoMechanismCoverage` in 3.6 and must be surfaced in View 09 as a named
+finding, matching the same never-silently-report-and-move-on posture used for access failures (0.0.4).
 
 ---
 
@@ -878,6 +973,33 @@ views:
       location: "src/billing/calculator.ts:67"
 ```
 
+### 3.6 Coverage Scorecard
+
+**Goal**: Compute the three coverage metrics that make the maximization directive checkable rather
+than aspirational. Never skip this step — it's what lets a user (or `audit-upgrade`) tell a genuinely
+complete extraction apart from one that quietly covers less than it could.
+
+```
+repoCoverage              = repos analyzed (Phase 0.0.4 confirmed set) / repos tracked in specs/repos.json
+languageCoverage          = languages extracted at tier 1 or 2 (0.1)   / languages present across cloned repos
+crossRepoMechanismCoverage = mechanisms extracted into edges (2.6.2)   / mechanisms detected as present (2.6.1)
+```
+
+```yaml
+views:
+  coverage_scorecard:
+    repo_coverage: "28/32 (88%)"
+    language_coverage: "5/5 (100%)"
+    cross_repo_mechanism_coverage: "2/3 (67%)"
+    gaps:
+      - "content-service, reviews-service excluded — not cloned (Phase 0.0.4)"
+      - "grpc mechanism detected but not resolved into edges (Phase 2.6.3)"
+```
+
+Any metric below 100% must appear in View 09 with its named reason (missing grammar, unresolved
+mechanism, inaccessible repo) — not just as a bare percentage. These same three values are written
+to `specs/analysis-manifest.json` in Phase 4C.
+
 ---
 
 ## Phase 4A: YAML Serialization
@@ -990,6 +1112,23 @@ CREATE INDEX idx_nodes_fan_in    ON nodes(fan_in DESC);
 CREATE INDEX idx_nodes_dead      ON nodes(is_dead_code);
 CREATE INDEX idx_nodes_entry     ON nodes(is_entry_point);
 CREATE INDEX idx_nodes_repo      ON nodes(repo);
+
+-- Repo-to-repo connections from Phase 2.6 (imports, HTTP, gRPC, queues, GraphQL,
+-- shared DB, OpenAPI, config) — kept separate from function-level `edges` because
+-- these relationships aren't between two resolvable node ids.
+CREATE TABLE mechanism_edges (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_repo TEXT NOT NULL,
+  to_repo TEXT NOT NULL,
+  type TEXT NOT NULL,           -- import | http | grpc | queue | graphql | db-shared | openapi | config
+  mechanism TEXT,               -- e.g. "kafka", "openapi", specific tool/protocol name
+  evidence TEXT,                -- human-readable description of what was found
+  location TEXT                 -- file:line where evidence was found
+);
+
+CREATE INDEX idx_mech_from_repo ON mechanism_edges(from_repo);
+CREATE INDEX idx_mech_to_repo   ON mechanism_edges(to_repo);
+CREATE INDEX idx_mech_type      ON mechanism_edges(type);
 ```
 
 ### Materialized View Tables
@@ -1054,13 +1193,21 @@ CREATE TABLE view_refactor_priority AS
   WHERE is_dead_code = 0
   ORDER BY refactor_score DESC;
 
--- All edges that cross a repo boundary
+-- All edges that cross a repo boundary — function-level call edges (Phase 2.1)
+-- unioned with repo-level mechanism edges (Phase 2.6.2) so both are queryable as one set.
 CREATE TABLE view_cross_repo_edges AS
   SELECT e.from_node, e.to_node,
          e.from_repo, e.to_repo,
-         e.call_site, e.is_async, e.is_conditional
+         e.type, e.call_site, e.is_async, e.is_conditional,
+         NULL AS mechanism, NULL AS evidence
   FROM edges e
-  WHERE e.from_repo != e.to_repo;
+  WHERE e.from_repo != e.to_repo
+  UNION ALL
+  SELECT NULL AS from_node, NULL AS to_node,
+         m.from_repo, m.to_repo,
+         m.type, m.location AS call_site, 0 AS is_async, 0 AS is_conditional,
+         m.mechanism, m.evidence
+  FROM mechanism_edges m;
 
 -- Entry points that transitively reach a DB call
 -- (populated during Phase 3 entry trace computation)
@@ -1089,6 +1236,7 @@ Steps:
    | `{sqlite_path}` | Relative path to the `.sqlite` file from repo root |
    | `{node_count}` | Total nodes from Phase 2 |
    | `{edge_count}` | Total edges from Phase 2 |
+   | `{mechanism_count}` | Total rows in `mechanism_edges` from Phase 2.6 |
    | `{repo_count}` | Number of repos scanned |
    | `{entry_count}` | Entry point count from Phase 1.3 |
    | `{dead_count}` | Dead code node count from Phase 2.3 |
@@ -1130,12 +1278,19 @@ Write or overwrite `artifacts.code-graph` with:
     "crossRepoCalls": "<N — edges where from_repo ≠ to_repo>",
     "entryPoints": "<N from Phase 1.3>",
     "deadCodeNodes": "<N from Phase 2.3>",
-    "deadCodeRate": "<N%>"
+    "deadCodeRate": "<N%>",
+    "repoCoverage": "<from Phase 3.6 coverage scorecard>",
+    "languageCoverage": "<from Phase 3.6 coverage scorecard>",
+    "crossRepoMechanismCoverage": "<from Phase 3.6 coverage scorecard>"
   }
 }
 ```
 
 Exclude from `reports` any outputs that were not selected in Phase 0.0.6.
+
+If `meta.cross_repo_mechanism_gaps` (2.6.3) or any excluded repos (0.0.4) are non-empty, also carry
+them into the manifest entry as `stats.gaps: string[]` so `/update` and `audit-upgrade` can pick them
+up without re-deriving them from View 09 markdown.
 
 ---
 
