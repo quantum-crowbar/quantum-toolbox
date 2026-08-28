@@ -208,6 +208,16 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Snapshot of the code-graph coverage scorecard at this run, for trend tracking across history entries (is coverage improving or regressing over time).",
+          "properties": {
+            "repoCoverage": { "type": "string", "examples": ["28/32 (88%)"] },
+            "languageCoverage": { "type": "string", "examples": ["5/5 (100%)"] },
+            "crossRepoMechanismCoverage": { "type": "string", "examples": ["2/3 (67%)"] }
+          }
+        },
         "notes": { "type": "string" }
       }
     }

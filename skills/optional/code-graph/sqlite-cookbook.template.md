@@ -439,7 +439,7 @@ ORDER BY type, from_repo;
 -- Function-level calls + repo-level mechanisms, side by side
 SELECT from_repo, to_repo, type, mechanism, COUNT(*) AS occurrences
 FROM view_cross_repo_edges
-WHERE from_repo = 'checkout-service'
+WHERE from_repo = 'worker-service'
 GROUP BY from_repo, to_repo, type, mechanism
 ORDER BY occurrences DESC;
 ```

@@ -87,11 +87,16 @@ Direct user request?
   A  Targeted   Pick 1–3 repos to analyse. Fast and focused.
                 Recommended for: first run, answering a
                 specific question, or when time is limited.
+                Note: repoCoverage and crossRepoMechanismCoverage in the
+                coverage scorecard will be partial by definition — only
+                mechanisms between the chosen repos can be resolved.
 
   B  Full scan  All cloned TypeScript repos extracted as one
                 unified graph. Richer cross-repo edges.
                 Requires SQLite. See full complexity breakdown
                 before confirming.
+                Required for a complete coverage scorecard (3.6) —
+                choose this when maximizing cross-repo coverage matters.
 
   C  AI-only    No static extraction. AI reads source files
                 and produces indicative markdown analysis.
@@ -105,6 +110,11 @@ Direct user request?
 Capture choice. If **C** → skip all remaining Phase 0 steps
 and proceed directly to AI-extraction output (View 09 markdown
 only). If **A** or **B** → continue to 0.0.3.
+
+If **A** was chosen, carry the partial-coverage note into the Phase 0.0.7 confirmation summary and
+into the coverage scorecard's `gaps` list (3.6) — repos outside the chosen set count against
+`repoCoverage`, and any mechanism whose other end lives outside the chosen set counts against
+`crossRepoMechanismCoverage`. This is an expected, named tradeoff of a targeted run, not a silent one.
 
 ---
 
@@ -827,11 +837,11 @@ graph's `edges` table — see `mechanism_edges` in Phase 4B — but are unioned 
 edges in `view_cross_repo_edges` so queries can treat them uniformly:
 
 ```yaml
-- from_repo: "checkout-service"
-  to_repo: "basket-api"
+- from_repo: "worker-service"
+  to_repo: "api-service"
   type: queue              # import | http | grpc | queue | graphql | db-shared | openapi | config
   mechanism: "kafka"
-  evidence: "checkout-service consumes topic `order.created` produced by basket-api"
+  evidence: "worker-service consumes topic `order.created` produced by api-service"
   location: "packages/order-consumer/src/index.ts:1"
 ```
 
@@ -1291,6 +1301,11 @@ Exclude from `reports` any outputs that were not selected in Phase 0.0.6.
 If `meta.cross_repo_mechanism_gaps` (2.6.3) or any excluded repos (0.0.4) are non-empty, also carry
 them into the manifest entry as `stats.gaps: string[]` so `/update` and `audit-upgrade` can pick them
 up without re-deriving them from View 09 markdown.
+
+If this run also appends a `history[]` entry (per the `analysis-tracking` skill's convention), include
+a `coverage` object on that entry with the same three scorecard values from Phase 3.6 — this is what
+lets coverage trend be read back across runs (improving vs regressing) instead of only ever seeing
+the latest snapshot.
 
 ---
 
