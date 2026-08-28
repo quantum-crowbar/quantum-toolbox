@@ -126,6 +126,13 @@ AI-driven extraction if no grammar exists or extraction fails at both prior step
 type resolution (no generics/dynamic-dispatch resolution) but is still real syntax-aware parsing, not
 inference — always preferred over AI-only.
 
+**Why type-aware stays 1st, not tree-sitter**: type-aware tools do *semantic* resolution (which
+overload/interface implementation a call actually targets, generics, cross-package type-checked
+references) that tree-sitter's syntax-only parsing can't provide. Promoting tree-sitter to a
+mandatory 2nd choice doesn't override a working type-aware tool — it just closes the gap where a
+language previously had no type-aware tool configured and extraction would otherwise skip straight
+to AI.
+
 **AI-driven fallback (last resort)**: Produces nodes and edges from source reading. Cannot resolve
 dynamic dispatch, generics, or cross-package overloads. All nodes marked `extraction_method: ai` for
 transparency, and every AI-fallback language is counted against `languageCoverage` in the coverage

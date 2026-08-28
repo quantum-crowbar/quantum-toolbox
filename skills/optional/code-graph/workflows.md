@@ -473,6 +473,12 @@ For each language detected in scope, resolve tooling in this order:
      → Flag extraction_method: ai and record the language as a gap
 ```
 
+Tier 1 stays first because type-aware tools do *semantic* resolution (generics, dynamic dispatch,
+overload/interface resolution) that tier 2 cannot — tree-sitter is a syntax parser with no type
+system. Promoting tree-sitter to a mandatory tier 2 does not override a working tier-1 tool; it
+only replaces what would otherwise be a jump straight to tier 3 (AI-only) when no type-aware tool
+is configured for a language.
+
 Capture, per language:
 ```yaml
 meta.code_graph_tooling:
