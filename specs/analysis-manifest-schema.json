@@ -186,7 +186,10 @@
             "crossRepoCalls": { "type": ["integer", "string"] },
             "entryPoints": { "type": ["integer", "string"] },
             "deadCodeNodes": { "type": ["integer", "string"] },
-            "deadCodeRate": { "type": "string", "examples": ["12%"] }
+            "deadCodeRate": { "type": "string", "examples": ["12%"] },
+            "repoCoverage": { "type": "string", "description": "Repos analyzed / repos tracked in specs/repos.json.", "examples": ["28/32 (88%)"] },
+            "languageCoverage": { "type": "string", "description": "Languages with a real tree-sitter extractor / languages present across cloned repos.", "examples": ["5/5 (100%)"] },
+            "crossRepoMechanismCoverage": { "type": "string", "description": "Cross-repo correlation passes implemented (imports, HTTP, Kafka, etc.) / mechanisms actually present in the codebase.", "examples": ["2/3 (67%)"] }
           }
         }
       }

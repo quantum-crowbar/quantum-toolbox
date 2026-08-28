@@ -299,6 +299,26 @@ then present a single decision point before proceeding to Phase 0.0.5:
 
 If **abort** → exit Phase 0.0 immediately. No extraction, no files written.
 If **clone** → run the clone commands, then re-run the validation check.
+
+**If a clone attempt itself fails for access reasons** (SSH permission denied,
+VPN/network unreachable, org membership issue, 404/403) — do not silently fall
+back to "continue" and exclude the repo. Stop and ask the user explicitly:
+
+```
+  ⚠ <repo> could not be cloned (<reason>). What should I do?
+
+    wait     Continue with everything else; re-check <repo> at the start
+             of the next run
+    fix now  I'll resolve access (VPN/credentials/org membership) now —
+             retry <repo> immediately once confirmed
+    partial  Proceed without <repo> — record the gap with today's date
+             and re-attempt automatically on every future run
+```
+
+If several repos fail for the same underlying reason (e.g. one VPN outage
+affecting three repos), it's fine to ask once and apply the answer to all of
+them — but still surface it as a question, never a silently-logged skip.
+
 If **continue** → proceed to Phase 0.0.5 with the reduced repo set. Note the
 excluded repos in the Phase 0.0.7 confirmation summary.
 
