@@ -29,9 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   resolution + unresolved-by-reason breakdown) in the View 09 template. `checklist.md` gained
   `2.1.1 Unresolved Call Classification`, `2.6 Cross-Repo Correlation Mechanisms`, and
   `3.6 Coverage Scorecard` sections, plus matching Quality Gates and Output: View 09 items.
-- Discovered via a real metarepo (`dxpcore-lowerfunnel-metarepo`) that had faithfully hand-authored
-  the 3.3.0 workflow requirements into its own scripts but never rendered them into its generated
-  View 09 doc — tracing that gap back to source showed the companion docs, not just the metarepo's
+- Discovered via a consuming metarepo that had faithfully hand-authored the 3.3.0 workflow
+  requirements into its own scripts but never rendered them into its generated View 09 doc —
+  tracing that gap back to source showed the companion docs, not just the metarepo's
   own code, were the origin of the omission.
 
 ## [3.3.0] - 2026-08-28
