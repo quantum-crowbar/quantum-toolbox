@@ -55,6 +55,26 @@ Quick reference for code graph analysis completion.
 - [ ] `fan_out` back-filled on all nodes
 - [ ] `is_dead_code` set (fan_in = 0 AND is_entry_point = false)
 
+### Phase 2.1.1: Unresolved Call Classification
+
+- [ ] Every `unresolved_calls.reason` uses only the 4 canonical values: `external-package` \|
+      `missing-repo` \| `dynamic` \| `type-alias` — no ad hoc/catch-all values
+- [ ] All 4 cheap resolution heuristics applied before falling back to `type-alias`: same-class
+      `this`/`self` lookup, framework-call allowlist, typed-variable tracking, DI/constructor
+      injection
+- [ ] `unresolved_calls.repo` populated (needed for per-language coverage breakdown)
+
+### Phase 2.6: Cross-Repo Correlation Mechanisms
+
+- [ ] Every cross-repo mechanism actually present in the codebase has a matching correlation pass
+      (imports, HTTP, gRPC, message queues, GraphQL federation, shared DB tables, OpenAPI clients,
+      shared config) — any mechanism present in code but absent from the correlation script is a
+      named gap, not a silent omission
+- [ ] `mechanism_edges` table populated for each implemented mechanism
+- [ ] **Near-miss diagnostics** (2.6.3): any correlation pass that finds zero matches despite both
+      inbound and outbound candidates existing logs the top 5 closest non-matching pairs by
+      path/topic-name similarity — a bare `0` with no near-miss evidence is not acceptable
+
 ---
 
 ## Phase 3: Pre-computed Views
@@ -66,6 +86,17 @@ Quick reference for code graph analysis completion.
   - [ ] `data_stores` collected per trace
 - [ ] `cycles` — circular dependencies detected
 - [ ] `complexity_hotspots` — cyclomatic_complexity > 10, sorted desc
+
+---
+
+## Phase 3.6: Coverage Scorecard
+
+- [ ] `repoCoverage`, `languageCoverage`, `crossRepoMechanismCoverage`, `edgeResolutionCoverage`
+      all computed
+- [ ] `edgeResolutionCoverage` reported both blended AND per-language — never blended-only
+- [ ] Every metric below 100% has a named reason recorded in `stats.gaps` (missing grammar,
+      unresolvable mechanism, inaccessible repo, dominant `type-alias` bucket, etc.)
+- [ ] Scorecard + gaps written to `specs/analysis-manifest.json` → `artifacts.code-graph.stats`
 
 ---
 
@@ -95,6 +126,9 @@ Quick reference for code graph analysis completion.
 
 - [ ] `analysis/09-code-graph.md` created
   - [ ] Extraction summary table complete
+  - [ ] Coverage Scorecard table complete (all 4 metrics + gap reasons)
+  - [ ] Edge Resolution Coverage per-language table complete (not blended-only)
+  - [ ] Unresolved Calls by reason table complete (4 canonical reasons)
   - [ ] Complexity hotspots table (top 10)
   - [ ] High fan-in table (top 10)
   - [ ] High fan-out table (top 10)
@@ -121,3 +155,5 @@ Quick reference for code graph analysis completion.
 - [ ] Cycles cross-checked: each cycle node exists in `nodes[]`
 - [ ] AI-extracted nodes flagged with `extraction_method: ai`
 - [ ] Backend selection documented in `meta.preferences.code_graph_backend`
+- [ ] No `unresolved_calls.reason` value outside the 4 canonical enum values
+- [ ] Every correlation pass with 0 matches has near-miss diagnostics logged, not a silent `0`

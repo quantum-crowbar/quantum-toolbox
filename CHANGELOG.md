@@ -16,6 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.1] - 2026-08-29
+
+### `code-graph` — companion doc drift fix
+
+- Fixed `templates.md`/`checklist.md` drift against 3.3.0: the View 09 output template and the
+  completion checklist never gained a Coverage Scorecard section, unresolved-call reason-enum
+  gates, or near-miss-diagnostics gates — even though `workflows.md` and `README.md` both already
+  required them. A metarepo following only the checklist/template (not the full workflow prose)
+  would have silently skipped all of 3.3.0's resolution-quality and coverage-maximization work.
+  `templates.md` gained a `## Coverage Scorecard` section (all 4 metrics + per-language edge
+  resolution + unresolved-by-reason breakdown) in the View 09 template. `checklist.md` gained
+  `2.1.1 Unresolved Call Classification`, `2.6 Cross-Repo Correlation Mechanisms`, and
+  `3.6 Coverage Scorecard` sections, plus matching Quality Gates and Output: View 09 items.
+- Discovered via a real metarepo (`dxpcore-lowerfunnel-metarepo`) that had faithfully hand-authored
+  the 3.3.0 workflow requirements into its own scripts but never rendered them into its generated
+  View 09 doc — tracing that gap back to source showed the companion docs, not just the metarepo's
+  own code, were the origin of the omission.
+
 ## [3.3.0] - 2026-08-28
 
 ### `code-graph` — coverage maximization

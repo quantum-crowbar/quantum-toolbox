@@ -36,6 +36,40 @@ Output templates for View 09 and all code-graph-dependent reports.
 
 ---
 
+## Coverage Scorecard
+
+Any metric below 100% must have a named reason in `stats.gaps` — never a silent gap.
+
+| Metric | Value | Gap Reason (if < 100%) |
+|--------|-------|-------------------------|
+| Repo Coverage | {code_graph.stats.repoCoverage}% | {stats.gaps.repoCoverage or "—"} |
+| Language Coverage | {code_graph.stats.languageCoverage}% | {stats.gaps.languageCoverage or "—"} |
+| Cross-Repo Mechanism Coverage | {code_graph.stats.crossRepoMechanismCoverage}% | {stats.gaps.crossRepoMechanismCoverage or "—"} |
+| Edge Resolution Coverage (blended) | {code_graph.stats.edgeResolutionCoverage.blended}% | {stats.gaps.edgeResolutionCoverage or "—"} |
+
+### Edge Resolution Coverage — by language
+
+A blended-only figure cannot distinguish a genuine regression from the expected effect of adding a
+harder-to-resolve language (heuristic-only Kotlin/Swift/Java, or a large volume of legitimately-
+external framework calls). Always report per-language, never blended-only:
+
+| Language | Resolved | Unresolved | Coverage |
+|----------|----------|------------|----------|
+{for lang in code_graph.stats.edgeResolutionCoverage.byLanguage}
+| {lang.name} | {lang.resolved} | {lang.unresolved} | {lang.coverage}% |
+{/for}
+
+### Unresolved Calls — by reason
+
+| Reason | Count | Meaning |
+|--------|-------|---------|
+| `external-package` | {stats.unresolvedByReason['external-package']} | Resolved to a known framework/SDK call (React, Spring, SwiftUI, etc.) via the 2.1.1 allowlist heuristic — expected, not a gap |
+| `missing-repo` | {stats.unresolvedByReason['missing-repo']} | Callee lives in a repo not cloned/accessible |
+| `dynamic` | {stats.unresolvedByReason['dynamic']} | Dynamic dispatch, reflection, or otherwise unresolvable statically |
+| `type-alias` | {stats.unresolvedByReason['type-alias']} | Genuinely unresolved after all 2.1.1 heuristics — the bucket to actually investigate |
+
+---
+
 ## Complexity Hotspots
 
 Functions with cyclomatic complexity > 10. High complexity increases defect probability and maintenance cost.
